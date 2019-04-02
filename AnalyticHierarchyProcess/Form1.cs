@@ -22,6 +22,7 @@ namespace AnalyticHierarchyProcess
             InitializeComponent();
             dataGridViewCriterions.Columns.Add("Критерии", "Критерии");
         }
+        string selectedTaskName;
         Dictionary<int, string> scales = new Dictionary<int, string>()
         {
             {1, "Одинаковая значимость"},
@@ -34,6 +35,7 @@ namespace AnalyticHierarchyProcess
             {8, "Почти абсолютная значимость"},
             {9, "Абсолютная значимость"}
         };
+        private Dictionary<string, Task.Task> tasks = new Dictionary<string, Task.Task>();
         public List<string> GetCriterions()
         {
             List<string> сriterions = new List<string>();
@@ -71,9 +73,19 @@ namespace AnalyticHierarchyProcess
             this.Width = dataGridViewCriterions.Width;
             this.Height = dataGridViewCriterions.Height + 40;
         }
+        /// <summary>
+        /// Получить текущую выбранную цель
+        /// </summary>
+        /// <returns>Task, если выбрана цель, null если не выбрана</returns>
+        public Task.Task GetSelectedTask()
+        {
+            if (!tasks.ContainsKey(selectedTaskName))
+                return null;
 
+            return tasks[selectedTaskName];
+        }
 
-        private Dictionary<string, Task.Task> tasks = new Dictionary<string, Task.Task>();
+        
         public void AddTasks(string newTaskName)
         {
             tasks.Add(newTaskName, new Task.Task(newTaskName, GetCriterions()));

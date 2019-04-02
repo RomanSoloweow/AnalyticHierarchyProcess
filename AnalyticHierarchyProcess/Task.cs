@@ -26,7 +26,7 @@ namespace Task
         /// Вектор приоритетов
         /// </summary>
         private List<double> vectorPriority = null;
-
+        
 
         public  Task(string _name,List<string> _criterions)
         {
@@ -102,6 +102,8 @@ namespace Task
                   Console.WriteLine();
                 }
         }
+
+
         /// <summary>
         /// Получить коэффициент согласованности
         /// </summary>
@@ -124,6 +126,8 @@ namespace Task
 
             return vectorPriority;
         }
+
+
         /// <summary>
         /// Обновить коэффициент согласованности и вектор приоритетов
         /// </summary>
