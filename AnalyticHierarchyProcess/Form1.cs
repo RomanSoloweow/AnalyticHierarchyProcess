@@ -200,7 +200,7 @@ namespace AnalyticHierarchyProcess
              tasks.Values.ElementAt(0).matrix[7][5] = 6;
              tasks.Values.ElementAt(0).matrix[7][6] = 2;*/
 
-            tasks.Values.ElementAt(0).CheckAgreed();
+            tasks.Values.ElementAt(0).UpdateAgreed();
             /* 
             tasks.Values.ElementAt(0).matrix[0][1] = 9;
             tasks.Values.ElementAt(0).matrix[0][2] = 5;
