@@ -73,9 +73,6 @@ namespace AnalyticHierarchyProcess
         }
 
 
-
-     
-
         private Dictionary<string, Task.Task> tasks = new Dictionary<string, Task.Task>();
         public void AddTasks(string newTaskName)
         {
