@@ -12,7 +12,7 @@ using InputBox;
 using System.Data.OleDb;
 using Task;
 using Excel = Microsoft.Office.Interop.Excel;
-//using MathNet.Numerics;
+using MathNet.Numerics;
 namespace AnalyticHierarchyProcess
 {
     public partial class Form1 : Form
