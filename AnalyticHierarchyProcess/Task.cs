@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
+using System;
 namespace Task
 {
     public class Task: MatrixTable.MatrixTable
@@ -33,17 +34,17 @@ namespace Task
         public new void AddField(int indexAddingField, string newField)
         {
             base.AddField(indexAddingField, newField);
-                UpdateAgreed();
+                //UpdateAgreed();
         }
         public new void AddField(string newField)
         {
             base.AddField(newField);
-                UpdateAgreed();
+                //UpdateAgreed();
         }
         public new void DeleteField(int indexDeletingField = -1)
         {
             base.DeleteField(indexDeletingField);
-            UpdateAgreed();
+            //UpdateAgreed();
         }
         /// <summary>
         /// Получить коэффициент согласованности
@@ -52,8 +53,8 @@ namespace Task
         public double GetIndexAgreed()
         {
             //если индекс согласованности < 0 - запускаем перерасчет
-            if (I < 0)
-            UpdateAgreed();
+            //if (I < 0)
+            //UpdateAgreed();
             return I;
         }
         /// <summary>
@@ -63,39 +64,32 @@ namespace Task
         public Vector<double> GetVectorPriority()
         {
             //если вектор приоритетов пуст - запускаем перерасчет
-            if (vectorPriority.Count<1)
-                UpdateAgreed();
+           /// if (vectorPriority.Count<1)
+              //  UpdateAgreed();
 
             return vectorPriority;
         }
         /// <summary>
         /// Обновить коэффициент согласованности и вектор приоритетов
         /// </summary>
-        public void UpdateAgreed()
+        public Vector<double> GetVectorPriority(Matrix<double> matrix)
         {
-            if (fields.Count > 3)
-            {
-                //на всякий случай корректируем матрицу
-                FillMatrix();
-                //расчет по формуле из методички
-                int n = fields.Count;
-                Matrix<double> e = Matrix<double>.Build.Dense(n, 1, 1);
-                Matrix<double> eT = Matrix<double>.Build.Dense(1, n, 1);
-                Matrix<double> Ae = matrix * e;
-                double eTAe = (eT * Ae)[0, 0];            //как бы преобразовываем матрицу(1,1) в число (всегда получается число)
-                Matrix<double> W = Ae / eTAe;
-                vectorPriority = W.Column(0);           //как бы преобразовываем матрицу(N,1) в вектор (всегда получается вектор)
-                double Lmax = (eT * matrix * W)[0, 0];    //как бы преобразовываем матрицу(1,1) в число (всегда получается число)
-                I = (Lmax - n) / (n - 1);
-                isAgreed = I < 0.1;
-            }
-            else
-            {
-                I = -1;
-                isAgreed = false;
-                vectorPriority = null;
-            }
-        }
+            int n = matrix.ColumnCount;
+            Vector<double> vectorPriority = Vector<double>.Build.Dense(n, 1);
 
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    vectorPriority[i] *= matrix[i, j];
+         
+            for (int i = 0; i < n; i++)
+                    vectorPriority[i] = Math.Pow(vectorPriority[i],(1.0/(n-1)));
+         
+            double sum = vectorPriority.Sum();
+
+            for (int i = 0; i < n; i++)
+                vectorPriority[i]/= sum;
+        
+                return vectorPriority;
+        }
     }
 }
