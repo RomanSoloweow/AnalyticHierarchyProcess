@@ -44,12 +44,14 @@ namespace AnalyticHierarchyProcess
 
         public static Vector<double> CalcNormalizedPriorities(Vector<double> _vector)
         {
+            //вычисляем сумму вектора
             double summ = 0;
             for (int i = 0; i < _vector.Count; i++)
             {
                 summ += _vector[i];
             }
 
+            //делим каждый элемент вектора на сумму
             for (int i = 0; i < _vector.Count; i++)
             {
                 _vector[i] = _vector[i] / summ;
@@ -59,6 +61,7 @@ namespace AnalyticHierarchyProcess
 
         public static Vector<double> CalcIdealizePriorities(Vector<double> _vector)
         {
+            // ищем максимальный элемент вектора и его индекс
             var normalizedPriorities = CalcNormalizedPriorities(_vector);
             double max = 0;
             int maxi = 0;
@@ -70,7 +73,9 @@ namespace AnalyticHierarchyProcess
                     maxi = i;
                 }
             }
+            // максимальный элемент вектора объявляем единицей
             normalizedPriorities[maxi] = 1;
+            // вычисляем вес элемента относительно максимального
             for (int i = 0; i < normalizedPriorities.Count; i++)
             {
                 if (i!=maxi)
