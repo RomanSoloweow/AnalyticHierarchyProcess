@@ -165,53 +165,12 @@ namespace AnalyticHierarchyProcess
             for(int i=0;i<3;i++)
             ty.Add("1");
             tasks.Add("1", new Task.Task("1", ty));
-             //Console.F
-            tasks.Values.ElementAt(0).SetCellMatrix(0,1,3);
+            tasks.Values.ElementAt(0).SetCellMatrix(0,1,9);
             tasks.Values.ElementAt(0).SetCellMatrix(0,2,5);
-            tasks.Values.ElementAt(0).SetCellMatrix(1,2,2);
-            tasks.Values.ElementAt(0).AddField("q");
-            /* 
-             tasks.Values.ElementAt(0).matrix[0][1] = 5;
-             tasks.Values.ElementAt(0).matrix[0][2] = 3;
-             tasks.Values.ElementAt(0).matrix[0][3] = 7;
-             tasks.Values.ElementAt(0).matrix[0][4] = 6;
-             tasks.Values.ElementAt(0).matrix[0][5] = 6;
-             tasks.Values.ElementAt(0).matrix[1][3] = 5;
-             tasks.Values.ElementAt(0).matrix[1][4] = 3;
-             tasks.Values.ElementAt(0).matrix[1][5] = 3;
-             tasks.Values.ElementAt(0).matrix[2][1] = 3;
-             tasks.Values.ElementAt(0).matrix[2][3] = 6;
-             tasks.Values.ElementAt(0).matrix[2][4] = 3;
-             tasks.Values.ElementAt(0).matrix[2][5] = 4;
-             tasks.Values.ElementAt(0).matrix[4][3] = 3;
-             tasks.Values.ElementAt(0).matrix[5][3] = 4;
-             tasks.Values.ElementAt(0).matrix[5][4] = 2;
-             tasks.Values.ElementAt(0).matrix[6][0] = 3;
-             tasks.Values.ElementAt(0).matrix[6][1] = 5;
-             tasks.Values.ElementAt(0).matrix[6][2] = 2;
-             tasks.Values.ElementAt(0).matrix[6][3] = 7;
-             tasks.Values.ElementAt(0).matrix[6][4] = 5;
-             tasks.Values.ElementAt(0).matrix[6][5] = 5;
-             tasks.Values.ElementAt(0).matrix[7][0] = 4;
-             tasks.Values.ElementAt(0).matrix[7][1] = 7;
-             tasks.Values.ElementAt(0).matrix[7][2] = 5;
-             tasks.Values.ElementAt(0).matrix[7][3] = 8;
-             tasks.Values.ElementAt(0).matrix[7][4] = 6;
-             tasks.Values.ElementAt(0).matrix[7][5] = 6;
-             tasks.Values.ElementAt(0).matrix[7][6] = 2;*/
+            tasks.Values.ElementAt(0).SetCellMatrix(2,1,4);
+            tasks.Values.ElementAt(0).FillMatrix();
+          Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
 
-           // tasks.Values.ElementAt(0).UpdateAgreed();
-        
-
-            /* tasks.Values.ElementAt(0).matrix[0][1] =5;
-            tasks.Values.ElementAt(0).matrix[0][2] = 9;
-            tasks.Values.ElementAt(0).matrix[1][2] = 4;
-            tasks.Values.ElementAt(0).CheckAgreed();*/
-
-
-            // tabs.TabPages[1].Parent = tabs;
-            //  tabs.Update();
-            //tasks.First().Value.CheckAgreed();
         }
 
         private void button2_Click(object sender, EventArgs e)
