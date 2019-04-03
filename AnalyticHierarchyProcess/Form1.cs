@@ -21,6 +21,7 @@ namespace AnalyticHierarchyProcess
         {
             InitializeComponent();
             dataGridViewCriterions.Columns.Add("Критерии", "Критерии");
+            dataGridViewCriterions.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
         string selectedTaskName;
         Dictionary<int, string> scales = new Dictionary<int, string>()
@@ -163,13 +164,16 @@ namespace AnalyticHierarchyProcess
 
             List<string> ty = new List<string>();
             for(int i=0;i<3;i++)
-            ty.Add("1");
+            ty.Add("Критерий №"+i.ToString());
             tasks.Add("1", new Task.Task("1", ty));
-            tasks.Values.ElementAt(0).SetCellMatrix(0,1,9);
-            tasks.Values.ElementAt(0).SetCellMatrix(0,2,5);
-            tasks.Values.ElementAt(0).SetCellMatrix(2,1,4);
+            tasks.Values.ElementAt(0).SetCellMatrix(0,1,5);
+            tasks.Values.ElementAt(0).SetCellMatrix(0,2,7);
+            tasks.Values.ElementAt(0).SetCellMatrix(1,2,3);
             tasks.Values.ElementAt(0).FillMatrix();
           Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
+            Console.WriteLine(tasks.Values.ElementAt(0).matrix);
+            Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
+            tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));
 
         }
 
@@ -207,13 +211,18 @@ namespace AnalyticHierarchyProcess
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (!tasks.ContainsKey(comboBoxAllTask.Text))
-                tabs.SelectedTab = tabTask;
+            //if (!tasks.ContainsKey(comboBoxAllTask.Text))
+             //   tabs.SelectedTab = tabTask;
         }
 
         private void buttonAddOption_Click(object sender, EventArgs e)
         {
         
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

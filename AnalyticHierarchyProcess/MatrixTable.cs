@@ -4,15 +4,17 @@ namespace MatrixTable
 {
     public class MatrixTable
     {
-        public MatrixTable(List<string> _fields)
+        public MatrixTable(string _name,List<string> _fields)
         {
+            name = _name;
             fields = new List<string>(_fields);
-            matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);
+            matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);          
         }
         /// <summary>
         /// Критерии
         /// </summary>
         public List<string> fields = null;
+        string name;
         /// <summary>
         /// Матрица сравнений критериев
         /// </summary>
@@ -135,5 +137,6 @@ namespace MatrixTable
 
                 }
         }
+        
     }
 }

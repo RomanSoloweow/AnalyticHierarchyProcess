@@ -114,7 +114,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(171, 400);
+            this.button1.Location = new System.Drawing.Point(641, 399);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(739, 280);
             this.button1.TabIndex = 9;
@@ -124,7 +124,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(376, 799);
+            this.button2.Location = new System.Drawing.Point(793, 194);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(268, 78);
             this.button2.TabIndex = 10;
@@ -167,9 +167,9 @@
             // 
             // buttonAddOption
             // 
-            this.buttonAddOption.Location = new System.Drawing.Point(557, 256);
+            this.buttonAddOption.Location = new System.Drawing.Point(16, 92);
             this.buttonAddOption.Name = "buttonAddOption";
-            this.buttonAddOption.Size = new System.Drawing.Size(273, 96);
+            this.buttonAddOption.Size = new System.Drawing.Size(238, 63);
             this.buttonAddOption.TabIndex = 11;
             this.buttonAddOption.Text = "Добавить альтернативу";
             this.buttonAddOption.UseVisualStyleBackColor = true;
@@ -188,11 +188,16 @@
             // 
             // dataGridViewCompare
             // 
+            this.dataGridViewCompare.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewCompare.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridViewCompare.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewCompare.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewCompare.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCompare.Location = new System.Drawing.Point(-8, 0);
             this.dataGridViewCompare.Name = "dataGridViewCompare";
+            this.dataGridViewCompare.RowHeadersVisible = false;
             this.dataGridViewCompare.RowTemplate.Height = 33;
-            this.dataGridViewCompare.Size = new System.Drawing.Size(1646, 982);
+            this.dataGridViewCompare.Size = new System.Drawing.Size(1629, 974);
             this.dataGridViewCompare.TabIndex = 0;
             // 
             // tabCriterions
@@ -209,11 +214,16 @@
             // 
             // dataGridViewCriterions
             // 
+            this.dataGridViewCriterions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridViewCriterions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridViewCriterions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewCriterions.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewCriterions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCriterions.Location = new System.Drawing.Point(0, 3);
             this.dataGridViewCriterions.Name = "dataGridViewCriterions";
+            this.dataGridViewCriterions.RowHeadersVisible = false;
             this.dataGridViewCriterions.RowTemplate.Height = 33;
-            this.dataGridViewCriterions.Size = new System.Drawing.Size(1635, 976);
+            this.dataGridViewCriterions.Size = new System.Drawing.Size(1638, 973);
             this.dataGridViewCriterions.TabIndex = 0;
             this.dataGridViewCriterions.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewCriterions_UserAddedRow);
             this.dataGridViewCriterions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCriterions_KeyDown);
@@ -226,7 +236,8 @@
             this.ClientSize = new System.Drawing.Size(1663, 1241);
             this.Controls.Add(this.tabs);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Метод анализа иерархий";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tabs.ResumeLayout(false);
             this.tabTask.ResumeLayout(false);
