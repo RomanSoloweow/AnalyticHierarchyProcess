@@ -13,6 +13,9 @@ using System.Data.OleDb;
 using Task;
 using Option;
 using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+
 namespace AnalyticHierarchyProcess
 {
     public partial class Form1 : Form
@@ -161,6 +164,16 @@ namespace AnalyticHierarchyProcess
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            double[,] data = new double[,]
+            {
+                {  1,  5,  7},
+                { 0.2, 1, 3},
+                { 0.142857,  0.33333, 1}
+            };
+
+            Matrix<double> _matrix = DenseMatrix.OfArray(data);
+            Calculations.Sole(_matrix);
 
             List<string> ty = new List<string>();
             for(int i=0;i<3;i++)
