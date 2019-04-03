@@ -1,48 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.Statistics;
 
 namespace AnalyticHierarchyProcess
 {
     public static class Calculations
     {
 
-        public static Vector<double> Sole(Matrix<double> _matrix)
+        public static Vector<double> Sole(Matrix<double> matrix)
         {
             // максимальное собственное значение
-            double MaxEigenVal = _matrix.Evd().EigenValues.Real().Maximum();
+            double MaxEigenVal = MaxEigenValue(matrix);
+
             //из главной диагонали матрицы вычитаем это собственное значение
-            for (int i = 0; i < _matrix.RowCount; i++)
-            {
-                for (int j = 0; j < _matrix.ColumnCount; j++)
-                {
-                    if (i == j)
-                        _matrix[i, j] = _matrix[i, j] - MaxEigenVal;
-                }
-            }
-            //создаем вектор, необходимый для решения слау
-            var _vector = Vector<double>.Build.Dense(_matrix.RowCount - 1);
-            _vector = _matrix.Column(0) * (-1);
-            _vector = _vector.SubVector(0, _vector.Count - 1);
+            matrix.SetDiagonal((matrix.Diagonal() - MaxEigenVal));
+
+            int n = matrix.RowCount;
+            //создаем вектор, необходимый для решения слау (первый столбец умножанный на -1, без 1 элемента
+            Vector<double> _vector = Vector<double>.Build.DenseOfVector((matrix.Column(0) * (-1)).SubVector(0, n - 1));
 
             //преобразуем матрицу для слау
-            _matrix = _matrix.RemoveColumn(0);
-            _matrix = _matrix.RemoveRow(_matrix.RowCount - 1);
+            matrix = matrix.RemoveColumn(0);
+            matrix = matrix.RemoveRow(n - 1);
 
-            //вычисляем решение
-            var result = _matrix.Solve(_vector);
-           //создаем результирующий вектор
-           var result1 = Vector<double>.Build.Dense(result.Count + 1);
-            result1[0] = 1;
-            for (int i = 1; i < result1.Count; i++)
-            {
-                result1[i] = result[i - 1];
-            }
-            Console.WriteLine(result1);
-            return (result1);
+            //вычисляем решение 
+            Vector<double> result = Vector<double>.Build.Dense(n, 1);
+            matrix.Solve(_vector).CopySubVectorTo(result, 0, 1, _vector.Count);
+
+            return result;
         }
-
         public static Vector<double> CalcNormalizedPriorities(Vector<double> _vector)
         {
             //вычисляем сумму вектора
@@ -59,7 +45,6 @@ namespace AnalyticHierarchyProcess
             }
             return (_vector);
         }
-
         public static Vector<double> CalcIdealizePriorities(Vector<double> _vector)
         {
             // ищем максимальный элемент вектора и его индекс
@@ -85,7 +70,34 @@ namespace AnalyticHierarchyProcess
 
             return (normalizedPriorities);
         }
+        public static Vector<double> GetVectorPriority(Matrix<double> matrix)
+        {
+            int n = matrix.ColumnCount;
+            Vector<double> vectorPriority = Vector<double>.Build.Dense(n, 1);
 
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    vectorPriority[i] *= matrix[i, j];
+
+            for (int i = 0; i < n; i++)
+                vectorPriority[i] = Math.Pow(vectorPriority[i], (1.0 / (n - 1)));
+
+            double sum = vectorPriority.Sum();
+
+            for (int i = 0; i < n; i++)
+                vectorPriority[i] /= sum;
+            return vectorPriority;
+        }
+        public static double GetIndexAgreed(Matrix<double> matrix)
+        {
+            int n = matrix.ColumnCount;
+            double I = (MaxEigenValue(matrix) - n) / (n - 1);
+            return I;
+        }
+        public static double MaxEigenValue(Matrix<double> matrix)
+        {
+            return matrix.Evd().EigenValues.Real().Maximum();
+        }
         public static double CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             // Посчет нормированных приоритетов для каждого из критериев
@@ -106,7 +118,6 @@ namespace AnalyticHierarchyProcess
 
             return (result.Maximum());
         }
-
         public static double CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             // Посчет идеализированных приоритетов для каждого из критериев
