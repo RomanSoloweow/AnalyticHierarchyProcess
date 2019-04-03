@@ -10,67 +10,39 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace AnalyticHierarchyProcess
 {
-    public class Calculations
+    public static class Calculations
     {
-        public Calculations(Task.Task task) {
-            task.GetIndexAgreed();
 
-        }
-
-        public int CalcCR() {
-            return 0;
-        }
-
-        public void Sole(Matrix<double> _matrix) {
-
-            /*
-                на вход подается матрица
-                вычисляем ее максимальное собственное значение
-                из главной диагонали матрицы вычитаем это собственное значение
-                создаем вектор, необходимый для решения слау
-                изменяем матрицу для решения слау
-                решаем слау 
-            */
-
+        public static Vector<double> Sole(Matrix<double> _matrix) {
             // максимальное собственное значение
-            double MaxEigenVal = MaxEigenValue(_matrix);
-
+            double MaxEigenVal = _matrix.Evd().EigenValues.Real().Maximum();
             //из главной диагонали матрицы вычитаем это собственное значение
             for (int i=0; i < _matrix.RowCount; i++) {
                 for (int j = 0; j < _matrix.ColumnCount; j++)
                 {
                     if (i == j)
-                        _matrix[i, j] = MaxEigenVal;
+                        _matrix[i, j] = _matrix[i, j]-MaxEigenVal;
                 }
             }
-
             //создаем вектор, необходимый для решения слау
             var _vector = Vector<double>.Build.Dense(_matrix.RowCount-1);
             _vector = _matrix.Column(0)*(-1);
+            _vector = _vector.SubVector(0, _vector.Count-1);
 
+            //преобразуем матрицу для слау
             _matrix = _matrix.RemoveColumn(0);
-            _matrix = _matrix.RemoveRow(0);
+            _matrix = _matrix.RemoveRow(_matrix.RowCount-1);
 
+            //вычисляем решение
+            var result = _matrix.Solve(_vector);
 
-            double[,] data = new double[,]
-        {
-            {  2,  0,  3},
-            { 10, -3, -6},
-            { -1,  0, -2}
-        };
-
-            Matrix<double> matrix = DenseMatrix.OfArray(data);
-            Console.WriteLine(matrix);
-
-            var eigen = matrix.Evd();
-            var values = eigen.EigenValues.Enumerate().GetEnumerator();
-            var vectors = eigen.EigenVectors.EnumerateColumns().GetEnumerator();
-
-            while (vectors.MoveNext() && values.MoveNext())
-            {
-                Console.WriteLine("Собственный вектор при {0}:\n{1}",
-                    values.Current, vectors.Current);
+            //создаем результирующий вектор
+            var result1 = Vector<double>.Build.Dense(result.Count+1);
+            result1[0] = 1;
+            for (int i=1; i<result1.Count;i++) {
+                result1[i] = result[i - 1];
             }
+            Console.WriteLine(result1);
+            return (result1);
         }
-    }
 }
