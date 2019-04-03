@@ -11,10 +11,9 @@ namespace AnalyticHierarchyProcess
     public class Calculations
     {
         Task.Task task;
-        MatrixTable.MatrixTable
-            List<>
+   
 
-       public  Calculations(Task.Task _task)
+       public Calculations(Task.Task _task)
         {
             task = _task;
         }
