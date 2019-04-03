@@ -84,8 +84,7 @@ namespace AnalyticHierarchyProcess
 
             return tasks[selectedTaskName];
         }
-
-        
+       
         public void AddTasks(string newTaskName)
         {
             tasks.Add(newTaskName, new Task.Task(newTaskName, GetCriterions()));
@@ -113,7 +112,7 @@ namespace AnalyticHierarchyProcess
             }
             return dataGridViewComboBoxCell;
         }     
-        public void updateВataGridViewCompare(string selectedTaskName)
+        public void updateDataGridViewCompare(string selectedTaskName)
         {
             dataGridViewCompare.Rows.Clear();
             dataGridViewCompare.Columns.Clear();
@@ -135,7 +134,7 @@ namespace AnalyticHierarchyProcess
                     if ((i < j - 1) && (j >= 1))
                     {
                         dataGridViewCompare[j, i] = GetDataGridViewComboBoxCell();
-                        // dataGridViewTasks[j, i].Value = scales[tasks[comboBoxAllTask.Text].matrix[i][j - 1]].ToString();
+                        // dataGridViewTasks[j, i].Value = scales[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
                         dataGridViewCompare[j, i].Value = scales[9].ToString();
                     }
                     if ((i >= j - 1) && (j >= 1))
@@ -172,13 +171,14 @@ namespace AnalyticHierarchyProcess
         {
 
             List<string> ty = new List<string>();
-            for(int i=0;i<2;i++)
+            for(int i=0;i<3;i++)
             ty.Add("1");
             tasks.Add("1", new Task.Task("1", ty));
-
-
-
-            tasks.Values.ElementAt(0).matrix[0][1] = 3;
+             
+            tasks.Values.ElementAt(0).matrix[0,1] = 3;
+            tasks.Values.ElementAt(0).matrix[0,2] = 5;
+            tasks.Values.ElementAt(0).matrix[1,2] = 2;
+            tasks.Values.ElementAt(0).AddCriterion();
             /* 
              tasks.Values.ElementAt(0).matrix[0][1] = 5;
              tasks.Values.ElementAt(0).matrix[0][2] = 3;
@@ -210,10 +210,7 @@ namespace AnalyticHierarchyProcess
              tasks.Values.ElementAt(0).matrix[7][6] = 2;*/
 
             tasks.Values.ElementAt(0).UpdateAgreed();
-            /* 
-            tasks.Values.ElementAt(0).matrix[0][1] = 9;
-            tasks.Values.ElementAt(0).matrix[0][2] = 5;
-            tasks.Values.ElementAt(0).matrix[2][1] = 4;*/
+        
 
             /* tasks.Values.ElementAt(0).matrix[0][1] =5;
             tasks.Values.ElementAt(0).matrix[0][2] = 9;
@@ -233,7 +230,7 @@ namespace AnalyticHierarchyProcess
 
         private void comboBoxAllTask_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateВataGridViewCompare(comboBoxAllTask.Text);
+            updateDataGridViewCompare(comboBoxAllTask.Text);
 
         }
 

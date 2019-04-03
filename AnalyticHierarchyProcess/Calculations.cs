@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
+using Task;
 namespace AnalyticHierarchyProcess
 {
     public class Calculations
     {
-        GetIndexAgreed();
+       public  Calculations(Task.Task task)
+        {
+        }
+      
     }
 }

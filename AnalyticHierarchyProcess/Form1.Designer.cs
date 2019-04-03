@@ -39,17 +39,17 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabTask = new System.Windows.Forms.TabPage();
-            this.tabCriterions = new System.Windows.Forms.TabPage();
+            this.buttonAddOption = new System.Windows.Forms.Button();
             this.tabCompare = new System.Windows.Forms.TabPage();
             this.dataGridViewCompare = new System.Windows.Forms.DataGridView();
+            this.tabCriterions = new System.Windows.Forms.TabPage();
             this.dataGridViewCriterions = new System.Windows.Forms.DataGridView();
-            this.buttonAddOption = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tabs.SuspendLayout();
             this.tabTask.SuspendLayout();
-            this.tabCriterions.SuspendLayout();
             this.tabCompare.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).BeginInit();
+            this.tabCriterions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,11 +113,12 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(95, 376);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(734, 316);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(264, 55);
+            this.button1.Size = new System.Drawing.Size(739, 280);
             this.button1.TabIndex = 9;
-            this.button1.Text = "Текст";
+            this.button1.Text = "Тест";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -164,17 +165,15 @@
             this.tabTask.Text = "Цель";
             this.tabTask.UseVisualStyleBackColor = true;
             // 
-            // tabCriterions
+            // buttonAddOption
             // 
-            this.tabCriterions.AutoScroll = true;
-            this.tabCriterions.Controls.Add(this.dataGridViewCriterions);
-            this.tabCriterions.Location = new System.Drawing.Point(8, 39);
-            this.tabCriterions.Name = "tabCriterions";
-            this.tabCriterions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCriterions.Size = new System.Drawing.Size(1641, 982);
-            this.tabCriterions.TabIndex = 1;
-            this.tabCriterions.Text = "Критерии";
-            this.tabCriterions.UseVisualStyleBackColor = true;
+            this.buttonAddOption.Location = new System.Drawing.Point(557, 256);
+            this.buttonAddOption.Name = "buttonAddOption";
+            this.buttonAddOption.Size = new System.Drawing.Size(273, 96);
+            this.buttonAddOption.TabIndex = 11;
+            this.buttonAddOption.Text = "Добавить альтернативу";
+            this.buttonAddOption.UseVisualStyleBackColor = true;
+            this.buttonAddOption.Click += new System.EventHandler(this.buttonAddOption_Click);
             // 
             // tabCompare
             // 
@@ -196,6 +195,18 @@
             this.dataGridViewCompare.Size = new System.Drawing.Size(1646, 982);
             this.dataGridViewCompare.TabIndex = 0;
             // 
+            // tabCriterions
+            // 
+            this.tabCriterions.AutoScroll = true;
+            this.tabCriterions.Controls.Add(this.dataGridViewCriterions);
+            this.tabCriterions.Location = new System.Drawing.Point(8, 39);
+            this.tabCriterions.Name = "tabCriterions";
+            this.tabCriterions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCriterions.Size = new System.Drawing.Size(1641, 982);
+            this.tabCriterions.TabIndex = 1;
+            this.tabCriterions.Text = "Критерии";
+            this.tabCriterions.UseVisualStyleBackColor = true;
+            // 
             // dataGridViewCriterions
             // 
             this.dataGridViewCriterions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -206,16 +217,6 @@
             this.dataGridViewCriterions.TabIndex = 0;
             this.dataGridViewCriterions.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewCriterions_UserAddedRow);
             this.dataGridViewCriterions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCriterions_KeyDown);
-            // 
-            // buttonAddOption
-            // 
-            this.buttonAddOption.Location = new System.Drawing.Point(557, 256);
-            this.buttonAddOption.Name = "buttonAddOption";
-            this.buttonAddOption.Size = new System.Drawing.Size(273, 96);
-            this.buttonAddOption.TabIndex = 11;
-            this.buttonAddOption.Text = "Добавить альтернативу";
-            this.buttonAddOption.UseVisualStyleBackColor = true;
-            this.buttonAddOption.Click += new System.EventHandler(this.buttonAddOption_Click);
             // 
             // Form1
             // 
@@ -230,9 +231,9 @@
             this.tabs.ResumeLayout(false);
             this.tabTask.ResumeLayout(false);
             this.tabTask.PerformLayout();
-            this.tabCriterions.ResumeLayout(false);
             this.tabCompare.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).EndInit();
+            this.tabCriterions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).EndInit();
             this.ResumeLayout(false);
 
