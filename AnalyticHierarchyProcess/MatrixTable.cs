@@ -10,11 +10,17 @@ namespace MatrixTable
             fields = new List<string>(_fields);
             matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);          
         }
+        public MatrixTable(string _name)
+        {
+            name = _name;
+            fields = new List<string>();
+            matrix = Matrix<double>.Build.Dense(1,1, 1);
+        }
         /// <summary>
         /// Критерии
         /// </summary>
         public List<string> fields = null;
-        string name;
+        public string name;
         /// <summary>
         /// Матрица сравнений критериев
         /// </summary>
@@ -24,13 +30,18 @@ namespace MatrixTable
         /// <param name="indexAddingField">Индекс добавляемого критерия</param>
         /// <param name="newField">Добавляемый критерий</param>
         public void AddField(int indexAddingField, string newField)
-        {
+        {            
             if (indexAddingField == -1)
                 indexAddingField = fields.Count;
 
             fields.Insert(indexAddingField, newField);
-            //расширяем матрицу
+                //расширяем матрицу
             ExpandMatrix(indexAddingField);
+
+        }
+        public int CountFiields()
+        {
+            return (fields!= null)?fields.Count:0;
         }
         /// <summary>
         /// Добавить критерий в конец.

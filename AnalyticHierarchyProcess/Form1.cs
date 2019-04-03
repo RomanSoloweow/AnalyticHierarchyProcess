@@ -14,6 +14,7 @@ using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using matrixTable = MatrixTable.MatrixTable;
+
 namespace AnalyticHierarchyProcess
 {
     public partial class Form1 : Form
@@ -21,8 +22,8 @@ namespace AnalyticHierarchyProcess
         public Form1()
         {
             InitializeComponent();
-            dataGridViewCriterions.Columns.Add("Критерии", "Критерии");
-            dataGridViewCriterions.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+          /// dataGridViewCriterions.Columns.Add("Критерии", "Критерии");
+            // dataGridViewCriterions.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
         string selectedTaskName;
         Dictionary<int, string> scales = new Dictionary<int, string>()
@@ -81,6 +82,11 @@ namespace AnalyticHierarchyProcess
         /// <returns>Task, если выбрана цель, null если не выбрана</returns>
         public matrixTable GetSelectedTask()
         {
+            if (dataGridViewTasks.SelectedCells.Count == 0)
+                return null;
+
+            string selectedTaskName = dataGridViewTasks.SelectedCells[0].Value.ToString();
+
             if (!tasks.ContainsKey(selectedTaskName))
                 return null;
 
@@ -182,8 +188,8 @@ namespace AnalyticHierarchyProcess
             tasks.Values.ElementAt(0).SetCellMatrix(1,2,3);
             tasks.Values.ElementAt(0).FillMatrix();
         //  Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
-         //   Console.WriteLine(tasks.Values.ElementAt(0).matrix);
-         //   Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
+          //  Console.WriteLine(tasks.Values.ElementAt(0).matrix);
+           // Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
             tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));
 
         }
@@ -206,9 +212,10 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
+            int indexDeletedRow = dataGridViewCriterions.CurrentRow.Index;
+            if ((e.KeyCode == Keys.Delete)&&(indexDeletedRow<(dataGridViewCriterions.RowCount - 1)))
             {
-                int indexDeletedRow = dataGridViewCriterions.CurrentRow.Index;
+               
                 dataGridViewCriterions.Rows.RemoveAt(indexDeletedRow);
                 //   Program.formTasks.DeleteCriterionForAllTask(indexDeletedRow);
 
@@ -236,9 +243,60 @@ namespace AnalyticHierarchyProcess
 
         }
 
-        private void dataGridViewTasks_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        private void buttonAddCriterion_Click(object sender, EventArgs e)
+        {
+            matrixTable SelectedTask = GetSelectedTask();
+            if (SelectedTask != null)
+            {
+                string newCriterionName = textBoxCriterionName.Text;
+                if (newCriterionName != String.Empty)
+                {
+                    if (!SelectedTask.fields.Contains(newCriterionName))
+                    {
+                        SelectedTask.AddField(newCriterionName);
+                        dataGridViewCriterions.Rows.Add(newCriterionName);
+                        textBoxCriterionName.Text = String.Empty;
+                    }
+                    else
+                        MessageBox.Show("Критерий уже существует");
+                }
+                else
+                    MessageBox.Show("Необходимо вести название критерия");
+            }
+            else
+                MessageBox.Show("Необходимо выбрать или создать цель");
+
+        }
+
+        private void buttonAddTask_Click(object sender, EventArgs e)
         {
 
+            string newTaskName = textBoxTaskName.Text;
+
+            if (newTaskName != string.Empty)
+            {
+                if (!tasks.ContainsKey(newTaskName))
+                {
+                    tasks.Add(newTaskName, new matrixTable(newTaskName));
+                    dataGridViewTasks.Rows.Add(newTaskName);
+                    textBoxTaskName.Text = String.Empty;
+                }
+                else
+                    MessageBox.Show("Цель уже существует");
+
+            }
+            else
+                MessageBox.Show("Введите название цели");
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewTasks_SelectionChanged(object sender, EventArgs e)
+        {
+            labelSelectedTask.Text = GetSelectedTask()?.name;
         }
     }
 }

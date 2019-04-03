@@ -32,33 +32,20 @@ namespace AnalyticHierarchyProcess
         public static Vector<double> CalcNormalizedPriorities(Vector<double> _vector)
         {
             //вычисляем сумму вектора
-            double summ = 0;
-            for (int i = 0; i < _vector.Count; i++)
-            {
-                summ += _vector[i];
-            }
+            double summ = _vector.Sum();
 
             //делим каждый элемент вектора на сумму
-            for (int i = 0; i < _vector.Count; i++)
-            {
-                _vector[i] = _vector[i] / summ;
-            }
+            _vector.Divide(summ);
+
             return (_vector);
         }
         public static Vector<double> CalcIdealizePriorities(Vector<double> _vector)
         {
             // ищем максимальный элемент вектора и его индекс
             var normalizedPriorities = CalcNormalizedPriorities(_vector);
-            double max = 0;
-            int maxi = 0;
-            for (int i = 0; i < normalizedPriorities.Count; i++)
-            {
-                if (normalizedPriorities[i] > max)
-                {
-                    max = normalizedPriorities[i];
-                    maxi = i;
-                }
-            }
+            double max = _vector.Maximum();
+            int maxi = _vector.MaximumIndex();
+
             // максимальный элемент вектора объявляем единицей
             normalizedPriorities[maxi] = 1;
             // вычисляем вес элемента относительно максимального
@@ -135,15 +122,8 @@ namespace AnalyticHierarchyProcess
                 for (int j = 0; j < lengthOfVector; j++)
                     result[j] += vectorList[i][j];
             }
-            double summ = 0;
-            for (int i = 0; i < result.Count; i++)
-            {
-                summ += result[i];
-            }
-            for (int i = 0; i < result.Count; i++)
-            {
-                result[i] = result[i]/summ;
-            }
+            double summ =result.Sum();
+            result.Divide(summ);
             return (result.Maximum());
         }
     }
