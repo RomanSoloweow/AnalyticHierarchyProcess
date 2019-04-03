@@ -20,7 +20,7 @@ namespace MatrixTable
         /// Критерии
         /// </summary>
         public List<string> fields = null;
-        public string name;
+        public string name=null;
         /// <summary>
         /// Матрица сравнений критериев
         /// </summary>
@@ -42,6 +42,10 @@ namespace MatrixTable
         public int CountFiields()
         {
             return (fields!= null)?fields.Count:0;
+        }
+        public void SetName(string _name)
+        {
+            name = _name;
         }
         /// <summary>
         /// Добавить критерий в конец.

@@ -26,7 +26,7 @@ namespace AnalyticHierarchyProcess
             // dataGridViewCriterions.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
         string selectedTaskName;
-        Dictionary<int, string> scales = new Dictionary<int, string>()
+        Dictionary<int, string> scalesInt = new Dictionary<int, string>()
         {
             {1, "Одинаковая значимость"},
             {2, "Почти слабая значимость"},
@@ -37,6 +37,18 @@ namespace AnalyticHierarchyProcess
             {7, "Очевидная значимость"},
             {8, "Почти абсолютная значимость"},
             {9, "Абсолютная значимость"}
+        };
+        Dictionary<string,int> scalesString = new Dictionary<string,int>()
+        {
+            {"Одинаковая значимость",1},
+            {"Почти слабая значимость",2},
+            {"Cлабая значимость",3},
+            {"Почти существенная значимость",4},
+            {"Существенная значимость",5},
+            {"Почти очевидная значимость",6},
+            {"Очевидная значимость",7},
+            {"Почти абсолютная значимость",8},
+            {"Абсолютная значимость",9}
         };
         private Dictionary<string, matrixTable> tasks = new Dictionary<string, matrixTable>();
         public List<string> GetCriterions()
@@ -80,23 +92,23 @@ namespace AnalyticHierarchyProcess
         /// Получить текущую выбранную цель
         /// </summary>
         /// <returns>Task, если выбрана цель, null если не выбрана</returns>
-        public matrixTable GetSelectedTask()
+        public  matrixTable GetSelectedTask()
         {
             if (dataGridViewTasks.SelectedCells.Count == 0)
                 return null;
 
-            string selectedTaskName = dataGridViewTasks.SelectedCells[0].Value.ToString();
+                string selectedTaskName = dataGridViewTasks.SelectedCells[0].Value.ToString();
 
             if (!tasks.ContainsKey(selectedTaskName))
                 return null;
 
-            return tasks[selectedTaskName];
+            return  tasks[selectedTaskName];
         }
        
         private DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
-            foreach (string value in scales.Values)
+            foreach (string value in scalesInt.Values)
             {
                 dataGridViewComboBoxCell.Items.Add(value);
             }
@@ -125,11 +137,11 @@ namespace AnalyticHierarchyProcess
                         {
 
                             dataGridViewCompare[j, i] = GetDataGridViewComboBoxCell();
-                            // dataGridViewTasks[j, i].Value = scales[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
-                            dataGridViewCompare[j, i].Value = scales[9].ToString();
+                                // dataGridViewTasks[j, i].Value = scalesInt[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
+                                dataGridViewCompare[j, i].Value = scalesInt[9].ToString();
                             if (i == (j-1))
                             {
-                                dataGridViewCompare[j, i].Value = scales[1].ToString();
+                                dataGridViewCompare[j, i].Value = scalesInt[1].ToString();
                                 dataGridViewCompare[j, i].ReadOnly = true;
                             }
                         }
@@ -137,7 +149,10 @@ namespace AnalyticHierarchyProcess
                     };
             }
         }
+        public void UpdateDataGridViewTasks(List<string> _tasks)
+        {
         
+        }
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -245,7 +260,40 @@ namespace AnalyticHierarchyProcess
             {
                 UpdateDataGridViewCompare(GetSelectedTask());
             }
+            if (tabs.SelectedTab == tabTask)
+            {
+                dataGridViewTasks.Rows.Clear();
+                tasks.Keys.ToList().ForEach(x => dataGridViewTasks.Rows.Add(x));
+            }
 
+        }
+
+        private void dataGridViewTasks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewTasks.SelectedCells.Count > 0)
+            {
+                DataGridViewCell selectedCell = dataGridViewTasks.SelectedCells[0];
+                string oldkey = tasks.Keys.ToList()[selectedCell.RowIndex];
+                matrixTable oldvalue = tasks[oldkey];
+                tasks.Remove(oldkey);
+                tasks.Add(selectedCell.Value.ToString(), oldvalue);
+                GetSelectedTask().name= selectedCell.Value.ToString();
+                labelSelectedTask.Text = selectedCell.Value.ToString();
+            }
+        }
+
+        private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridViewCriterions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewCriterions.SelectedCells.Count>0)
+            {
+                DataGridViewCell selectedCell = dataGridViewCriterions.SelectedCells[0];
+                GetSelectedTask().fields[selectedCell.RowIndex] = selectedCell.Value.ToString();
+            }
         }
     }
 }

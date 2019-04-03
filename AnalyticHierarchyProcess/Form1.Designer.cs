@@ -128,6 +128,7 @@
             this.dataGridViewCompare.RowTemplate.Height = 33;
             this.dataGridViewCompare.Size = new System.Drawing.Size(1616, 839);
             this.dataGridViewCompare.TabIndex = 0;
+            this.dataGridViewCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCompare_CellValueChanged);
             // 
             // tabTask
             // 
@@ -162,8 +163,8 @@
             // 
             this.dataGridViewTasks.AllowUserToAddRows = false;
             this.dataGridViewTasks.AllowUserToDeleteRows = false;
-            this.dataGridViewTasks.AllowUserToResizeColumns = false;
-            this.dataGridViewTasks.AllowUserToResizeRows = false;
+            this.dataGridViewTasks.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewTasks.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridViewTasks.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dataGridViewTasks.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -177,12 +178,14 @@
             this.dataGridViewTasks.RowTemplate.Height = 33;
             this.dataGridViewTasks.Size = new System.Drawing.Size(1623, 858);
             this.dataGridViewTasks.TabIndex = 0;
+            this.dataGridViewTasks.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTasks_CellValueChanged);
             this.dataGridViewTasks.SelectionChanged += new System.EventHandler(this.dataGridViewTasks_SelectionChanged);
             // 
             // ColumnTasks
             // 
             this.ColumnTasks.HeaderText = "ColumnTasks";
             this.ColumnTasks.Name = "ColumnTasks";
+            this.ColumnTasks.Width = 5;
             // 
             // tabCriterions
             // 
@@ -220,8 +223,8 @@
             this.dataGridViewCriterions.AllowUserToAddRows = false;
             this.dataGridViewCriterions.AllowUserToResizeColumns = false;
             this.dataGridViewCriterions.AllowUserToResizeRows = false;
-            this.dataGridViewCriterions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.dataGridViewCriterions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridViewCriterions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewCriterions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridViewCriterions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dataGridViewCriterions.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewCriterions.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -230,12 +233,13 @@
             this.dataGridViewCriterions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnCriterions});
             this.dataGridViewCriterions.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.dataGridViewCriterions.Location = new System.Drawing.Point(6, 93);
+            this.dataGridViewCriterions.Location = new System.Drawing.Point(6, 104);
             this.dataGridViewCriterions.Name = "dataGridViewCriterions";
             this.dataGridViewCriterions.RowHeadersVisible = false;
             this.dataGridViewCriterions.RowTemplate.Height = 33;
-            this.dataGridViewCriterions.Size = new System.Drawing.Size(1563, 830);
+            this.dataGridViewCriterions.Size = new System.Drawing.Size(1615, 819);
             this.dataGridViewCriterions.TabIndex = 0;
+            this.dataGridViewCriterions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCriterions_CellValueChanged);
             this.dataGridViewCriterions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCriterions_KeyDown);
             // 
             // ColumnCriterions
