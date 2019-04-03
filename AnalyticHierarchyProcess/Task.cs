@@ -19,6 +19,9 @@ namespace Task
         /// Список критериев цели
         /// </summary>
         public List<string> criterions = null;
+        /// <summary>
+        /// Матрица сравнений критериев
+        /// </summary>
         public Matrix<double> matrix;
         /// <summary>
         /// Вектор приоритетов
@@ -132,10 +135,10 @@ namespace Task
             Matrix<double> e = Matrix<double>.Build.Dense(n, 1, 1);
             Matrix<double> eT = Matrix<double>.Build.Dense(1, n, 1);
             Matrix<double> Ae = matrix*e;
-            double eTAe = (eT*Ae)[0, 0];
+            double eTAe = (eT*Ae)[0, 0];            //как бы преобразовываем матрицу(1,1) в число (всегда получается число)
             Matrix<double> W = Ae / eTAe;
-            vectorPriority = W.Column(0);
-            double Lmax = (eT * matrix*W)[0, 0];
+            vectorPriority = W.Column(0);           //как бы преобразовываем матрицу(N,1) в вектор (всегда получается вектор)
+            double Lmax = (eT * matrix*W)[0, 0];    //как бы преобразовываем матрицу(1,1) в число (всегда получается число)
             I = (Lmax-n)/(n-1);
             isAgreed = I < 0.1;
         }
