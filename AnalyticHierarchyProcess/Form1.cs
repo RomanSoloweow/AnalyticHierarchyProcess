@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using InputBox;
 using System.Data.OleDb;
 using Task;
-using Excel = Microsoft.Office.Interop.Excel;
+using Option;
 using MathNet.Numerics;
 namespace AnalyticHierarchyProcess
 {
@@ -93,16 +93,7 @@ namespace AnalyticHierarchyProcess
         {
             return tasks.Keys.ToList<string>();
         }
-        public void AddCriterionForAllTask(int index = -1)
-        {
-            for (int i = 0; i < tasks.Count; i++)
-                tasks.ElementAt(i).Value.AddCriterion(index);
-        }
-        public void DeleteCriterion(int indexDeletedRow)
-        {
-            for (int i = 0; i < tasks.Count; i++)
-                tasks.ElementAt(i).Value.DeleteCriterion(indexDeletedRow);
-        }
+ 
         private DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
@@ -174,11 +165,11 @@ namespace AnalyticHierarchyProcess
             for(int i=0;i<3;i++)
             ty.Add("1");
             tasks.Add("1", new Task.Task("1", ty));
-             
-            tasks.Values.ElementAt(0).matrix[0,1] = 3;
-            tasks.Values.ElementAt(0).matrix[0,2] = 5;
-            tasks.Values.ElementAt(0).matrix[1,2] = 2;
-            tasks.Values.ElementAt(0).AddCriterion();
+             //Console.F
+            tasks.Values.ElementAt(0).SetCellMatrix(0,1,3);
+            tasks.Values.ElementAt(0).SetCellMatrix(0,2,5);
+            tasks.Values.ElementAt(0).SetCellMatrix(1,2,2);
+           // tasks.Values.ElementAt(0).AddCriterion();
             /* 
              tasks.Values.ElementAt(0).matrix[0][1] = 5;
              tasks.Values.ElementAt(0).matrix[0][2] = 3;
@@ -253,7 +244,6 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewCriterions_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
-            AddCriterionForAllTask();
         }
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
