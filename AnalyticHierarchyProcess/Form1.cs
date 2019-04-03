@@ -93,15 +93,6 @@ namespace AnalyticHierarchyProcess
             return tasks[selectedTaskName];
         }
        
-        public void AddTasks(string newTaskName)
-        {
-            tasks.Add(newTaskName, new matrixTable(newTaskName, GetCriterions()));
-        }
-        public List<string> GetTasksNames()
-        {
-            return tasks.Keys.ToList<string>();
-        }
- 
         private DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
@@ -111,61 +102,42 @@ namespace AnalyticHierarchyProcess
             }
             return dataGridViewComboBoxCell;
         }     
-        public void updateDataGridViewCompare(string selectedTaskName)
+        public void UpdateDataGridViewCompare(matrixTable table)
         {
             dataGridViewCompare.Rows.Clear();
             dataGridViewCompare.Columns.Clear();
-            dataGridViewCompare.Width = 0;
-            if (!tasks.ContainsKey(selectedTaskName))
-                return;
+           // dataGridViewCompare.Width = 0;
+           if(table!=null)
+            if (table.fields.Count > 0)
+            {
+                string columnName = "";
+                dataGridViewCompare.Columns.Add(" ", " ");
+                table.fields.ForEach(x => dataGridViewCompare.Columns.Add(x, x));
+                table.fields.ForEach(x => dataGridViewCompare.Rows.Add(x, x));
+                for (int i = 0; i < table.CountFiields(); i++)
+                    dataGridViewCompare.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-            dataGridViewCompare.Columns.Add(" ", " ");
 
-            List<string> columnsNames = GetCriterions();
-            columnsNames.ForEach(columnName => dataGridViewCompare.Columns.Add(columnName, columnName));
-
-            foreach (string columnName in columnsNames)
-                dataGridViewCompare.Rows.Add(columnName);
-
-            for (int i = 0; i < dataGridViewCompare.Rows.Count; i++)
-                for (int j = 0; j < dataGridViewCompare.ColumnCount; j++)
-                {
-                    if ((i < j - 1) && (j >= 1))
+                for (int i = 0; i < dataGridViewCompare.RowCount; i++)
+                    for (int j = 0; j < dataGridViewCompare.Columns.Count; j++)
                     {
-                        dataGridViewCompare[j, i] = GetDataGridViewComboBoxCell();
-                        // dataGridViewTasks[j, i].Value = scales[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
-                        dataGridViewCompare[j, i].Value = scales[9].ToString();
-                    }
-                    if ((i >= j - 1) && (j >= 1))
-                    {
-                        dataGridViewCompare[j, i].ReadOnly = true;
-                        dataGridViewCompare[j, i].Value = scales[-1].ToString();
-                    }
-                };
+                        if (j >= 1)
+                        {
+
+                            dataGridViewCompare[j, i] = GetDataGridViewComboBoxCell();
+                            // dataGridViewTasks[j, i].Value = scales[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
+                            dataGridViewCompare[j, i].Value = scales[9].ToString();
+                            if (i == (j-1))
+                            {
+                                dataGridViewCompare[j, i].Value = scales[1].ToString();
+                                dataGridViewCompare[j, i].ReadOnly = true;
+                            }
+                        }
+                       
+                    };
+            }
         }
         
-        private void AddTask_Click(object sender, EventArgs e)
-        {          
-            string taskName = string.Empty;
-
-            if (InputBoxs.InputBox("Input task", "Введите цель", ref taskName) == DialogResult.Cancel)
-                return;
-
-            comboBoxAllTask.DataSource = GetTasksNames();
-            comboBoxAllTask.SelectedIndex = -1;
-        }
-
-        private void ButtonOpenFile_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void buttonClear_Click(object sender, EventArgs e)
-        {
-            comboBoxAllTask.SelectedIndex = -1;
-        }
-
-
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -194,54 +166,17 @@ namespace AnalyticHierarchyProcess
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-          //Program.formCriterions.UpdateForm();
-        }
-
-        private void comboBoxAllTask_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            updateDataGridViewCompare(comboBoxAllTask.Text);
-
-        }
-
-        private void tabs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-         
-        }
 
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
         {
             int indexDeletedRow = dataGridViewCriterions.CurrentRow.Index;
             if ((e.KeyCode == Keys.Delete)&&(indexDeletedRow<(dataGridViewCriterions.RowCount - 1)))
-            {
-               
+            {              
                 dataGridViewCriterions.Rows.RemoveAt(indexDeletedRow);
-                //   Program.formTasks.DeleteCriterionForAllTask(indexDeletedRow);
-
-                //this.UpdateForm();
+                GetSelectedTask().DeleteField(indexDeletedRow);
             }
         }
 
-        private void dataGridViewCriterions_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-        }
-
-        private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
-        {
-            //if (!tasks.ContainsKey(comboBoxAllTask.Text))
-             //   tabs.SelectedTab = tabTask;
-        }
-
-        private void buttonAddOption_Click(object sender, EventArgs e)
-        {
-        
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void buttonAddCriterion_Click(object sender, EventArgs e)
         {
@@ -288,15 +223,29 @@ namespace AnalyticHierarchyProcess
             else
                 MessageBox.Show("Введите название цели");
         }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void dataGridViewTasks_SelectionChanged(object sender, EventArgs e)
         {
-            labelSelectedTask.Text = GetSelectedTask()?.name;
+            matrixTable SelectedTask = GetSelectedTask();
+            if (SelectedTask != null)
+            {
+                labelSelectedTask.Text = GetSelectedTask()?.name;
+                UpdateDataGridViewCompare(SelectedTask);
+            }
+        }
+
+        private void tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(tabs.SelectedTab==tabCriterions)
+            {
+                dataGridViewCriterions.Rows.Clear();
+                GetSelectedTask()?.fields.ForEach(x => dataGridViewCriterions.Rows.Add(x));
+            }
+
+            if (tabs.SelectedTab == tabCompare)
+            {
+                UpdateDataGridViewCompare(GetSelectedTask());
+            }
+
         }
     }
 }
