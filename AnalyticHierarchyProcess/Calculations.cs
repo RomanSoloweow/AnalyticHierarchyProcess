@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task;
+using MatrixTable;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra;
@@ -12,41 +12,27 @@ namespace AnalyticHierarchyProcess
 {
     public static class Calculations
     {
-
         public static Vector<double> Sole(Matrix<double> matrix)
         {
             // максимальное собственное значение
             double MaxEigenVal = MaxEigenValue(matrix);
+
             //из главной диагонали матрицы вычитаем это собственное значение
-            for (int i = 0; i < matrix.RowCount; i++)
-            {
-                for (int j = 0; j < matrix.ColumnCount; j++)
-                {
-                    if (i == j)
-                        matrix[i, j] = matrix[i, j] - MaxEigenVal;
-                }
-            }
-            //создаем вектор, необходимый для решения слау
-            var _vector = Vector<double>.Build.Dense(matrix.RowCount - 1);
-            _vector = matrix.Column(0) * (-1);
-            _vector = _vector.SubVector(0, _vector.Count - 1);
+            matrix.SetDiagonal((matrix.Diagonal() - MaxEigenVal));
+
+            int n = matrix.RowCount;
+            //создаем вектор, необходимый для решения слау (первый столбец умножанный на -1, без 1 элемента
+            Vector<double> _vector = Vector<double>.Build.DenseOfVector((matrix.Column(0) * (-1)).SubVector(0, n - 1));
 
             //преобразуем матрицу для слау
             matrix = matrix.RemoveColumn(0);
-            matrix = matrix.RemoveRow(matrix.RowCount - 1);
+            matrix = matrix.RemoveRow(n-1);
 
-            //вычисляем решение
-            var result = matrix.Solve(_vector);
+            //вычисляем решение 
+            Vector<double> result = Vector<double>.Build.Dense(n, 1);
+            matrix.Solve(_vector).CopySubVectorTo(result, 0, 1, _vector.Count);
 
-            //создаем результирующий вектор
-            var result1 = Vector<double>.Build.Dense(result.Count + 1);
-            result1[0] = 1;
-            for (int i = 1; i < result1.Count; i++)
-            {
-                result1[i] = result[i - 1];
-            }
-            Console.WriteLine(result1);
-            return (result1);
+            return result;
         }
         public static Vector<double> GetVectorPriority(Matrix<double> matrix)
         {

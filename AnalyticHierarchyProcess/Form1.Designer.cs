@@ -38,19 +38,23 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tabs = new System.Windows.Forms.TabControl();
-            this.tabTask = new System.Windows.Forms.TabPage();
+            this.tabMain = new System.Windows.Forms.TabPage();
             this.buttonAddOption = new System.Windows.Forms.Button();
             this.tabCompare = new System.Windows.Forms.TabPage();
             this.dataGridViewCompare = new System.Windows.Forms.DataGridView();
             this.tabCriterions = new System.Windows.Forms.TabPage();
             this.dataGridViewCriterions = new System.Windows.Forms.DataGridView();
+            this.tabTask = new System.Windows.Forms.TabPage();
+            this.dataGridViewTasks = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tabs.SuspendLayout();
-            this.tabTask.SuspendLayout();
+            this.tabMain.SuspendLayout();
             this.tabCompare.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).BeginInit();
             this.tabCriterions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).BeginInit();
+            this.tabTask.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTasks)).BeginInit();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -59,7 +63,7 @@
             // 
             // AddTask
             // 
-            this.AddTask.Location = new System.Drawing.Point(15, 20);
+            this.AddTask.Location = new System.Drawing.Point(90, 364);
             this.AddTask.Name = "AddTask";
             this.AddTask.Size = new System.Drawing.Size(239, 55);
             this.AddTask.TabIndex = 2;
@@ -71,7 +75,7 @@
             // 
             this.LabelTasks.AutoSize = true;
             this.LabelTasks.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LabelTasks.Location = new System.Drawing.Point(272, 3);
+            this.LabelTasks.Location = new System.Drawing.Point(6, 0);
             this.LabelTasks.Name = "LabelTasks";
             this.LabelTasks.Size = new System.Drawing.Size(164, 31);
             this.LabelTasks.TabIndex = 4;
@@ -105,7 +109,7 @@
             // 
             this.comboBoxAllTask.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAllTask.FormattingEnabled = true;
-            this.comboBoxAllTask.Location = new System.Drawing.Point(260, 37);
+            this.comboBoxAllTask.Location = new System.Drawing.Point(6, 37);
             this.comboBoxAllTask.Name = "comboBoxAllTask";
             this.comboBoxAllTask.Size = new System.Drawing.Size(238, 33);
             this.comboBoxAllTask.TabIndex = 7;
@@ -135,8 +139,9 @@
             // 
             // tabs
             // 
-            this.tabs.Controls.Add(this.tabTask);
+            this.tabs.Controls.Add(this.tabMain);
             this.tabs.Controls.Add(this.tabCompare);
+            this.tabs.Controls.Add(this.tabTask);
             this.tabs.Controls.Add(this.tabCriterions);
             this.tabs.Location = new System.Drawing.Point(1, 3);
             this.tabs.Name = "tabs";
@@ -146,28 +151,28 @@
             this.tabs.SelectedIndexChanged += new System.EventHandler(this.tabs_SelectedIndexChanged);
             this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
             // 
-            // tabTask
+            // tabMain
             // 
-            this.tabTask.AutoScroll = true;
-            this.tabTask.Controls.Add(this.buttonAddOption);
-            this.tabTask.Controls.Add(this.AddTask);
-            this.tabTask.Controls.Add(this.comboBoxAllTask);
-            this.tabTask.Controls.Add(this.button1);
-            this.tabTask.Controls.Add(this.ButtonOpenFile);
-            this.tabTask.Controls.Add(this.buttonClear);
-            this.tabTask.Controls.Add(this.button2);
-            this.tabTask.Controls.Add(this.LabelTasks);
-            this.tabTask.Location = new System.Drawing.Point(8, 39);
-            this.tabTask.Name = "tabTask";
-            this.tabTask.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTask.Size = new System.Drawing.Size(1641, 982);
-            this.tabTask.TabIndex = 0;
-            this.tabTask.Text = "Цель";
-            this.tabTask.UseVisualStyleBackColor = true;
+            this.tabMain.AutoScroll = true;
+            this.tabMain.Controls.Add(this.buttonAddOption);
+            this.tabMain.Controls.Add(this.AddTask);
+            this.tabMain.Controls.Add(this.comboBoxAllTask);
+            this.tabMain.Controls.Add(this.button1);
+            this.tabMain.Controls.Add(this.ButtonOpenFile);
+            this.tabMain.Controls.Add(this.buttonClear);
+            this.tabMain.Controls.Add(this.button2);
+            this.tabMain.Controls.Add(this.LabelTasks);
+            this.tabMain.Location = new System.Drawing.Point(8, 39);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMain.Size = new System.Drawing.Size(1641, 982);
+            this.tabMain.TabIndex = 0;
+            this.tabMain.Text = "Главная";
+            this.tabMain.UseVisualStyleBackColor = true;
             // 
             // buttonAddOption
             // 
-            this.buttonAddOption.Location = new System.Drawing.Point(16, 92);
+            this.buttonAddOption.Location = new System.Drawing.Point(456, 194);
             this.buttonAddOption.Name = "buttonAddOption";
             this.buttonAddOption.Size = new System.Drawing.Size(238, 63);
             this.buttonAddOption.TabIndex = 11;
@@ -228,6 +233,30 @@
             this.dataGridViewCriterions.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewCriterions_UserAddedRow);
             this.dataGridViewCriterions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCriterions_KeyDown);
             // 
+            // tabTask
+            // 
+            this.tabTask.Controls.Add(this.dataGridViewTasks);
+            this.tabTask.Location = new System.Drawing.Point(8, 39);
+            this.tabTask.Name = "tabTask";
+            this.tabTask.Size = new System.Drawing.Size(1641, 982);
+            this.tabTask.TabIndex = 3;
+            this.tabTask.Text = "Цели";
+            this.tabTask.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewTasks
+            // 
+            this.dataGridViewTasks.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewTasks.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridViewTasks.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTasks.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewTasks.Name = "dataGridViewTasks";
+            this.dataGridViewTasks.RowHeadersVisible = false;
+            this.dataGridViewTasks.RowTemplate.Height = 33;
+            this.dataGridViewTasks.Size = new System.Drawing.Size(1635, 939);
+            this.dataGridViewTasks.TabIndex = 0;
+            this.dataGridViewTasks.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewTasks_UserAddedRow);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -240,12 +269,14 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tabs.ResumeLayout(false);
-            this.tabTask.ResumeLayout(false);
-            this.tabTask.PerformLayout();
+            this.tabMain.ResumeLayout(false);
+            this.tabMain.PerformLayout();
             this.tabCompare.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).EndInit();
             this.tabCriterions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).EndInit();
+            this.tabTask.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTasks)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -261,12 +292,14 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabControl tabs;
-        private System.Windows.Forms.TabPage tabTask;
+        private System.Windows.Forms.TabPage tabMain;
         private System.Windows.Forms.TabPage tabCriterions;
         private System.Windows.Forms.TabPage tabCompare;
         private System.Windows.Forms.DataGridView dataGridViewCompare;
         private System.Windows.Forms.DataGridView dataGridViewCriterions;
         private System.Windows.Forms.Button buttonAddOption;
+        private System.Windows.Forms.TabPage tabTask;
+        private System.Windows.Forms.DataGridView dataGridViewTasks;
     }
 }
 

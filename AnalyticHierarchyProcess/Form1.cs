@@ -10,12 +10,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using InputBox;
 using System.Data.OleDb;
-using Task;
-using Option;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-
+using matrixTable = MatrixTable.MatrixTable;
 namespace AnalyticHierarchyProcess
 {
     public partial class Form1 : Form
@@ -39,7 +37,7 @@ namespace AnalyticHierarchyProcess
             {8, "Почти абсолютная значимость"},
             {9, "Абсолютная значимость"}
         };
-        private Dictionary<string, Task.Task> tasks = new Dictionary<string, Task.Task>();
+        private Dictionary<string, matrixTable> tasks = new Dictionary<string, matrixTable>();
         public List<string> GetCriterions()
         {
             List<string> сriterions = new List<string>();
@@ -81,7 +79,7 @@ namespace AnalyticHierarchyProcess
         /// Получить текущую выбранную цель
         /// </summary>
         /// <returns>Task, если выбрана цель, null если не выбрана</returns>
-        public Task.Task GetSelectedTask()
+        public matrixTable GetSelectedTask()
         {
             if (!tasks.ContainsKey(selectedTaskName))
                 return null;
@@ -91,7 +89,7 @@ namespace AnalyticHierarchyProcess
        
         public void AddTasks(string newTaskName)
         {
-            tasks.Add(newTaskName, new Task.Task(newTaskName, GetCriterions()));
+            tasks.Add(newTaskName, new matrixTable(newTaskName, GetCriterions()));
         }
         public List<string> GetTasksNames()
         {
@@ -178,14 +176,14 @@ namespace AnalyticHierarchyProcess
             List<string> ty = new List<string>();
             for(int i=0;i<3;i++)
             ty.Add("Критерий №"+i.ToString());
-            tasks.Add("1", new Task.Task("1", ty));
+            tasks.Add("1", new matrixTable("1", ty));
             tasks.Values.ElementAt(0).SetCellMatrix(0,1,5);
             tasks.Values.ElementAt(0).SetCellMatrix(0,2,7);
             tasks.Values.ElementAt(0).SetCellMatrix(1,2,3);
             tasks.Values.ElementAt(0).FillMatrix();
-          Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
-            Console.WriteLine(tasks.Values.ElementAt(0).matrix);
-            Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
+        //  Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
+         //   Console.WriteLine(tasks.Values.ElementAt(0).matrix);
+         //   Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
             tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));
 
         }
@@ -234,6 +232,11 @@ namespace AnalyticHierarchyProcess
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewTasks_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
 
         }
