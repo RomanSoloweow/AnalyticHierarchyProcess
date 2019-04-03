@@ -48,6 +48,8 @@ namespace AnalyticHierarchyProcess
             var _vector = Vector<double>.Build.Dense(_matrix.RowCount-1);
             _vector = _matrix.Column(0)*(-1);
 
+            _matrix = _matrix.RemoveColumn(0);
+            _matrix = _matrix.RemoveRow(0);
 
 
             double[,] data = new double[,]
