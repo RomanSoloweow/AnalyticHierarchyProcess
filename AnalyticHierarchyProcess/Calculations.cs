@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.Statistics;
 
 namespace AnalyticHierarchyProcess
 {
@@ -30,9 +32,8 @@ namespace AnalyticHierarchyProcess
 
             //вычисляем решение
             var result = _matrix.Solve(_vector);
-
-            //создаем результирующий вектор
-            var result1 = Vector<double>.Build.Dense(result.Count + 1);
+           //создаем результирующий вектор
+           var result1 = Vector<double>.Build.Dense(result.Count + 1);
             result1[0] = 1;
             for (int i = 1; i < result1.Count; i++)
             {
@@ -83,6 +84,56 @@ namespace AnalyticHierarchyProcess
             }
 
             return (normalizedPriorities);
+        }
+
+        public static double CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        {
+            // Посчет нормированных приоритетов для каждого из критериев
+            List<Vector<double>> vectorList = new List<Vector<double>>();
+            for (int i = 0; i < matrixList.Count; i++)
+            {
+                vectorList.Add(CalcNormalizedPriorities(Sole(matrixList[i])));
+            }
+
+            // Подсчет глобальных нормализированных приоритетов
+            int lengthOfVector = vectorList[0].Count;
+            var result = Vector<double>.Build.Dense(lengthOfVector, 0);
+            for (int i = 0; i < vectorList.Count; i++)
+            {
+                for (int j = 0; j < lengthOfVector; j++)
+                    result[j] += vectorList[i][j];
+            }
+
+            return (result.Maximum());
+        }
+
+        public static double CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        {
+            // Посчет идеализированных приоритетов для каждого из критериев
+            List<Vector<double>> vectorList = new List<Vector<double>>();
+            for (int i = 0; i < matrixList.Count; i++)
+            {
+                vectorList.Add(CalcIdealizePriorities(Sole(matrixList[i])));
+            }
+
+            // Подсчет глобальных идеализированных приоритетов
+            int lengthOfVector = vectorList[0].Count;
+            var result = Vector<double>.Build.Dense(lengthOfVector, 0);
+            for (int i = 0; i < vectorList.Count; i++)
+            {
+                for (int j = 0; j < lengthOfVector; j++)
+                    result[j] += vectorList[i][j];
+            }
+            double summ = 0;
+            for (int i = 0; i < result.Count; i++)
+            {
+                summ += result[i];
+            }
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i] = result[i]/summ;
+            }
+            return (result.Maximum());
         }
     }
 }
