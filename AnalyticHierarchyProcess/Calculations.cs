@@ -5,12 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Task;
+
 namespace AnalyticHierarchyProcess
 {
     public class Calculations
     {
-       public  Calculations(Task.Task task)
+        Task.Task task;
+        MatrixTable.MatrixTable
+            List<>
+
+       public  Calculations(Task.Task _task)
         {
+            task = _task;
         }
       
     }

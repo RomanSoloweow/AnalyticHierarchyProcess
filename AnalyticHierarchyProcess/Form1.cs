@@ -169,7 +169,7 @@ namespace AnalyticHierarchyProcess
             tasks.Values.ElementAt(0).SetCellMatrix(0,1,3);
             tasks.Values.ElementAt(0).SetCellMatrix(0,2,5);
             tasks.Values.ElementAt(0).SetCellMatrix(1,2,2);
-           // tasks.Values.ElementAt(0).AddCriterion();
+            tasks.Values.ElementAt(0).AddField("q");
             /* 
              tasks.Values.ElementAt(0).matrix[0][1] = 5;
              tasks.Values.ElementAt(0).matrix[0][2] = 3;
@@ -200,7 +200,7 @@ namespace AnalyticHierarchyProcess
              tasks.Values.ElementAt(0).matrix[7][5] = 6;
              tasks.Values.ElementAt(0).matrix[7][6] = 2;*/
 
-            tasks.Values.ElementAt(0).UpdateAgreed();
+           // tasks.Values.ElementAt(0).UpdateAgreed();
         
 
             /* tasks.Values.ElementAt(0).matrix[0][1] =5;
