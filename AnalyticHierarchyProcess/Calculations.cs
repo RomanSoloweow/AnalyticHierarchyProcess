@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace AnalyticHierarchyProcess
+namespace Calculations
 {
     public static class Calculations
     {
@@ -77,8 +77,11 @@ namespace AnalyticHierarchyProcess
         }
         public static double GetIndexAgreed(Matrix<double> matrix)
         {
+            if (matrix == null)
+                return 1;
+
             int n = matrix.ColumnCount;
-            double I = (MaxEigenValue(matrix) - n) / (n - 1);
+            double I = (MaxEigenValue(matrix) - n)*1.0 / (n - 1);
             return I;
         }
         public static double MaxEigenValue(Matrix<double> matrix)

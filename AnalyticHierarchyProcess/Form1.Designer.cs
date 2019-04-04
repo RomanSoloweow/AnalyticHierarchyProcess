@@ -32,12 +32,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.tabs = new System.Windows.Forms.TabControl();
-            this.tabMane = new System.Windows.Forms.TabPage();
+            this.tabOptions = new System.Windows.Forms.TabPage();
+            this.textBoxOptionName = new System.Windows.Forms.TextBox();
+            this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
+            this.ColumnOptions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonAddOption = new System.Windows.Forms.Button();
-            this.tabCompare = new System.Windows.Forms.TabPage();
+            this.tabCompares = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
             this.dataGridViewCompare = new System.Windows.Forms.DataGridView();
-            this.tabTask = new System.Windows.Forms.TabPage();
+            this.tabTasks = new System.Windows.Forms.TabPage();
             this.textBoxTaskName = new System.Windows.Forms.TextBox();
             this.buttonAddTask = new System.Windows.Forms.Button();
             this.dataGridViewTasks = new System.Windows.Forms.DataGridView();
@@ -49,18 +52,16 @@
             this.ColumnCriterions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelSelectedTask = new System.Windows.Forms.Label();
             this.labelHeader = new System.Windows.Forms.Label();
-            this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
-            this.ColumnOptions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tabs.SuspendLayout();
-            this.tabMane.SuspendLayout();
-            this.tabCompare.SuspendLayout();
+            this.tabOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).BeginInit();
+            this.tabCompares.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).BeginInit();
-            this.tabTask.SuspendLayout();
+            this.tabTasks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTasks)).BeginInit();
             this.tabCriterions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).BeginInit();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -84,9 +85,9 @@
             // 
             // tabs
             // 
-            this.tabs.Controls.Add(this.tabMane);
-            this.tabs.Controls.Add(this.tabCompare);
-            this.tabs.Controls.Add(this.tabTask);
+            this.tabs.Controls.Add(this.tabOptions);
+            this.tabs.Controls.Add(this.tabCompares);
+            this.tabs.Controls.Add(this.tabTasks);
             this.tabs.Controls.Add(this.tabCriterions);
             this.tabs.Location = new System.Drawing.Point(1, 40);
             this.tabs.Name = "tabs";
@@ -94,44 +95,76 @@
             this.tabs.Size = new System.Drawing.Size(1657, 992);
             this.tabs.TabIndex = 11;
             this.tabs.SelectedIndexChanged += new System.EventHandler(this.tabs_SelectedIndexChanged);
-            this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
             // 
-            // tabMane
+            // tabOptions
             // 
-            this.tabMane.AutoScroll = true;
-            this.tabMane.Controls.Add(this.dataGridViewOptions);
-            this.tabMane.Controls.Add(this.buttonAddOption);
-            this.tabMane.Controls.Add(this.button1);
-            this.tabMane.Location = new System.Drawing.Point(8, 39);
-            this.tabMane.Name = "tabMane";
-            this.tabMane.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMane.Size = new System.Drawing.Size(1641, 945);
-            this.tabMane.TabIndex = 0;
-            this.tabMane.Text = "Главная";
-            this.tabMane.UseVisualStyleBackColor = true;
-            this.tabMane.Click += new System.EventHandler(this.tabMane_Click);
+            this.tabOptions.AutoScroll = true;
+            this.tabOptions.Controls.Add(this.textBoxOptionName);
+            this.tabOptions.Controls.Add(this.dataGridViewOptions);
+            this.tabOptions.Controls.Add(this.buttonAddOption);
+            this.tabOptions.Controls.Add(this.button1);
+            this.tabOptions.Location = new System.Drawing.Point(8, 39);
+            this.tabOptions.Name = "tabOptions";
+            this.tabOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabOptions.Size = new System.Drawing.Size(1641, 945);
+            this.tabOptions.TabIndex = 0;
+            this.tabOptions.Text = "Главная";
+            this.tabOptions.UseVisualStyleBackColor = true;
+            // 
+            // textBoxOptionName
+            // 
+            this.textBoxOptionName.Location = new System.Drawing.Point(413, 33);
+            this.textBoxOptionName.Name = "textBoxOptionName";
+            this.textBoxOptionName.Size = new System.Drawing.Size(412, 31);
+            this.textBoxOptionName.TabIndex = 12;
+            // 
+            // dataGridViewOptions
+            // 
+            this.dataGridViewOptions.AllowUserToAddRows = false;
+            this.dataGridViewOptions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridViewOptions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridViewOptions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewOptions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewOptions.ColumnHeadersVisible = false;
+            this.dataGridViewOptions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnOptions});
+            this.dataGridViewOptions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.dataGridViewOptions.EnableHeadersVisualStyles = false;
+            this.dataGridViewOptions.Location = new System.Drawing.Point(6, 96);
+            this.dataGridViewOptions.Name = "dataGridViewOptions";
+            this.dataGridViewOptions.RowHeadersVisible = false;
+            this.dataGridViewOptions.RowTemplate.Height = 33;
+            this.dataGridViewOptions.Size = new System.Drawing.Size(1629, 790);
+            this.dataGridViewOptions.TabIndex = 11;
+            this.dataGridViewOptions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOptions_CellValueChanged);
+            // 
+            // ColumnOptions
+            // 
+            this.ColumnOptions.HeaderText = "ColumnOptions";
+            this.ColumnOptions.Name = "ColumnOptions";
+            this.ColumnOptions.Width = 5;
             // 
             // buttonAddOption
             // 
-            this.buttonAddOption.Location = new System.Drawing.Point(6, 6);
+            this.buttonAddOption.Location = new System.Drawing.Point(6, 15);
             this.buttonAddOption.Name = "buttonAddOption";
             this.buttonAddOption.Size = new System.Drawing.Size(264, 66);
             this.buttonAddOption.TabIndex = 10;
-            this.buttonAddOption.Text = "Добавить ";
+            this.buttonAddOption.Text = "Добавить объекты для сравнения";
             this.buttonAddOption.UseVisualStyleBackColor = true;
             this.buttonAddOption.Click += new System.EventHandler(this.buttonAddOption_Click);
             // 
-            // tabCompare
+            // tabCompares
             // 
-            this.tabCompare.AutoScroll = true;
-            this.tabCompare.Controls.Add(this.button2);
-            this.tabCompare.Controls.Add(this.dataGridViewCompare);
-            this.tabCompare.Location = new System.Drawing.Point(8, 39);
-            this.tabCompare.Name = "tabCompare";
-            this.tabCompare.Size = new System.Drawing.Size(1641, 1153);
-            this.tabCompare.TabIndex = 2;
-            this.tabCompare.Text = "Сравнения";
-            this.tabCompare.UseVisualStyleBackColor = true;
+            this.tabCompares.AutoScroll = true;
+            this.tabCompares.Controls.Add(this.button2);
+            this.tabCompares.Controls.Add(this.dataGridViewCompare);
+            this.tabCompares.Location = new System.Drawing.Point(8, 39);
+            this.tabCompares.Name = "tabCompares";
+            this.tabCompares.Size = new System.Drawing.Size(1641, 945);
+            this.tabCompares.TabIndex = 2;
+            this.tabCompares.Text = "Сравнения";
+            this.tabCompares.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
@@ -161,17 +194,17 @@
             this.dataGridViewCompare.TabIndex = 0;
             this.dataGridViewCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCompare_CellValueChanged);
             // 
-            // tabTask
+            // tabTasks
             // 
-            this.tabTask.Controls.Add(this.textBoxTaskName);
-            this.tabTask.Controls.Add(this.buttonAddTask);
-            this.tabTask.Controls.Add(this.dataGridViewTasks);
-            this.tabTask.Location = new System.Drawing.Point(8, 39);
-            this.tabTask.Name = "tabTask";
-            this.tabTask.Size = new System.Drawing.Size(1641, 1153);
-            this.tabTask.TabIndex = 3;
-            this.tabTask.Text = "Цели";
-            this.tabTask.UseVisualStyleBackColor = true;
+            this.tabTasks.Controls.Add(this.textBoxTaskName);
+            this.tabTasks.Controls.Add(this.buttonAddTask);
+            this.tabTasks.Controls.Add(this.dataGridViewTasks);
+            this.tabTasks.Location = new System.Drawing.Point(8, 39);
+            this.tabTasks.Name = "tabTasks";
+            this.tabTasks.Size = new System.Drawing.Size(1641, 945);
+            this.tabTasks.TabIndex = 3;
+            this.tabTasks.Text = "Цели";
+            this.tabTasks.UseVisualStyleBackColor = true;
             // 
             // textBoxTaskName
             // 
@@ -228,7 +261,7 @@
             this.tabCriterions.Location = new System.Drawing.Point(8, 39);
             this.tabCriterions.Name = "tabCriterions";
             this.tabCriterions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCriterions.Size = new System.Drawing.Size(1641, 1153);
+            this.tabCriterions.Size = new System.Drawing.Size(1641, 945);
             this.tabCriterions.TabIndex = 1;
             this.tabCriterions.Text = "Критерии";
             this.tabCriterions.UseVisualStyleBackColor = true;
@@ -299,31 +332,6 @@
             this.labelHeader.TabIndex = 13;
             this.labelHeader.Text = "Текущая цель:";
             // 
-            // dataGridViewOptions
-            // 
-            this.dataGridViewOptions.AllowUserToAddRows = false;
-            this.dataGridViewOptions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridViewOptions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGridViewOptions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridViewOptions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOptions.ColumnHeadersVisible = false;
-            this.dataGridViewOptions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnOptions});
-            this.dataGridViewOptions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.dataGridViewOptions.EnableHeadersVisualStyles = false;
-            this.dataGridViewOptions.Location = new System.Drawing.Point(6, 85);
-            this.dataGridViewOptions.Name = "dataGridViewOptions";
-            this.dataGridViewOptions.RowHeadersVisible = false;
-            this.dataGridViewOptions.RowTemplate.Height = 33;
-            this.dataGridViewOptions.Size = new System.Drawing.Size(1617, 790);
-            this.dataGridViewOptions.TabIndex = 11;
-            // 
-            // ColumnOptions
-            // 
-            this.ColumnOptions.HeaderText = "ColumnOptions";
-            this.ColumnOptions.Name = "ColumnOptions";
-            this.ColumnOptions.Width = 5;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -337,16 +345,17 @@
             this.Text = "Метод анализа иерархий";
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tabs.ResumeLayout(false);
-            this.tabMane.ResumeLayout(false);
-            this.tabCompare.ResumeLayout(false);
+            this.tabOptions.ResumeLayout(false);
+            this.tabOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).EndInit();
+            this.tabCompares.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCompare)).EndInit();
-            this.tabTask.ResumeLayout(false);
-            this.tabTask.PerformLayout();
+            this.tabTasks.ResumeLayout(false);
+            this.tabTasks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTasks)).EndInit();
             this.tabCriterions.ResumeLayout(false);
             this.tabCriterions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -357,12 +366,12 @@
         private System.Data.DataSet dataSet1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabControl tabs;
-        private System.Windows.Forms.TabPage tabMane;
+        private System.Windows.Forms.TabPage tabOptions;
         private System.Windows.Forms.TabPage tabCriterions;
-        private System.Windows.Forms.TabPage tabCompare;
+        private System.Windows.Forms.TabPage tabCompares;
         private System.Windows.Forms.DataGridView dataGridViewCompare;
         private System.Windows.Forms.DataGridView dataGridViewCriterions;
-        private System.Windows.Forms.TabPage tabTask;
+        private System.Windows.Forms.TabPage tabTasks;
         private System.Windows.Forms.DataGridView dataGridViewTasks;
         private System.Windows.Forms.Button buttonAddCriterion;
         private System.Windows.Forms.Button buttonAddTask;
@@ -376,6 +385,7 @@
         private System.Windows.Forms.Button buttonAddOption;
         private System.Windows.Forms.DataGridView dataGridViewOptions;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOptions;
+        private System.Windows.Forms.TextBox textBoxOptionName;
     }
 }
 
