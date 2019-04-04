@@ -28,6 +28,7 @@ namespace AnalyticHierarchyProcess
         string selectedTaskName;
         Dictionary<int, string> scalesInt = new Dictionary<int, string>()
         {
+            {-1,"Обратное симметричному"},
             {1, "Одинаковая значимость"},
             {2, "Почти слабая значимость"},
             {3, "Cлабая значимость"},
@@ -40,6 +41,7 @@ namespace AnalyticHierarchyProcess
         };
         Dictionary<string,int> scalesString = new Dictionary<string,int>()
         {
+            {"Обратное симметричному",-1},
             {"Одинаковая значимость",1},
             {"Почти слабая значимость",2},
             {"Cлабая значимость",3},
@@ -51,6 +53,8 @@ namespace AnalyticHierarchyProcess
             {"Абсолютная значимость",9}
         };
         private Dictionary<string, matrixTable> tasks = new Dictionary<string, matrixTable>();
+        int selectedtabIndex = 0;
+        
         public List<string> GetCriterions()
         {
             List<string> сriterions = new List<string>();
@@ -113,49 +117,69 @@ namespace AnalyticHierarchyProcess
                 dataGridViewComboBoxCell.Items.Add(value);
             }
             return dataGridViewComboBoxCell;
-        }     
-        public void UpdateDataGridViewCompare(matrixTable table)
+        }
+        private void UpdateDataGridViewCompare(matrixTable table)
         {
             dataGridViewCompare.Rows.Clear();
             dataGridViewCompare.Columns.Clear();
-           // dataGridViewCompare.Width = 0;
            if(table!=null)
             if (table.fields.Count > 0)
             {
-                string columnName = "";
                 dataGridViewCompare.Columns.Add(" ", " ");
                 table.fields.ForEach(x => dataGridViewCompare.Columns.Add(x, x));
                 table.fields.ForEach(x => dataGridViewCompare.Rows.Add(x, x));
                 for (int i = 0; i < table.CountFiields(); i++)
                     dataGridViewCompare.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-
-                for (int i = 0; i < dataGridViewCompare.RowCount; i++)
-                    for (int j = 0; j < dataGridViewCompare.Columns.Count; j++)
-                    {
-                        if (j >= 1)
+                     for (int i = 0; i < dataGridViewCompare.RowCount; i++)
+                        for (int j = 0; j < dataGridViewCompare.Columns.Count-1; j++)
                         {
+                                dataGridViewCompare.Rows[i].Cells[j+1].ValueType = typeof(DataGridViewComboBoxCell);
+                                dataGridViewCompare.Rows[i].Cells[j + 1] = GetDataGridViewComboBoxCell();
 
-                            dataGridViewCompare[j, i] = GetDataGridViewComboBoxCell();
-                                // dataGridViewTasks[j, i].Value = scalesInt[tasks[comboBoxAllTask.Text].matrix[i,j - 1]].ToString();
-                                dataGridViewCompare[j, i].Value = scalesInt[9].ToString();
-                            if (i == (j-1))
-                            {
-                                dataGridViewCompare[j, i].Value = scalesInt[1].ToString();
-                                dataGridViewCompare[j, i].ReadOnly = true;
-                            }
-                        }
-                       
-                    };
+                                if (table.GetCellMatrix(i, j) % 1 == 0)
+                                    dataGridViewCompare.Rows[i].Cells[j + 1].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
+                                else
+                                dataGridViewCompare.Rows[i].Cells[j + 1].Value = scalesInt[-1].ToString();
+
+                                // dataGridViewCompare[j, i].Value = scalesInt[9].ToString();
+                                if (i == j)
+                                {
+                                dataGridViewCompare.Rows[i].Cells[j + 1].Value = scalesInt[1].ToString();
+                                dataGridViewCompare.Rows[i].Cells[j + 1].ReadOnly = true;
+                                }                       
+                        };
             }
         }
-        public void UpdateDataGridViewTasks(List<string> _tasks)
+        private void UpdateDataGridViewTasks(List<string> _tasks)
         {
         
         }
+        private void UpdateSelectedMatrixCompare()
+        {
+            double valueCells = 0;
+            for (int i = 0; i < dataGridViewCompare.RowCount; i++)
+                for (int j = 0; j < dataGridViewCompare.Columns.Count-1; j++)
+                {
+                    valueCells = scalesString[dataGridViewCompare.Rows[i].Cells[j + 1].Value.ToString()];
+                    if (valueCells == -1)
+                        valueCells = 1.0 /(scalesString[dataGridViewCompare.Rows[j].Cells[i + 1].Value.ToString()]);
+
+                      GetSelectedTask().matrix[i, j] = valueCells;
+                }
+                 
+
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-
+            GetSelectedTask().SetCellMatrix(0, 1, 2);
+            GetSelectedTask().SetCellMatrix(0, 2, 3);
+            GetSelectedTask().SetCellMatrix(1, 0, 4);
+            GetSelectedTask().SetCellMatrix(1, 2, 6);
+            GetSelectedTask().SetCellMatrix(2, 0, 7);
+            GetSelectedTask().SetCellMatrix(2, 1, 8);
+           // Console.WriteLine(Math.Pow(32,5)%72);
+            /*
             double[,] data = new double[,]
             {
                 {  1,  5,  7},
@@ -177,7 +201,7 @@ namespace AnalyticHierarchyProcess
         //  Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
           //  Console.WriteLine(tasks.Values.ElementAt(0).matrix);
            // Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
-            tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));
+            tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));*/
 
         }
 
@@ -191,7 +215,7 @@ namespace AnalyticHierarchyProcess
                 GetSelectedTask().DeleteField(indexDeletedRow);
             }
         }
-
+        
 
         private void buttonAddCriterion_Click(object sender, EventArgs e)
         {
@@ -244,18 +268,20 @@ namespace AnalyticHierarchyProcess
             if (SelectedTask != null)
             {
                 labelSelectedTask.Text = GetSelectedTask()?.name;
-                UpdateDataGridViewCompare(SelectedTask);
             }
         }
 
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(selectedtabIndex == 1)
+            {
+                UpdateSelectedMatrixCompare();
+            }
             if(tabs.SelectedTab==tabCriterions)
             {
                 dataGridViewCriterions.Rows.Clear();
                 GetSelectedTask()?.fields.ForEach(x => dataGridViewCriterions.Rows.Add(x));
             }
-
             if (tabs.SelectedTab == tabCompare)
             {
                 UpdateDataGridViewCompare(GetSelectedTask());
@@ -265,7 +291,7 @@ namespace AnalyticHierarchyProcess
                 dataGridViewTasks.Rows.Clear();
                 tasks.Keys.ToList().ForEach(x => dataGridViewTasks.Rows.Add(x));
             }
-
+            selectedtabIndex = tabs.SelectedIndex;
         }
 
         private void dataGridViewTasks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -284,7 +310,15 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            //если ячейка выбрана
+            if (dataGridViewCompare.SelectedCells.Count > 0)
+            {
+                DataGridViewCell selectedCell = dataGridViewCompare.SelectedCells[0];
+               //если не первый столбец(там заголовки) и не диагональные элементы
+                if ((selectedCell.ColumnIndex > 0)&&(selectedCell.RowIndex!= selectedCell.ColumnIndex-1))
+                    dataGridViewCompare.Rows[selectedCell.ColumnIndex - 1].Cells[selectedCell.RowIndex+1].Value = scalesInt[-1];
 
+            }
         }
 
         private void dataGridViewCriterions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -294,6 +328,26 @@ namespace AnalyticHierarchyProcess
                 DataGridViewCell selectedCell = dataGridViewCriterions.SelectedCells[0];
                 GetSelectedTask().fields[selectedCell.RowIndex] = selectedCell.Value.ToString();
             }
+        }
+
+        private void tabMane_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+           // dataGridViewCompare.Rows[3].Cells[2].Value = scalesInt[-1].ToString();
+        }
+
+        private void buttonAddOption_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
