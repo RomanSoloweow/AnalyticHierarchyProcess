@@ -93,8 +93,8 @@ namespace MatrixTable
         /// <param name="indexDeleting">Номер удаляемого элемента</param>
         public void ContractMatrix(int indexDeleting)
         {
-            matrix.RemoveColumn(indexDeleting);
-            matrix.RemoveRow(indexDeleting);
+            matrix = matrix.RemoveColumn(indexDeleting);
+            matrix = matrix.RemoveRow(indexDeleting);
         }
         /// <summary>
         /// Установить значение ячейки матрицы

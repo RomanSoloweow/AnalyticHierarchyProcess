@@ -64,7 +64,7 @@ namespace AnalyticHierarchyProcess
         private Dictionary<string, matrixTable> tasks = new Dictionary<string, matrixTable>();
         private Dictionary<string, matrixTable> options = new Dictionary<string, matrixTable>();
            
-        public  matrixTable GetSelectedTask()
+        public matrixTable GetSelectedTask()
         {
             if (dataGridViewTasks.SelectedCells.Count == 0)
                 return null;
@@ -75,6 +75,10 @@ namespace AnalyticHierarchyProcess
                 return null;
 
             return  tasks[selectedTaskName];
+        }
+        public matrixTable GetSelectedMatrix()
+        {
+            return null;
         }
         public List<matrixTable> GetOptions()
         {
@@ -118,6 +122,7 @@ namespace AnalyticHierarchyProcess
         private void UpdateSelectedMatrixCompare()
         {
             double valueCells = 0;
+            matrixTable selectedMatrix = GetSelectedMatrix();
             for (int i = 0; i < dataGridViewCompare.RowCount; i++)
                 for (int j = 0; j < dataGridViewCompare.Columns.Count-1; j++)
                 {
@@ -125,7 +130,7 @@ namespace AnalyticHierarchyProcess
                     if (valueCells == -1)
                         valueCells = 1.0 /(scalesString[dataGridViewCompare.Rows[j].Cells[i + 1].Value.ToString()]);
 
-                      GetSelectedTask().matrix[i, j] = valueCells;
+                        selectedMatrix.matrix[i, j] = valueCells;
                 }
                  
 
@@ -168,16 +173,33 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
         {
-            int indexDeletedRow = dataGridViewCriterions.CurrentRow.Index;
-            if ((e.KeyCode == Keys.Delete)&&(indexDeletedRow<(dataGridViewCriterions.RowCount - 1)))
+            DataGridViewRow DeletedRow = dataGridViewCriterions.CurrentRow;
+            if((e.KeyCode == Keys.Delete) && (DeletedRow != null))
             {              
-                dataGridViewCriterions.Rows.RemoveAt(indexDeletedRow);
-                GetSelectedTask().DeleteField(indexDeletedRow);
+                dataGridViewCriterions.Rows.RemoveAt(DeletedRow.Index);
+                GetSelectedTask().DeleteField(DeletedRow.Index);
             }
         }
-        
+        private void dataGridViewOptions_KeyDown(object sender, KeyEventArgs e)
+        {
+            DataGridViewRow DeletedRow = dataGridViewOptions.CurrentRow;
+            if ((e.KeyCode == Keys.Delete)&&(DeletedRow!=null))
+            {
+                dataGridViewOptions.Rows.RemoveAt(DeletedRow.Index);
+                options.Remove(DeletedRow.Cells[0].Value.ToString());
+            }
+        }
+        private void dataGridViewTasks_KeyDown(object sender, KeyEventArgs e)
+        {
+            DataGridViewRow DeletedRow = dataGridViewTasks.CurrentRow;
+            if ((e.KeyCode == Keys.Delete) && (DeletedRow != null))
+            {
+                dataGridViewTasks.Rows.RemoveAt(DeletedRow.Index);
+                tasks.Remove(DeletedRow.Cells[0].Value.ToString());
+                labelSelectedTask.Text = String.Empty;
+            }
+        }
 
-           
         private void dataGridViewTasks_SelectionChanged(object sender, EventArgs e)
         {
             matrixTable SelectedTask = GetSelectedTask();
@@ -186,7 +208,6 @@ namespace AnalyticHierarchyProcess
                 labelSelectedTask.Text = GetSelectedTask()?.name;
             }
         }
-
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(selectedtabIndex == 1)
@@ -262,10 +283,11 @@ namespace AnalyticHierarchyProcess
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonSaveMatrix_Click(object sender, EventArgs e)
         {
-           // dataGridViewCompare.Rows[3].Cells[2].Value = scalesInt[-1].ToString();
+            UpdateSelectedMatrixCompare();
         }
+
         private void buttonAddTask_Click(object sender, EventArgs e)
         {
             string newTaskName = textBoxTaskName.Text;
@@ -337,6 +359,9 @@ namespace AnalyticHierarchyProcess
                 MessageBox.Show("Необходимо выбрать или создать цель");
         }
 
-        
+        private void buttonSaveTaskInFile_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
