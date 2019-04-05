@@ -82,9 +82,11 @@ namespace AnalyticHierarchyProcess
                 }
                File.Close();
             }
+            UpdateDataGridView(dataGridViewTaskCompare,task);
         }
         public void SaveTaskInFile(string FullFileName)
         {
+            UpdateMatrix(task, dataGridViewTaskCompare);
             using (StreamWriter file = new StreamWriter(FullFileName, true))
             {
                 file.WriteLine(string.Join(",", task.fields));
@@ -410,7 +412,7 @@ namespace AnalyticHierarchyProcess
         {         
             if (task != null)
             {
-                UpdateMatrix(task, dataGridViewTaskCompare);
+                
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.FileName = task.name;
                 saveFileDialog.Filter = "CSV|*.csv";
