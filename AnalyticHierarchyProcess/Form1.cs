@@ -23,6 +23,7 @@ namespace AnalyticHierarchyProcess
     {
         public Form1()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
         }
         string selectedMatrix = string.Empty;
@@ -68,6 +69,7 @@ namespace AnalyticHierarchyProcess
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
         {        
+
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
             using (StreamReader File = new StreamReader(FullFileName))
             {
