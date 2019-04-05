@@ -67,8 +67,7 @@ namespace AnalyticHierarchyProcess
         private Dictionary<string, matrixTable> matrixsCompare = new Dictionary<string, matrixTable>();
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
-        {
-           
+        {        
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
             using (StreamReader File = new StreamReader(FullFileName))
             {
@@ -77,23 +76,24 @@ namespace AnalyticHierarchyProcess
                 Vector<double> vector = null;
                 for(int i=0;i< criterions.Count;i++)
                 {
-                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => Convert.ToDouble(x)).ToArray());
-              
-
-                
+                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
+                    for(int j=0;j<vector.Count;j++)
+                    task.matrix[i,j] = vector[j];
                 }
-                /*
-                  вот тут считываем  остальное  и заполняем матрицу через  task.matrix
-               */
+               File.Close();
             }
         }
         public void SaveTaskInFile(string FullFileName)
         {
-            /*
-                   сохраняем  все в указанный файл
-                   список критериев : task.fields
-                   матрциа : task.matrix
-           */
+            using (StreamWriter file = new StreamWriter(FullFileName, true))
+            {
+                file.WriteLine(string.Join(",", task.fields));
+                for (int i = 0; i < task.matrix.RowCount;i++)
+                {
+                    file.WriteLine(string.Join(",", task.matrix.Row(i).ToList().Select(x => x.ToString()).ToList()));
+                }
+                file.Close();
+            }
         }
 
         public matrixTable GetSelectedMatrix()
