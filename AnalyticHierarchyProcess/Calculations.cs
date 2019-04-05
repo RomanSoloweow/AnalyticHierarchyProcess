@@ -41,7 +41,7 @@ namespace Calculations
             double summ = _vector.Sum();
 
             //делим каждый элемент вектора на сумму
-            _vector.Divide(summ);
+            _vector = _vector.Divide(summ);
 
             return (_vector);
         }
@@ -89,8 +89,11 @@ namespace Calculations
         }
         public static double GetIndexAgreed(Matrix<double> matrix)
         {
+            if (matrix == null)
+                return 1;
+
             int n = matrix.ColumnCount;
-            double I = (MaxEigenValue(matrix) - n) / (n - 1);
+            double I = (MaxEigenValue(matrix) - n)*1.0 / (n - 1);
             return I;
         }
         public static double MaxEigenValue(Matrix<double> matrix)
@@ -99,10 +102,10 @@ namespace Calculations
                 return -1;
             return matrix.Evd().EigenValues.Real().Maximum();
         }
-        public static double CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        public static Vector<double> CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             if ((priority_vector == null) || (matrixList.Count < 1))
-                return -1;
+                return null;
             // Посчет нормированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();
             for (int i = 0; i < matrixList.Count; i++)
@@ -110,7 +113,7 @@ namespace Calculations
                 if (matrixList[i] != null)
                     vectorList.Add(CalcNormalizedPriorities(Sole(matrixList[i])));
                 else
-                    return -1;
+                    return null;
             }
 
             // Подсчет глобальных нормализированных приоритетов
@@ -119,15 +122,15 @@ namespace Calculations
             for (int i = 0; i < vectorList.Count; i++)
             {
                 for (int j = 0; j < lengthOfVector; j++)
-                    result[j] += vectorList[i][j];
+                    result[j] += vectorList[i][j]* priority_vector[i];
             }
 
-            return (result.Maximum());
+            return (result);
         }
-        public static double CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        public static Vector<double> CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             if ((priority_vector == null) || (matrixList.Count < 1))
-                return -1;
+                return null;
             // Посчет идеализированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();
             for (int i = 0; i < matrixList.Count; i++)
@@ -135,7 +138,7 @@ namespace Calculations
                 if (matrixList[i] != null)
                     vectorList.Add(CalcIdealizePriorities(Sole(matrixList[i])));
                 else
-                    return -1;
+                    return null;
             }
 
             // Подсчет глобальных идеализированных приоритетов
@@ -144,11 +147,11 @@ namespace Calculations
             for (int i = 0; i < vectorList.Count; i++)
             {
                 for (int j = 0; j < lengthOfVector; j++)
-                    result[j] += vectorList[i][j];
+                    result[j] += vectorList[i][j] * priority_vector[i];
             }
             double summ =result.Sum();
-            result.Divide(summ);
-            return (result.Maximum());
+            result = result.Divide(summ);
+            return (result);
         }
     }
 }
