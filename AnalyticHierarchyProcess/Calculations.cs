@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace AnalyticHierarchyProcess
+namespace Calculations
 {
     public static class Calculations
     {
