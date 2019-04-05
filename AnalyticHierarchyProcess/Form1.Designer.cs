@@ -33,7 +33,8 @@
             this.buttonGetResult = new System.Windows.Forms.Button();
             this.tab = new System.Windows.Forms.TabControl();
             this.tabOptions = new System.Windows.Forms.TabPage();
-            this.labelIdealizeResultHeader = new System.Windows.Forms.Label();
+            this.labelResult = new System.Windows.Forms.Label();
+            this.labelResultHeader = new System.Windows.Forms.Label();
             this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
             this.ColumnOptions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonAddOption = new System.Windows.Forms.Button();
@@ -52,8 +53,6 @@
             this.ColumnCriterions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelSelectedTask = new System.Windows.Forms.Label();
             this.labelHeader = new System.Windows.Forms.Label();
-            this.labelNormalizedResultHeader = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tab.SuspendLayout();
             this.tabOptions.SuspendLayout();
@@ -83,7 +82,7 @@
             this.buttonGetResult.TabIndex = 9;
             this.buttonGetResult.Text = "Расчитать";
             this.buttonGetResult.UseVisualStyleBackColor = true;
-            this.buttonGetResult.Click += new System.EventHandler(this.button1_Click);
+            this.buttonGetResult.Click += new System.EventHandler(this.buttonGetResult_Click);
             // 
             // tab
             // 
@@ -102,9 +101,8 @@
             // tabOptions
             // 
             this.tabOptions.AutoScroll = true;
-            this.tabOptions.Controls.Add(this.label1);
-            this.tabOptions.Controls.Add(this.labelNormalizedResultHeader);
-            this.tabOptions.Controls.Add(this.labelIdealizeResultHeader);
+            this.tabOptions.Controls.Add(this.labelResult);
+            this.tabOptions.Controls.Add(this.labelResultHeader);
             this.tabOptions.Controls.Add(this.dataGridViewOptions);
             this.tabOptions.Controls.Add(this.buttonAddOption);
             this.tabOptions.Controls.Add(this.buttonGetResult);
@@ -116,14 +114,22 @@
             this.tabOptions.Text = "Главная";
             this.tabOptions.UseVisualStyleBackColor = true;
             // 
-            // labelIdealizeResultHeader
+            // labelResult
             // 
-            this.labelIdealizeResultHeader.AutoSize = true;
-            this.labelIdealizeResultHeader.Location = new System.Drawing.Point(531, 20);
-            this.labelIdealizeResultHeader.Name = "labelIdealizeResultHeader";
-            this.labelIdealizeResultHeader.Size = new System.Drawing.Size(564, 25);
-            this.labelIdealizeResultHeader.TabIndex = 13;
-            this.labelIdealizeResultHeader.Text = "Результат на основе идеализированных приоритетов: ";
+            this.labelResult.AutoSize = true;
+            this.labelResult.Location = new System.Drawing.Point(741, 36);
+            this.labelResult.Name = "labelResult";
+            this.labelResult.Size = new System.Drawing.Size(0, 25);
+            this.labelResult.TabIndex = 15;
+            // 
+            // labelResultHeader
+            // 
+            this.labelResultHeader.AutoSize = true;
+            this.labelResultHeader.Location = new System.Drawing.Point(552, 36);
+            this.labelResultHeader.Name = "labelResultHeader";
+            this.labelResultHeader.Size = new System.Drawing.Size(183, 25);
+            this.labelResultHeader.TabIndex = 14;
+            this.labelResultHeader.Text = "Лучший вариант:";
             // 
             // dataGridViewOptions
             // 
@@ -133,16 +139,14 @@
             this.dataGridViewOptions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dataGridViewOptions.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewOptions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOptions.ColumnHeadersVisible = false;
             this.dataGridViewOptions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnOptions});
             this.dataGridViewOptions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.dataGridViewOptions.EnableHeadersVisualStyles = false;
-            this.dataGridViewOptions.Location = new System.Drawing.Point(6, 96);
+            this.dataGridViewOptions.Location = new System.Drawing.Point(6, 87);
             this.dataGridViewOptions.Name = "dataGridViewOptions";
             this.dataGridViewOptions.RowHeadersVisible = false;
             this.dataGridViewOptions.RowTemplate.Height = 33;
-            this.dataGridViewOptions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewOptions.Size = new System.Drawing.Size(1581, 790);
             this.dataGridViewOptions.TabIndex = 11;
             this.dataGridViewOptions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOptions_CellValueChanged);
@@ -150,9 +154,9 @@
             // 
             // ColumnOptions
             // 
-            this.ColumnOptions.HeaderText = "ColumnOptions";
+            this.ColumnOptions.HeaderText = "Объекты";
             this.ColumnOptions.Name = "ColumnOptions";
-            this.ColumnOptions.Width = 5;
+            this.ColumnOptions.Width = 146;
             // 
             // buttonAddOption
             // 
@@ -207,7 +211,7 @@
             this.dataGridViewCompare.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCompare.EnableHeadersVisualStyles = false;
             this.dataGridViewCompare.GridColor = System.Drawing.SystemColors.ActiveBorder;
-            this.dataGridViewCompare.Location = new System.Drawing.Point(4, 94);
+            this.dataGridViewCompare.Location = new System.Drawing.Point(8, 84);
             this.dataGridViewCompare.Name = "dataGridViewCompare";
             this.dataGridViewCompare.RowTemplate.Height = 33;
             this.dataGridViewCompare.Size = new System.Drawing.Size(1586, 805);
@@ -310,7 +314,6 @@
             this.dataGridViewCriterions.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewCriterions.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dataGridViewCriterions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewCriterions.ColumnHeadersVisible = false;
             this.dataGridViewCriterions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnCriterions});
             this.dataGridViewCriterions.EnableHeadersVisualStyles = false;
@@ -326,9 +329,9 @@
             // 
             // ColumnCriterions
             // 
-            this.ColumnCriterions.HeaderText = "ColumnCriterions";
+            this.ColumnCriterions.HeaderText = "Критерии";
             this.ColumnCriterions.Name = "ColumnCriterions";
-            this.ColumnCriterions.Width = 5;
+            this.ColumnCriterions.Width = 152;
             // 
             // labelSelectedTask
             // 
@@ -347,24 +350,6 @@
             this.labelHeader.Size = new System.Drawing.Size(158, 25);
             this.labelHeader.TabIndex = 13;
             this.labelHeader.Text = "Текущая цель:";
-            // 
-            // labelNormalizedResultHeader
-            // 
-            this.labelNormalizedResultHeader.AutoSize = true;
-            this.labelNormalizedResultHeader.Location = new System.Drawing.Point(531, 52);
-            this.labelNormalizedResultHeader.Name = "labelNormalizedResultHeader";
-            this.labelNormalizedResultHeader.Size = new System.Drawing.Size(579, 25);
-            this.labelNormalizedResultHeader.TabIndex = 14;
-            this.labelNormalizedResultHeader.Text = "Результат на основе нормализированных приоритетов: ";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1101, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 25);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "label1";
             // 
             // Form1
             // 
@@ -410,17 +395,16 @@
         private System.Windows.Forms.Button buttonAddTask;
         private System.Windows.Forms.Label labelSelectedTask;
         private System.Windows.Forms.Label labelHeader;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnCriterions;
         private System.Windows.Forms.Button buttonAddOption;
         private System.Windows.Forms.DataGridView dataGridViewOptions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOptions;
-        private System.Windows.Forms.Label labelIdealizeResultHeader;
         private System.Windows.Forms.Label labelChoiseCriterion;
         private System.Windows.Forms.ComboBox comboBoxCompare;
         private System.Windows.Forms.Button buttonSaveTaskInFile;
         private System.Windows.Forms.Button buttonLoadTaskFromFile;
-        private System.Windows.Forms.Label labelNormalizedResultHeader;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelResultHeader;
+        private System.Windows.Forms.Label labelResult;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOptions;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnCriterions;
     }
 }
 

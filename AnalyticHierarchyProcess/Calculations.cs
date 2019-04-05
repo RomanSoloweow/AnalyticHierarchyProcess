@@ -10,7 +10,7 @@ namespace Calculations
         public static Vector<double> Sole(Matrix<double> matrix)
         {
 
-            if (matrix == null)
+            if ((matrix == null) || (matrix.RowCount < 1) || (matrix.ColumnCount < 1))
                 return null;
             Matrix<double> matrix_copy = Matrix<double>.Build.DenseOfMatrix(matrix);
             // максимальное собственное значение
@@ -67,7 +67,7 @@ namespace Calculations
         }
         public static Vector<double> GetVectorPriority(Matrix<double> matrix)
         {
-            if (matrix == null)
+            if ((matrix == null) || (matrix.RowCount < 1) || (matrix.ColumnCount < 1))
                 return null;
 
                 int n = matrix.ColumnCount;
@@ -89,7 +89,7 @@ namespace Calculations
         }
         public static double GetIndexAgreed(Matrix<double> matrix)
         {
-            if (matrix == null)
+            if ((matrix == null)||(matrix.RowCount<1)||(matrix.ColumnCount < 1))
                 return 1;
 
             int n = matrix.ColumnCount;

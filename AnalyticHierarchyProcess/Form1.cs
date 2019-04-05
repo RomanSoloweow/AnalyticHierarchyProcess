@@ -28,6 +28,8 @@ namespace AnalyticHierarchyProcess
         }
         string selectedMatrix = string.Empty;
         int selectedtabIndex = 0;
+        bool result = false;
+        bool calc = false;
         Dictionary<int,string> scalesInt = new Dictionary<int, string>()
         {
             {-1,"Обратное симметричному"},
@@ -68,7 +70,12 @@ namespace AnalyticHierarchyProcess
         private Dictionary<string, matrixTable> matrixsCompare = new Dictionary<string, matrixTable>();
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
-        {        
+        {
+            matrixsCompare.Clear();
+            dataGridViewTaskCompare.Rows.Clear();
+            dataGridViewTaskCompare.Columns.Clear();
+            comboBoxCompare.Items.Clear();
+            selectedMatrix = string.Empty;
 
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
             using (StreamReader File = new StreamReader(FullFileName))
@@ -87,6 +94,7 @@ namespace AnalyticHierarchyProcess
             }
             UpdateDataGridView(dataGridViewTaskCompare,task);
             labelSelectedTask.Text = task.name;
+            result = false;
         }
         public void SaveTaskInFile(string FullFileName)
         {
@@ -102,7 +110,33 @@ namespace AnalyticHierarchyProcess
             }
             
         }
-        
+        public void AddTask(string NewTaskName)
+        {
+            matrixsCompare.Clear();
+            dataGridViewTaskCompare.Rows.Clear();
+            dataGridViewTaskCompare.Columns.Clear();
+            comboBoxCompare.Items.Clear();
+            selectedMatrix = string.Empty;
+
+            task = new matrixTable(NewTaskName);
+            labelSelectedTask.Text = NewTaskName;
+            result = false;
+        }
+        public void UpdateOptions()
+        {
+            dataGridViewOptions.Rows.Clear();
+            dataGridViewOptions.Columns.Clear();
+            labelResult.Text = String.Empty;
+            dataGridViewOptions.Columns.Add("Объекты", "Объекты");
+            if (task != null)
+            {
+                options.ForEach(x => dataGridViewOptions.Rows.Add(x));
+                if (result)
+                   buttonGetResult_Click(null,null);
+
+            }
+            
+        }
         public matrixTable GetSelectedMatrix()
         {
             if (comboBoxCompare.SelectedIndex== -1)
@@ -131,6 +165,7 @@ namespace AnalyticHierarchyProcess
             task.AddField(newCriterionName);
             matrixsCompare.Add(newCriterionName, new matrixTable(newCriterionName, options));
             dataGridViewCriterions.Rows.Add(newCriterionName);
+            result = false;
         }
         public void UpdateCriterion(DataGridViewCell selectedCell)
         {
@@ -147,34 +182,41 @@ namespace AnalyticHierarchyProcess
                 oldvalue.name = newCriterionName;
                 matrixsCompare.Remove(oldkey);
                 matrixsCompare.Add(newCriterionName, oldvalue);
-            
+            result = false;
         }
         public void DeleteCriterion(DataGridViewRow DeletedRow)
         {
             dataGridViewCriterions.Rows.RemoveAt(DeletedRow.Index);
             task.DeleteField(DeletedRow.Index);
             matrixsCompare.Remove(DeletedRow.Cells[0].Value.ToString());
-
+            result = false;
         }
 
         public void AddOption(string newOptionName)
         {
+            result = false;
             options.Add(newOptionName);
-            dataGridViewOptions.Rows.Add(newOptionName);
             matrixsCompare.Values.ToList().ForEach(x => x.AddField(newOptionName));
+            UpdateOptions();
         }
         public void UpdateOption(DataGridViewCell selectedCell)
         {
-            string newOptionName = selectedCell.Value.ToString();
-            options[selectedCell.RowIndex] = newOptionName;
-            matrixsCompare.Values.ToList().ForEach(x => x.fields[selectedCell.RowIndex] = newOptionName);
+                string newOptionName = "";
+                if (selectedCell.Value!= null)
+                newOptionName = selectedCell.Value.ToString();
+                else
+                newOptionName = "Объект " + selectedCell.RowIndex.ToString();
+                    
+                options[selectedCell.RowIndex] = newOptionName;
+                matrixsCompare.Values.ToList().ForEach(x => x.fields[selectedCell.RowIndex] = newOptionName);
+                UpdateOptions();         
         }
         public void DeleteOption(DataGridViewRow DeletedOption)
         {
             int indexDeletedOption = DeletedOption.Index;
-            dataGridViewOptions.Rows.RemoveAt(indexDeletedOption);
             matrixsCompare.Values.ToList().ForEach(x => x.DeleteField(indexDeletedOption));
             options.RemoveAt(indexDeletedOption);
+            UpdateOptions();
         }
 
         private void UpdateDataGridView(DataGridView dataGridView, matrixTable table,bool clear=true)
@@ -231,12 +273,12 @@ namespace AnalyticHierarchyProcess
                 dataGridView.Columns.Add(newColumnName, newColumnName);
                 dataGridView.Columns[dataGridView.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                int RowsCount = dataGridView.Rows.Count;
+                int ColumnCount = dataGridView.ColumnCount;
                 for (int i = 0; i < vector.Count; i++)
                 {
-                    dataGridView.Rows[i].Cells[RowsCount - 1].ValueType = typeof(double);
-                    dataGridView.Rows[i].Cells[RowsCount - 1].Value = vector[i];
-                    dataGridView.Rows[i].Cells[RowsCount - 1].ReadOnly = true;
+                    dataGridView.Rows[i].Cells[ColumnCount - 1].ValueType = typeof(double);
+                    dataGridView.Rows[i].Cells[ColumnCount - 1].Value = vector[i].ToString();
+                    dataGridView.Rows[i].Cells[ColumnCount - 1].ReadOnly = true;
                 }
             }
         }
@@ -255,10 +297,22 @@ namespace AnalyticHierarchyProcess
                  
 
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonGetResult_Click(object sender, EventArgs e)
         {
             if(task!=null)
-            labelIdealizeResultHeader.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
+            {
+                Vector<double> NormResult = calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+                Vector<double> IdealResult = calculations.CalcGlobalIdealizePriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+                if ((NormResult != null) && (IdealResult != null))
+                {
+                    calc = true;
+                    UpdateDataGridView(dataGridViewOptions, IdealResult, "Идеализированные приоритеты", false);
+                    UpdateDataGridView(dataGridViewOptions, NormResult, "Нормированные приоритеты", false);
+                    calc = false;
+                    result = true;
+                    labelResult.Text = options[NormResult.MaximumIndex()].ToString();
+                }
+            }
             else
                 MessageBox.Show("Необходимо создать цель");
             
@@ -305,12 +359,8 @@ namespace AnalyticHierarchyProcess
             
 
             if (tab.SelectedTab == tabOptions)
-            {
-                dataGridViewOptions.Rows.Clear();
-                if (task != null)
-                {
-                    options.ForEach(x => dataGridViewOptions.Rows.Add(x));
-                }
+            {            
+                    UpdateOptions();
             }
             if (tab.SelectedTab==tabCriterions)
             {
@@ -371,6 +421,7 @@ namespace AnalyticHierarchyProcess
         {
             if (dataGridViewOptions.SelectedCells.Count > 0)
             {
+                if (!calc)
                 UpdateOption(dataGridViewOptions.SelectedCells[0]);
             }
         }
@@ -378,26 +429,20 @@ namespace AnalyticHierarchyProcess
 
         private void buttonAddTask_Click(object sender, EventArgs e)
         {
-            string taskName = String.Empty;
+            string newTaskName = String.Empty;
             if (task == null)
-            {             
-                if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref taskName)!= DialogResult.Cancel)
-                task = new matrixTable(taskName);
-                labelSelectedTask.Text = taskName;
+            {
+                if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref newTaskName) != DialogResult.Cancel)
+                    AddTask(newTaskName);
             }
             else
             {
                 DialogResult dialogResult = MessageBox.Show("Цель уже была создана, удалить предыдущую?","Предупреждение", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    matrixsCompare.Clear();
-                    dataGridViewTaskCompare.Rows.Clear();
-                    dataGridViewTaskCompare.Columns.Clear();
-                    comboBoxCompare.Items.Clear();
-                    selectedMatrix = string.Empty;
-                    if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref taskName) != DialogResult.Cancel)
-                        task = new matrixTable(taskName);
-                    labelSelectedTask.Text = taskName;
+                  
+                    if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref newTaskName) != DialogResult.Cancel)
+                        AddTask(newTaskName);
                 }
             }
           
@@ -414,6 +459,7 @@ namespace AnalyticHierarchyProcess
                     if (!task.fields.Contains(newCriterionName))
                     {
                         AddCriterion(newCriterionName);
+
                     }
                     else
                         MessageBox.Show("Критерий уже существует");
@@ -484,11 +530,7 @@ namespace AnalyticHierarchyProcess
                 DialogResult dialogResult = MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    matrixsCompare.Clear();
-                    dataGridViewTaskCompare.Rows.Clear();
-                    dataGridViewTaskCompare.Columns.Clear();
-                    comboBoxCompare.Items.Clear();
-                    selectedMatrix = string.Empty;
+                   
                     if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                         return;
                     LoadTaskFromFile(openFileDialog.FileName);                    
