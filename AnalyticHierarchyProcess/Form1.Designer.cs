@@ -167,7 +167,7 @@
             this.buttonAddOption.TabIndex = 10;
             this.buttonAddOption.Text = "Добавить объекты для сравнения";
             this.buttonAddOption.UseVisualStyleBackColor = true;
-            this.buttonAddOption.Click += new System.EventHandler(this.buttonAddOption_Click);
+           this.buttonAddOption.Click += new System.EventHandler(this.buttonAddOption_Click);
             // 
             // tabCompares
             // 

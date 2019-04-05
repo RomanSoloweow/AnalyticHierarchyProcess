@@ -278,7 +278,8 @@ namespace InputBox
                     textBox.SelectionStart = 0;
                 }
                 textBox.Size = new Size(TextRenderer.MeasureText(textBox.Text, form.Font).Width + 10, TextRenderer.MeasureText(textBox.Text, form.Font).Height);
-                if (textBox.Size.Width >= buttonCancel.Location.X+ buttonCancel.Width)
+
+                if (textBox.Size.Width >= (buttonCancel.Location.X + buttonCancel.Width))
                     form.Width = textBox.Size.Width + 20;
 
                 if (textBox.Text.Length == 1)
@@ -301,8 +302,12 @@ namespace InputBox
 
             form.Text = title;
             form.ClientSize = new Size(buttonCancel.Location.X + buttonCancel.Size.Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
-            if (form.ClientSize.Width < TextRenderer.MeasureText(title, form.Font).Width)
-                form.ClientSize = new Size(TextRenderer.MeasureText(title, form.Font).Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
+            //if (form.ClientSize.Width < TextRenderer.MeasureText(title, form.Font).Width)
+               // form.ClientSize = new Size(TextRenderer.MeasureText(title, form.Font).Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
+
+          //  if (TextRenderer.MeasureText(title, form.Font).Width>buttonCancel.Location.X)
+               // form.ClientSize = new Size(TextRenderer.MeasureText(title, form.Font).Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
+
             form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.StartPosition = FormStartPosition.CenterScreen;
@@ -341,6 +346,8 @@ namespace InputBox
             form.ClientSize = new Size(buttonCancel.Location.X + buttonCancel.Size.Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
             if (form.ClientSize.Width < TextRenderer.MeasureText(title, form.Font).Width)
                 form.ClientSize = new Size(TextRenderer.MeasureText(title, form.Font).Width + 1, buttonCancel.Location.Y + buttonCancel.Size.Height + 1);
+            
+           
             form.Controls.AddRange(new Control[] { checkBox, buttonOk, buttonCancel });
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.StartPosition = FormStartPosition.CenterScreen;
