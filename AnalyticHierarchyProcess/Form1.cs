@@ -216,7 +216,9 @@ namespace AnalyticHierarchyProcess
         {
             if(task!=null)
             labelTheBestOption.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
-
+            else
+                MessageBox.Show("Необходимо создать цель");
+            
         }
 
 
@@ -289,12 +291,16 @@ namespace AnalyticHierarchyProcess
             selectedtabIndex = tab.SelectedIndex;
         }
 
-        private void dataGridViewTasks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridViewTaskCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            //если ячейка выбрана
             if (dataGridViewTaskCompare.SelectedCells.Count > 0)
             {
                 DataGridViewCell selectedCell = dataGridViewTaskCompare.SelectedCells[0];
-                task.name = selectedCell.Value.ToString();
+                //если не первый столбец(там заголовки) и не диагональные элементы
+                if ((selectedCell.ColumnIndex > 0) && (selectedCell.RowIndex != selectedCell.ColumnIndex - 1))
+                    dataGridViewTaskCompare.Rows[selectedCell.ColumnIndex - 1].Cells[selectedCell.RowIndex + 1].Value = scalesInt[-1];
+
             }
         }
         private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -404,6 +410,7 @@ namespace AnalyticHierarchyProcess
         {         
             if (task != null)
             {
+                UpdateMatrix(task, dataGridViewTaskCompare);
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.FileName = task.name;
                 saveFileDialog.Filter = "CSV|*.csv";
