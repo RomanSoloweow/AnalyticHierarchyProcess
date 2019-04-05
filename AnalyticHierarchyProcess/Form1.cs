@@ -68,6 +68,7 @@ namespace AnalyticHierarchyProcess
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
         {        
+
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
             using (StreamReader File = new StreamReader(FullFileName))
             {
