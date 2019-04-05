@@ -7,15 +7,21 @@ namespace MatrixTable
     {
         public MatrixTable(string _name,List<string> _fields)
         {
-            name = _name;
-            fields = new List<string>(_fields);
-            matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);          
+            name = _name;          
+                fields = new List<string>(_fields);
+               if ((_fields != null) && (_fields.Count > 0))
+                matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);           
         }
         public MatrixTable(string _name)
         {
             name = _name;
             fields = new List<string>();
-            matrix = null;
+        }
+         ~MatrixTable()
+        {
+            fields.Clear();
+            matrix.Clear();
+
         }
         /// <summary>
         /// Критерии
@@ -25,7 +31,7 @@ namespace MatrixTable
         /// <summary>
         /// Матрица сравнений критериев
         /// </summary>
-        public Matrix<double> matrix;     
+        public Matrix<double> matrix=null;     
         /// Добавить критерий. Матрица сравнений будет расширена.
         /// </summary>
         /// <param name="indexAddingField">Индекс добавляемого критерия</param>
