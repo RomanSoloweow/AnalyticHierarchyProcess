@@ -68,15 +68,24 @@ namespace AnalyticHierarchyProcess
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
         {
+           
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
-            /*
-             вот тут считываем  первую строку и заполняем критерии
-             */
-            List<string> criterions = null;
+            using (StreamReader File = new StreamReader(FullFileName))
+            {
+            List<string> criterions = new List<string>(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList());
             task = new matrixTable(taskName, criterions);
-            /*
-              вот тут считываем  остальное  и заполняем матрицу через  task.matrix
-           */
+                Vector<double> vector = null;
+                for(int i=0;i< criterions.Count;i++)
+                {
+                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => Convert.ToDouble(x)).ToArray());
+              
+
+                
+                }
+                /*
+                  вот тут считываем  остальное  и заполняем матрицу через  task.matrix
+               */
+            }
         }
         public void SaveTaskInFile(string FullFileName)
         {
@@ -205,36 +214,8 @@ namespace AnalyticHierarchyProcess
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            task.SetCellMatrix(0, 1, 2);
-            task.SetCellMatrix(0, 2, 3);
-            task.SetCellMatrix(1, 0, 4);
-            task.SetCellMatrix(1, 2, 6);
-            task.SetCellMatrix(2, 0, 7);
-            task.SetCellMatrix(2, 1, 8);
-           // Console.WriteLine(Math.Pow(32,5)%72);
-            /*
-            double[,] data = new double[,]
-            {
-                {  1,  5,  7},
-                { 0.2, 1, 3},
-                { 0.142857,  0.33333, 1}
-            };
-
-            Matrix<double> _matrix = DenseMatrix.OfArray(data);
-            Calculations.Sole(_matrix);
-
-            List<string> ty = new List<string>();
-            for(int i=0;i<3;i++)
-            ty.Add("Критерий №"+i.ToString());
-            tasks.Add("1", new matrixTable("1", ty));
-            tasks.Values.ElementAt(0).SetCellMatrix(0,1,5);
-            tasks.Values.ElementAt(0).SetCellMatrix(0,2,7);
-            tasks.Values.ElementAt(0).SetCellMatrix(1,2,3);
-            tasks.Values.ElementAt(0).FillMatrix();
-        //  Console.WriteLine(tasks.Values.ElementAt(0).GetVectorPriority(tasks.Values.ElementAt(0).matrix));
-          //  Console.WriteLine(tasks.Values.ElementAt(0).matrix);
-           // Console.WriteLine(tasks.Values.ElementAt(0).MaxEigenValue(tasks.Values.ElementAt(0).matrix));
-            tasks.Values.ElementAt(0).fields.ForEach(x => dataGridViewCompare.Columns.Add(x,x));*/
+            if(task!=null)
+            labelTheBestOption.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
 
         }
 
@@ -255,8 +236,6 @@ namespace AnalyticHierarchyProcess
                 DeleteOption(DeletedRow);
             }
         }
-
-
 
 
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
@@ -309,7 +288,6 @@ namespace AnalyticHierarchyProcess
             }
             selectedtabIndex = tab.SelectedIndex;
         }
-
 
         private void dataGridViewTasks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -435,8 +413,7 @@ namespace AnalyticHierarchyProcess
             }
             else
                 MessageBox.Show("Необходимо создать цель");
-        }
-      
+        }    
         private void buttonLoadTaskFromFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

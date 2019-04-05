@@ -33,7 +33,7 @@
             this.buttonGetResult = new System.Windows.Forms.Button();
             this.tab = new System.Windows.Forms.TabControl();
             this.tabOptions = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelTheBestOption = new System.Windows.Forms.Label();
             this.textBoxOptionName = new System.Windows.Forms.TextBox();
             this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
             this.ColumnOptions = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,7 +77,7 @@
             // buttonGetResult
             // 
             this.buttonGetResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonGetResult.Location = new System.Drawing.Point(768, 17);
+            this.buttonGetResult.Location = new System.Drawing.Point(936, 15);
             this.buttonGetResult.Name = "buttonGetResult";
             this.buttonGetResult.Size = new System.Drawing.Size(262, 73);
             this.buttonGetResult.TabIndex = 9;
@@ -102,7 +102,7 @@
             // tabOptions
             // 
             this.tabOptions.AutoScroll = true;
-            this.tabOptions.Controls.Add(this.label1);
+            this.tabOptions.Controls.Add(this.labelTheBestOption);
             this.tabOptions.Controls.Add(this.textBoxOptionName);
             this.tabOptions.Controls.Add(this.dataGridViewOptions);
             this.tabOptions.Controls.Add(this.buttonAddOption);
@@ -115,14 +115,14 @@
             this.tabOptions.Text = "Главная";
             this.tabOptions.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // labelTheBestOption
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1168, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 25);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "label1";
+            this.labelTheBestOption.AutoSize = true;
+            this.labelTheBestOption.Location = new System.Drawing.Point(1517, 33);
+            this.labelTheBestOption.Name = "labelTheBestOption";
+            this.labelTheBestOption.Size = new System.Drawing.Size(70, 25);
+            this.labelTheBestOption.TabIndex = 13;
+            this.labelTheBestOption.Text = "label1";
             // 
             // textBoxOptionName
             // 
@@ -245,7 +245,7 @@
             // 
             // buttonSaveTaskInFile
             // 
-            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(285, 13);
+            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(287, 13);
             this.buttonSaveTaskInFile.Name = "buttonSaveTaskInFile";
             this.buttonSaveTaskInFile.Size = new System.Drawing.Size(263, 78);
             this.buttonSaveTaskInFile.TabIndex = 3;
@@ -413,7 +413,7 @@
         private System.Windows.Forms.DataGridView dataGridViewOptions;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOptions;
         private System.Windows.Forms.TextBox textBoxOptionName;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelTheBestOption;
         private System.Windows.Forms.Label labelChoiseCriterion;
         private System.Windows.Forms.ComboBox comboBoxCompare;
         private System.Windows.Forms.Button buttonSaveTaskInFile;

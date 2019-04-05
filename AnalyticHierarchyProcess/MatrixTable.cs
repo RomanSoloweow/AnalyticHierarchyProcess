@@ -17,12 +17,6 @@ namespace MatrixTable
             name = _name;
             fields = new List<string>();
         }
-         ~MatrixTable()
-        {
-            fields.Clear();
-            matrix.Clear();
-
-        }
         /// <summary>
         /// Критерии
         /// </summary>
