@@ -75,10 +75,10 @@ namespace AnalyticHierarchyProcess
             {
             List<string> criterions = new List<string>(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList());
             task = new matrixTable(taskName, criterions);
+            criterions.ForEach(x => matrixsCompare.Add(x, new matrixTable(x, options)));
                 Vector<double> vector = null;
                 for(int i=0;i< criterions.Count;i++)
                 {
-                    matrixsCompare.Add(criterions[i], new matrixTable(criterions[i], options));
                     vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
                     for(int j=0;j<vector.Count;j++)
                     task.matrix[i,j] = vector[j];
@@ -102,7 +102,7 @@ namespace AnalyticHierarchyProcess
             }
             
         }
-
+        
         public matrixTable GetSelectedMatrix()
         {
             if (comboBoxCompare.SelectedIndex== -1)
@@ -157,7 +157,7 @@ namespace AnalyticHierarchyProcess
 
         }
 
-       public void AddOption(string newOptionName)
+        public void AddOption(string newOptionName)
         {
             options.Add(newOptionName);
             dataGridViewOptions.Rows.Add(newOptionName);
@@ -177,49 +177,78 @@ namespace AnalyticHierarchyProcess
             options.RemoveAt(indexDeletedOption);
         }
 
-        private void UpdateDataGridView(DataGridView dataGridView, matrixTable table)
+        private void UpdateDataGridView(DataGridView dataGridView, matrixTable table,bool clear=true)
         {
-            dataGridView.Rows.Clear();
-            dataGridView.Columns.Clear();
+            if (clear==true)
+            {
+                dataGridView.Rows.Clear();
+                dataGridView.Columns.Clear();
+            }
            if(table!=null)
             if (table.fields.Count > 0)
             {
-                dataGridView.Columns.Add(table.name, table.name);
                 table.fields.ForEach(x => dataGridView.Columns.Add(x, x));
-                table.fields.ForEach(x => dataGridView.Rows.Add(x, x));
                 for (int i = 0; i < table.CountFiields(); i++)
+                    { 
                         dataGridView.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                        dataGridView.Rows.Add();
+                        dataGridView.Rows[i].HeaderCell.Value = table.fields[i];
+                    }
+                    dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+                    dataGridView.TopLeftHeaderCell.Value = table.name;
 
-                     for (int i = 0; i < dataGridView.RowCount; i++)
-                        for (int j = 0; j < dataGridView.Columns.Count-1; j++)
+
+                    for (int i = 0; i < dataGridView.RowCount; i++)
+                        for (int j = 0; j < dataGridView.Columns.Count; j++)
                         {
-                            dataGridView.Rows[i].Cells[j+1].ValueType = typeof(DataGridViewComboBoxCell);
-                            dataGridView.Rows[i].Cells[j + 1] = GetDataGridViewComboBoxCell();
+                            dataGridView.Rows[i].Cells[j].ValueType = typeof(DataGridViewComboBoxCell);
+                            dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
 
-                                if (table.GetCellMatrix(i, j) % 1 == 0)
-                                dataGridView.Rows[i].Cells[j + 1].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
-                                else
-                                dataGridView.Rows[i].Cells[j + 1].Value = scalesInt[-1].ToString();
+                            if (table.GetCellMatrix(i, j) % 1 == 0)
+                                dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
+                            else
+                                dataGridView.Rows[i].Cells[j ].Value = scalesInt[-1].ToString();
 
-                                if (i == j)
-                                {
-                               
-                                dataGridView.Rows[i].Cells[j + 1].Value = scalesInt[1].ToString();
-                           //     dataGridView.Rows[i].Cells[j + 1].= Color.White;
-                                dataGridView.Rows[i].Cells[j + 1].ReadOnly = true;
-                                }                       
+                            if (i == j)
+                            {
+                                dataGridView.Rows[i].Cells[j].Value = scalesInt[1].ToString();
+                                dataGridView.Rows[i].Cells[j].ReadOnly = true;
+                            }
                         };
+
+                }
+        }
+        public void UpdateDataGridView(DataGridView dataGridView, Vector<double> vector, string newColumnName, bool clear=true)
+        {
+            if ((vector != null) && (newColumnName != null) && (newColumnName != string.Empty))
+            {
+                if (clear == true)
+                {
+                    dataGridView.Rows.Clear();
+                    dataGridView.Columns.Clear();
+                }
+
+                dataGridView.Columns.Add(newColumnName, newColumnName);
+                dataGridView.Columns[dataGridView.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                int RowsCount = dataGridView.Rows.Count;
+                for (int i = 0; i < vector.Count; i++)
+                {
+                    dataGridView.Rows[i].Cells[RowsCount - 1].ValueType = typeof(double);
+                    dataGridView.Rows[i].Cells[RowsCount - 1].Value = vector[i];
+                    dataGridView.Rows[i].Cells[RowsCount - 1].ReadOnly = true;
+                }
             }
         }
         private void UpdateMatrix(matrixTable table,DataGridView dataGridView)
         {
             double valueCells = 0;
             for (int i = 0; i < dataGridView.RowCount; i++)
-                for (int j = 0; j < dataGridView.Columns.Count-1; j++)
+                for (int j = 0; j < dataGridView.Columns.Count; j++)
                 {
-                    valueCells = scalesString[dataGridView.Rows[i].Cells[j + 1].Value.ToString()];
+                    valueCells = scalesString[dataGridView.Rows[i].Cells[j].Value.ToString()];
                     if (valueCells == -1)
-                        valueCells = 1.0 /(scalesString[dataGridView.Rows[j].Cells[i + 1].Value.ToString()]);
+                        valueCells = 1.0 /(scalesString[dataGridView.Rows[j].Cells[i].Value.ToString()]);
 
                         table.matrix[i, j] = valueCells;
                 }
@@ -229,7 +258,7 @@ namespace AnalyticHierarchyProcess
         private void button1_Click(object sender, EventArgs e)
         {
             if(task!=null)
-            labelTheBestOption.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
+            labelIdealizeResultHeader.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
             else
                 MessageBox.Show("Необходимо создать цель");
             
@@ -377,13 +406,14 @@ namespace AnalyticHierarchyProcess
         {
             if (task != null)
             {
-                string newCriterionName = textBoxCriterionName.Text;
+                string newCriterionName="";
+                if (InputBoxs.InputBox("Добавить критерий", "Введите критерий", ref newCriterionName) == DialogResult.Cancel)
+                    return;
                 if (newCriterionName != String.Empty)
                 {
                     if (!task.fields.Contains(newCriterionName))
                     {
                         AddCriterion(newCriterionName);
-                        textBoxCriterionName.Text = String.Empty;
                     }
                     else
                         MessageBox.Show("Критерий уже существует");
@@ -401,13 +431,15 @@ namespace AnalyticHierarchyProcess
             {
                 if (calculations.GetIndexAgreed(task.matrix) < 0.1)
                 {
-                   string newOptionName = textBoxOptionName.Text;
+                    string newOptionName="";
+                    if (InputBoxs.InputBox("Добавить объект", "Введите название объекта", ref newOptionName) == DialogResult.Cancel)
+                        return;
+
                     if (newOptionName != String.Empty)
                     {
                         if (!options.Contains(newOptionName))
                         {
                             AddOption(newOptionName);                           
-                            textBoxOptionName.Text = String.Empty;
                         }
                         else
                             MessageBox.Show("Объект уже существует");
