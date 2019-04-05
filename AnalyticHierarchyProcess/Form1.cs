@@ -133,15 +133,20 @@ namespace AnalyticHierarchyProcess
         }
         public void UpdateCriterion(DataGridViewCell selectedCell)
         {
-            string newCriterionName = selectedCell.Value.ToString();
-            task.fields[selectedCell.RowIndex] = newCriterionName;
+            if (selectedCell.Value == null)
+            {            
+                selectedCell.Value = "Критерий " + selectedCell.RowIndex.ToString();
+                dataGridViewCriterions.Rows[selectedCell.RowIndex].Cells[selectedCell.ColumnIndex].Value = selectedCell.Value;
+            }
 
-            string oldkey = matrixsCompare.Keys.ToList()[selectedCell.RowIndex];
-            matrixTable oldvalue = matrixsCompare[oldkey];           
-            oldvalue.name = newCriterionName;
-            matrixsCompare.Remove(oldkey);
-            matrixsCompare.Add(newCriterionName, oldvalue);
-
+                string newCriterionName = selectedCell.Value.ToString();         
+                task.fields[selectedCell.RowIndex] = newCriterionName;
+                string oldkey = matrixsCompare.Keys.ToList()[selectedCell.RowIndex];
+                matrixTable oldvalue = matrixsCompare[oldkey];
+                oldvalue.name = newCriterionName;
+                matrixsCompare.Remove(oldkey);
+                matrixsCompare.Add(newCriterionName, oldvalue);
+            
         }
         public void DeleteCriterion(DataGridViewRow DeletedRow)
         {
@@ -197,7 +202,9 @@ namespace AnalyticHierarchyProcess
 
                                 if (i == j)
                                 {
+                               
                                 dataGridView.Rows[i].Cells[j + 1].Value = scalesInt[1].ToString();
+                           //     dataGridView.Rows[i].Cells[j + 1].= Color.White;
                                 dataGridView.Rows[i].Cells[j + 1].ReadOnly = true;
                                 }                       
                         };
@@ -391,7 +398,7 @@ namespace AnalyticHierarchyProcess
         {
             if (task != null)
             {
-                if (calculations.GetIndexAgreed(task.matrix)<0.01)
+                if (calculations.GetIndexAgreed(task.matrix) < 0.1)
                 {
                    string newOptionName = textBoxOptionName.Text;
                     if (newOptionName != String.Empty)
