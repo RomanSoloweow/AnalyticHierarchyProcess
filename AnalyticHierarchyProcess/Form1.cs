@@ -128,6 +128,7 @@ namespace AnalyticHierarchyProcess
             dataGridViewOptions.Columns.Clear();
             labelResult.Text = String.Empty;
             dataGridViewOptions.Columns.Add("Объекты", "Объекты");
+            dataGridViewOptions.Columns[dataGridViewOptions.Columns.Count-1].SortMode = DataGridViewColumnSortMode.NotSortable;
             if (task != null)
             {
                 options.ForEach(x => dataGridViewOptions.Rows.Add(x));

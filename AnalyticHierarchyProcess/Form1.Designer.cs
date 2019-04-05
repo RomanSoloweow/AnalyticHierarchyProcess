@@ -271,7 +271,6 @@
             this.dataGridViewTaskCompare.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewTaskCompare.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTaskCompare.EnableHeadersVisualStyles = false;
-            this.dataGridViewTaskCompare.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dataGridViewTaskCompare.Location = new System.Drawing.Point(7, 97);
             this.dataGridViewTaskCompare.Name = "dataGridViewTaskCompare";
             this.dataGridViewTaskCompare.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -317,7 +316,6 @@
             this.dataGridViewCriterions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnCriterions});
             this.dataGridViewCriterions.EnableHeadersVisualStyles = false;
-            this.dataGridViewCriterions.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dataGridViewCriterions.Location = new System.Drawing.Point(6, 84);
             this.dataGridViewCriterions.Name = "dataGridViewCriterions";
             this.dataGridViewCriterions.RowHeadersVisible = false;
