@@ -83,6 +83,7 @@ namespace AnalyticHierarchyProcess
                File.Close();
             }
             UpdateDataGridView(dataGridViewTaskCompare,task);
+            labelSelectedTask.Text = task.name;
         }
         public void SaveTaskInFile(string FullFileName)
         {
@@ -96,6 +97,7 @@ namespace AnalyticHierarchyProcess
                 }
                 file.Close();
             }
+            
         }
 
         public matrixTable GetSelectedMatrix()
@@ -244,10 +246,12 @@ namespace AnalyticHierarchyProcess
 
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
-           if(selectedMatrix!=string.Empty)
-           UpdateMatrix(matrixsCompare[selectedMatrix],dataGridViewCompare);
-           selectedMatrix = comboBoxCompare.Text;
-           UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
+            if (selectedMatrix != string.Empty)
+            {
+                UpdateMatrix(matrixsCompare[selectedMatrix], dataGridViewCompare);
+                selectedMatrix = comboBoxCompare.Text;
+                UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
+            }
         }
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
