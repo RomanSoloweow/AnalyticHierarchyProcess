@@ -1,30 +1,31 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System.Collections.Generic;
+using System;
 namespace MatrixTable
 {
     public class MatrixTable
     {
         public MatrixTable(string _name,List<string> _fields)
         {
-            name = _name;
-            fields = new List<string>(_fields);
-            matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);          
+            name = _name;          
+                fields = new List<string>(_fields);
+               if ((_fields != null) && (_fields.Count > 0))
+                matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);           
         }
         public MatrixTable(string _name)
         {
             name = _name;
             fields = new List<string>();
-            matrix = Matrix<double>.Build.Dense(1,1, 1);
         }
         /// <summary>
         /// Критерии
         /// </summary>
         public List<string> fields = null;
-        public string name;
+        public string name=null;
         /// <summary>
         /// Матрица сравнений критериев
         /// </summary>
-        public Matrix<double> matrix;     
+        public Matrix<double> matrix=null;     
         /// Добавить критерий. Матрица сравнений будет расширена.
         /// </summary>
         /// <param name="indexAddingField">Индекс добавляемого критерия</param>
@@ -42,6 +43,10 @@ namespace MatrixTable
         public int CountFiields()
         {
             return (fields!= null)?fields.Count:0;
+        }
+        public void SetName(string _name)
+        {
+            name = _name;
         }
         /// <summary>
         /// Добавить критерий в конец.
@@ -70,10 +75,17 @@ namespace MatrixTable
         /// <param name="indexAdding">Индекс добавляемого элемента</param>
         public void ExpandMatrix(int indexAdding)
         {
-            //Длина добавляемой строки = RowCount т.к. если была матрица 3 на 3, нужно добавить строку длиной 3 и будет 4 на 3
-            matrix = matrix.InsertRow(indexAdding, Vector<double>.Build.Dense(matrix.RowCount, 1));
-            //Высота добавляемого столбца = RowCount т.к. если матрица стала  4 на 3, нужно добавить столбец высотой 4 и будет 4 на 4
-            matrix = matrix.InsertColumn(indexAdding, Vector<double>.Build.Dense(matrix.RowCount, 1));
+            //если матрица не пустая - расширяем, если пустая - создаем новую
+            if (matrix != null)
+            {
+                //Длина добавляемой строки = RowCount т.к. если была матрица 3 на 3, нужно добавить строку длиной 3 и будет 4 на 3
+                matrix = matrix.InsertRow(indexAdding, Vector<double>.Build.Dense(matrix.RowCount, 1));
+                //Высота добавляемого столбца = RowCount т.к. если матрица стала  4 на 3, нужно добавить столбец высотой 4 и будет 4 на 4
+                matrix = matrix.InsertColumn(indexAdding, Vector<double>.Build.Dense(matrix.RowCount, 1));
+            }
+            else
+                matrix = Matrix<double>.Build.Dense(indexAdding+1, indexAdding+1, 1);
+
         }
         /// <summary>
         /// Сократить матрицу (удалится строка и столбец)
@@ -81,8 +93,8 @@ namespace MatrixTable
         /// <param name="indexDeleting">Номер удаляемого элемента</param>
         public void ContractMatrix(int indexDeleting)
         {
-            matrix.RemoveColumn(indexDeleting);
-            matrix.RemoveRow(indexDeleting);
+            matrix = matrix.RemoveColumn(indexDeleting);
+            matrix = matrix.RemoveRow(indexDeleting);
         }
         /// <summary>
         /// Установить значение ячейки матрицы
@@ -142,7 +154,7 @@ namespace MatrixTable
                         /*чтобы сделать матрицу обратно - симметричной
                          * если текущее отношение не задано - берем обратное значение от симметричного элемента
                        */
-                        if (matrix[i, j] == 1)
+                        if (Math.Abs(matrix[i, j]) == 1)
                             matrix[i, j] = 1 / matrix[j, i];
                     }
 
