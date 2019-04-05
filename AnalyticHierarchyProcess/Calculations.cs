@@ -41,7 +41,7 @@ namespace Calculations
             double summ = _vector.Sum();
 
             //делим каждый элемент вектора на сумму
-            _vector.Divide(summ);
+            _vector = _vector.Divide(summ);
 
             return (_vector);
         }
@@ -122,10 +122,10 @@ namespace Calculations
             for (int i = 0; i < vectorList.Count; i++)
             {
                 for (int j = 0; j < lengthOfVector; j++)
-                    result[j] += vectorList[i][j];
+                    result[j] += vectorList[i][j]* priority_vector[i];
             }
 
-            return (result.Maximum());
+            return (result.MaximumIndex()+1);
         }
         public static double CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
@@ -147,11 +147,11 @@ namespace Calculations
             for (int i = 0; i < vectorList.Count; i++)
             {
                 for (int j = 0; j < lengthOfVector; j++)
-                    result[j] += vectorList[i][j];
+                    result[j] += vectorList[i][j] * priority_vector[i];
             }
             double summ =result.Sum();
-            result.Divide(summ);
-            return (result.Maximum());
+            result = result.Divide(summ);
+            return (result.MaximumIndex()+1);
         }
     }
 }
