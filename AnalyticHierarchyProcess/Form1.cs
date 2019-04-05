@@ -78,6 +78,7 @@ namespace AnalyticHierarchyProcess
                 Vector<double> vector = null;
                 for(int i=0;i< criterions.Count;i++)
                 {
+                    matrixsCompare.Add(criterions[i], new matrixTable(criterions[i], options));
                     vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
                     for(int j=0;j<vector.Count;j++)
                     task.matrix[i,j] = vector[j];
@@ -256,11 +257,11 @@ namespace AnalyticHierarchyProcess
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedMatrix != string.Empty)
-            {
                 UpdateMatrix(matrixsCompare[selectedMatrix], dataGridViewCompare);
+
                 selectedMatrix = comboBoxCompare.Text;
                 UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
-            }
+            
         }
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
