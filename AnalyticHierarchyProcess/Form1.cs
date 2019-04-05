@@ -67,8 +67,8 @@ namespace AnalyticHierarchyProcess
         private Dictionary<string, matrixTable> matrixsCompare = new Dictionary<string, matrixTable>();
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
-        {
-           
+        {        
+
             string taskName = Path.GetFileNameWithoutExtension(FullFileName);
             using (StreamReader File = new StreamReader(FullFileName))
             {
@@ -77,23 +77,28 @@ namespace AnalyticHierarchyProcess
                 Vector<double> vector = null;
                 for(int i=0;i< criterions.Count;i++)
                 {
-                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => Convert.ToDouble(x)).ToArray());
-              
-
-                
+                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
+                    for(int j=0;j<vector.Count;j++)
+                    task.matrix[i,j] = vector[j];
                 }
-                /*
-                  вот тут считываем  остальное  и заполняем матрицу через  task.matrix
-               */
+               File.Close();
             }
+            UpdateDataGridView(dataGridViewTaskCompare,task);
+            labelSelectedTask.Text = task.name;
         }
         public void SaveTaskInFile(string FullFileName)
         {
-            /*
-                   сохраняем  все в указанный файл
-                   список критериев : task.fields
-                   матрциа : task.matrix
-           */
+            UpdateMatrix(task, dataGridViewTaskCompare);
+            using (StreamWriter file = new StreamWriter(FullFileName, true))
+            {
+                file.WriteLine(string.Join(",", task.fields));
+                for (int i = 0; i < task.matrix.RowCount;i++)
+                {
+                    file.WriteLine(string.Join(",", task.matrix.Row(i).ToList().Select(x => x.ToString()).ToList()));
+                }
+                file.Close();
+            }
+            
         }
 
         public matrixTable GetSelectedMatrix()
@@ -216,7 +221,9 @@ namespace AnalyticHierarchyProcess
         {
             if(task!=null)
             labelTheBestOption.Text=calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList()).ToString();
-
+            else
+                MessageBox.Show("Необходимо создать цель");
+            
         }
 
 
@@ -240,10 +247,12 @@ namespace AnalyticHierarchyProcess
 
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
-           if(selectedMatrix!=string.Empty)
-           UpdateMatrix(matrixsCompare[selectedMatrix],dataGridViewCompare);
-           selectedMatrix = comboBoxCompare.Text;
-           UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
+            if (selectedMatrix != string.Empty)
+            {
+                UpdateMatrix(matrixsCompare[selectedMatrix], dataGridViewCompare);
+                selectedMatrix = comboBoxCompare.Text;
+                UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
+            }
         }
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -289,12 +298,16 @@ namespace AnalyticHierarchyProcess
             selectedtabIndex = tab.SelectedIndex;
         }
 
-        private void dataGridViewTasks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridViewTaskCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            //если ячейка выбрана
             if (dataGridViewTaskCompare.SelectedCells.Count > 0)
             {
                 DataGridViewCell selectedCell = dataGridViewTaskCompare.SelectedCells[0];
-                task.name = selectedCell.Value.ToString();
+                //если не первый столбец(там заголовки) и не диагональные элементы
+                if ((selectedCell.ColumnIndex > 0) && (selectedCell.RowIndex != selectedCell.ColumnIndex - 1))
+                    dataGridViewTaskCompare.Rows[selectedCell.ColumnIndex - 1].Cells[selectedCell.RowIndex + 1].Value = scalesInt[-1];
+
             }
         }
         private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -404,6 +417,7 @@ namespace AnalyticHierarchyProcess
         {         
             if (task != null)
             {
+                
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.FileName = task.name;
                 saveFileDialog.Filter = "CSV|*.csv";

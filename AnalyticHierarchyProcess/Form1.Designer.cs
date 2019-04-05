@@ -77,7 +77,7 @@
             // buttonGetResult
             // 
             this.buttonGetResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonGetResult.Location = new System.Drawing.Point(936, 15);
+            this.buttonGetResult.Location = new System.Drawing.Point(772, 9);
             this.buttonGetResult.Name = "buttonGetResult";
             this.buttonGetResult.Size = new System.Drawing.Size(262, 73);
             this.buttonGetResult.TabIndex = 9;
@@ -280,7 +280,7 @@
             this.dataGridViewTaskCompare.RowTemplate.Height = 33;
             this.dataGridViewTaskCompare.Size = new System.Drawing.Size(1623, 869);
             this.dataGridViewTaskCompare.TabIndex = 0;
-            this.dataGridViewTaskCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTasks_CellValueChanged);
+            this.dataGridViewTaskCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTaskCompare_CellValueChanged);
             // 
             // tabCriterions
             // 
