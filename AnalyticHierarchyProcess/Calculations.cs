@@ -102,10 +102,10 @@ namespace Calculations
                 return -1;
             return matrix.Evd().EigenValues.Real().Maximum();
         }
-        public static double CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        public static Vector<double> CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             if ((priority_vector == null) || (matrixList.Count < 1))
-                return -1;
+                return null;
             // Посчет нормированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();
             for (int i = 0; i < matrixList.Count; i++)
@@ -113,7 +113,7 @@ namespace Calculations
                 if (matrixList[i] != null)
                     vectorList.Add(CalcNormalizedPriorities(Sole(matrixList[i])));
                 else
-                    return -1;
+                    return null;
             }
 
             // Подсчет глобальных нормализированных приоритетов
@@ -125,12 +125,12 @@ namespace Calculations
                     result[j] += vectorList[i][j]* priority_vector[i];
             }
 
-            return (result.MaximumIndex()+1);
+            return (result);
         }
-        public static double CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
+        public static Vector<double> CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
             if ((priority_vector == null) || (matrixList.Count < 1))
-                return -1;
+                return null;
             // Посчет идеализированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();
             for (int i = 0; i < matrixList.Count; i++)
@@ -138,7 +138,7 @@ namespace Calculations
                 if (matrixList[i] != null)
                     vectorList.Add(CalcIdealizePriorities(Sole(matrixList[i])));
                 else
-                    return -1;
+                    return null;
             }
 
             // Подсчет глобальных идеализированных приоритетов
@@ -151,7 +151,7 @@ namespace Calculations
             }
             double summ =result.Sum();
             result = result.Divide(summ);
-            return (result.MaximumIndex()+1);
+            return (result);
         }
     }
 }
