@@ -78,7 +78,7 @@ namespace Calculations
                         vectorPriority[i] *= matrix[i, j];
 
                 for (int i = 0; i < n; i++)
-                    vectorPriority[i] = Math.Pow(vectorPriority[i], (1.0 / (n - 1)));
+                    vectorPriority[i] = Math.Pow(vectorPriority[i], (1.0 / (n)));
 
                 double sum = vectorPriority.Sum();
 

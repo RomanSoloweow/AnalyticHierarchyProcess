@@ -16,7 +16,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using System.IO;
 using matrixTable = MatrixTable.MatrixTable;
 using calculations=Calculations.Calculations;
-
+using matrixIO = MatrixIO.MatrixIO;
 namespace AnalyticHierarchyProcess
 {
     public partial class Form1 : Form
@@ -68,7 +68,6 @@ namespace AnalyticHierarchyProcess
             }
             return dataGridViewComboBoxCell;
         }
-        //private Dictionary<string, matrixTable> tasks = new Dictionary<string, matrixTable>();
         private Dictionary<string, matrixTable> matrixsCompare = new Dictionary<string, matrixTable>();
         private List<string> options = new List<string>();
         public void LoadTaskFromFile(string FullFileName)
@@ -77,23 +76,11 @@ namespace AnalyticHierarchyProcess
             dataGridViewTaskCompare.Rows.Clear();
             dataGridViewTaskCompare.Columns.Clear();
             comboBoxCompare.Items.Clear();
-            selectedMatrix = string.Empty;
 
-            string taskName = Path.GetFileNameWithoutExtension(FullFileName);
-            using (StreamReader File = new StreamReader(FullFileName))
-            {
-            List<string> criterions = new List<string>(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList());
-            task = new matrixTable(taskName, criterions);
-            criterions.ForEach(x => matrixsCompare.Add(x, new matrixTable(x, options)));
-                Vector<double> vector = null;
-                for(int i=0;i< criterions.Count;i++)
-                {
-                    vector = Vector<double>.Build.DenseOfArray(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
-                    for(int j=0;j<vector.Count;j++)
-                    task.matrix[i,j] = vector[j];
-                }
-               File.Close();
-            }
+
+            selectedMatrix = string.Empty;
+            task = matrixIO.LoadFromFile(FullFileName);
+            task.fields.ForEach(x => matrixsCompare.Add(x, new matrixTable(x, options)));
             UpdateDataGridView(dataGridViewTaskCompare,task);
             labelSelectedTask.Text = task.name;
             result = false;
@@ -101,16 +88,52 @@ namespace AnalyticHierarchyProcess
         public void SaveTaskInFile(string FullFileName)
         {
             UpdateMatrix(task, dataGridViewTaskCompare);
-            using (StreamWriter file = new StreamWriter(FullFileName, true))
+            matrixIO.SaveInFile(task, FullFileName);
+        }
+
+        bool HaveErrors(int code, string nameNewObject = null, bool mute = false)
+        {
+            string textError = String.Empty;
+            if (((code & 1) > 0) && (task == null))
             {
-                file.WriteLine(string.Join(",", task.fields));
-                for (int i = 0; i < task.matrix.RowCount;i++)
-                {
-                    file.WriteLine(string.Join(",", task.matrix.Row(i).ToList().Select(x => x.ToString()).ToList()));
-                }
-                file.Close();
+                textError = "Необходимо создать цель";
             }
-            
+                else if (((code & 2) > 0) && (task.fields.Count < 1))
+                {
+                textError = "Необходимо добавить критерии";
+                }
+                    else if (((code & 4) > 0) && (calculations.GetIndexAgreed(task.matrix) > 0.1))
+                    {
+                        textError = "Цель должна быть согласованна";
+                    }
+                        else if (((code & 8) > 0) && (nameNewObject == String.Empty))
+                        {
+                            textError =  "Необходимо вести название";
+                        }
+                            else if(((code & 16) > 0) && (task.fields.Contains(nameNewObject)))
+                            {
+                                textError =  "Критерий уже существует";
+                            }
+                                else if(((code & 32) > 0) && (options.Contains(nameNewObject)))
+                                {
+                                    textError = "Объект уже существует";
+                                }
+                                    else if (((code & 64) > 0) && (options.Count < 1))
+                                    {
+                                        textError = "Таблица пуста. Необходимо добавить объекты для сравнения";
+                                    }
+                                        else if (((code & 128) > 0) && (!result))
+                                        {
+                                            textError = "Необходимо провести расчеты";
+                                        }
+            if (textError != String.Empty)
+            {
+            if (!mute)
+                MessageBox.Show(textError);
+
+            return true;
+            }   
+           return false;
         }
         public void AddTask(string NewTaskName)
         {
@@ -230,39 +253,38 @@ namespace AnalyticHierarchyProcess
                 dataGridView.Rows.Clear();
                 dataGridView.Columns.Clear();
             }
-           if(table!=null)
-            if (table.fields.Count > 0)
-            {
-                table.fields.ForEach(x => dataGridView.Columns.Add(x, x));
-                for (int i = 0; i < table.CountFiields(); i++)
-                    { 
-                        dataGridView.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-                        dataGridView.Rows.Add();
-                        dataGridView.Rows[i].HeaderCell.Value = table.fields[i];
-                    }
-                    dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-                    dataGridView.TopLeftHeaderCell.Value = table.name;
 
+            if ((table == null)||(table.fields.Count < 0))
+                return;
 
-                    for (int i = 0; i < dataGridView.RowCount; i++)
-                        for (int j = 0; j < dataGridView.Columns.Count; j++)
+            table.fields.ForEach(x => dataGridView.Columns.Add(x, x));
+            for (int i = 0; i < table.CountFiields(); i++)
+            { 
+                dataGridView.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                dataGridView.Rows.Add();
+                dataGridView.Rows[i].HeaderCell.Value = table.fields[i];
+            }
+                dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+                dataGridView.TopLeftHeaderCell.Value = table.name;
+
+                for (int i = 0; i < dataGridView.RowCount; i++)
+                    for (int j = 0; j < dataGridView.Columns.Count; j++)
+                    {
+                        dataGridView.Rows[i].Cells[j].ValueType = typeof(DataGridViewComboBoxCell);
+                        dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
+
+                        if (table.GetCellMatrix(i, j) % 1 == 0)
+                            dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
+                        else
+                            dataGridView.Rows[i].Cells[j ].Value = scalesInt[-1].ToString();
+
+                        if (i == j)
                         {
-                            dataGridView.Rows[i].Cells[j].ValueType = typeof(DataGridViewComboBoxCell);
-                            dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
+                            dataGridView.Rows[i].Cells[j].Value = scalesInt[1].ToString();
+                            dataGridView.Rows[i].Cells[j].ReadOnly = true;
+                        }
+                    };
 
-                            if (table.GetCellMatrix(i, j) % 1 == 0)
-                                dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
-                            else
-                                dataGridView.Rows[i].Cells[j ].Value = scalesInt[-1].ToString();
-
-                            if (i == j)
-                            {
-                                dataGridView.Rows[i].Cells[j].Value = scalesInt[1].ToString();
-                                dataGridView.Rows[i].Cells[j].ReadOnly = true;
-                            }
-                        };
-
-                }
         }
         public void UpdateDataGridView(DataGridView dataGridView, Vector<double> vector, string newColumnName, bool clear=true)
         {
@@ -303,20 +325,17 @@ namespace AnalyticHierarchyProcess
         }
         private void buttonGetResult_Click(object sender, EventArgs e)
         {
-            if(task!=null)
-            {
-                 NormResult = calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
-                 IdealResult = calculations.CalcGlobalIdealizePriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
-                if ((NormResult != null) && (IdealResult != null))
-                {                  
-                    result = true;
-                    labelNormResult.Text = options[NormResult.MaximumIndex()].ToString();
-                    labelIdealResult.Text = options[IdealResult.MaximumIndex()].ToString();
-                }
-            }
-            else
-                MessageBox.Show("Необходимо создать цель");
-            
+            if (HaveErrors(1))
+                return;
+
+             NormResult = calculations.CalcGlobalDistributedPriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+            IdealResult = calculations.CalcGlobalIdealizePriority(calculations.GetVectorPriority(task.matrix), matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+            if ((NormResult != null) && (IdealResult != null))
+            {                  
+                result = true;
+                labelNormResult.Text = options[NormResult.MaximumIndex()].ToString();
+                labelIdealResult.Text = options[IdealResult.MaximumIndex()].ToString();
+            }          
         }
 
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
@@ -339,18 +358,17 @@ namespace AnalyticHierarchyProcess
 
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (options.Count < 1)
+            if (HaveErrors(64))
             {
-                MessageBox.Show("Таблица пуста. Необходимо добавить объекты для сравнения");
                 tab.SelectedTab = tabOptions;
+                return;
+            }
            
             if (selectedMatrix != string.Empty)
                 UpdateMatrix(matrixsCompare[selectedMatrix], dataGridViewCompare);
 
                 selectedMatrix = comboBoxCompare.Text;
                 UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);
-            }
-
         }
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -380,15 +398,10 @@ namespace AnalyticHierarchyProcess
                 dataGridViewCompare.Rows.Clear();
                 dataGridViewCompare.Columns.Clear();
                 comboBoxCompare.Items.Clear();
-                if (task != null)
-                {
+                if (!HaveErrors(1))
                     task.fields.ForEach(x => comboBoxCompare.Items.Add(x));               
-                }
                 else
-                {
-                    MessageBox.Show("Необходимо создать цель");
                     tab.SelectedTab = tabTask;
-                }
 
             }
             if (tab.SelectedTab == tabTask)
@@ -407,8 +420,8 @@ namespace AnalyticHierarchyProcess
             {
                 DataGridViewCell selectedCell = dataGridViewTaskCompare.SelectedCells[0];
                 //если не первый столбец(там заголовки) и не диагональные элементы
-                if ((selectedCell.ColumnIndex > 0) && (selectedCell.RowIndex != selectedCell.ColumnIndex - 1))
-                    dataGridViewTaskCompare.Rows[selectedCell.ColumnIndex - 1].Cells[selectedCell.RowIndex + 1].Value = scalesInt[-1];
+                if ((selectedCell.ColumnIndex > 0) && (selectedCell.RowIndex != selectedCell.ColumnIndex ))
+                    dataGridViewTaskCompare.Rows[selectedCell.ColumnIndex].Cells[selectedCell.RowIndex].Value = scalesInt[-1];
 
             }
         }
@@ -419,167 +432,82 @@ namespace AnalyticHierarchyProcess
             {
                 DataGridViewCell selectedCell = dataGridViewCompare.SelectedCells[0];
                //если не первый столбец(там заголовки) и не диагональные элементы
-                if ((selectedCell.ColumnIndex > 0)&&(selectedCell.RowIndex!= selectedCell.ColumnIndex-1))
-                    dataGridViewCompare.Rows[selectedCell.ColumnIndex - 1].Cells[selectedCell.RowIndex+1].Value = scalesInt[-1];
+                if ((selectedCell.ColumnIndex > 0)&&(selectedCell.RowIndex!= selectedCell.ColumnIndex))
+                    dataGridViewCompare.Rows[selectedCell.ColumnIndex].Cells[selectedCell.RowIndex].Value = scalesInt[-1];
 
             }
         }
         private void dataGridViewCriterions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridViewCriterions.SelectedCells.Count>0)
-            {
                 UpdateCriterion(dataGridViewCriterions.SelectedCells[0]);               
-            }
         }
         private void dataGridViewOptions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridViewOptions.SelectedCells.Count > 0)
-            {
-                if (!calc)
+            if ((dataGridViewOptions.SelectedCells.Count > 0)&& (!calc))
                 UpdateOption(dataGridViewOptions.SelectedCells[0]);
-            }
         }
 
 
         private void buttonAddTask_Click(object sender, EventArgs e)
         {
             string newTaskName = String.Empty;
-            if (task == null)
-            {
+            if ((HaveErrors(1,null, true))||(!HaveErrors(1, null, true)&&(MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)))
                 if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref newTaskName) != DialogResult.Cancel)
-                    AddTask(newTaskName);
-            }
-            else
-            {
-                DialogResult dialogResult = MessageBox.Show("Цель уже была создана, удалить предыдущую?","Предупреждение", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                  
-                    if (InputBoxs.InputBox("Создать цель", "Введите название цели", ref newTaskName) != DialogResult.Cancel)
-                        AddTask(newTaskName);
-                }
-            }
-          
+                    AddTask(newTaskName);          
         }
         private void buttonAddCriterion_Click(object sender, EventArgs e)
         {
-
-            if (task != null)
-            {
-                string newCriterionName = "";
-                if (InputBoxs.InputBox("Добавить критерий", "Введите критерий", ref newCriterionName) == DialogResult.Cancel)
-                    return;
-                if (newCriterionName != String.Empty)
-                {
-                    if (!task.fields.Contains(newCriterionName))
-                    {
+            string newCriterionName = "";
+            if (!HaveErrors(1))
+                if (InputBoxs.InputBox("Добавить критерий", "Введите критерий", ref newCriterionName) != DialogResult.Cancel)
+                    if (!HaveErrors(25, newCriterionName))
                         AddCriterion(newCriterionName);
-
-                    }
-                    else
-                        MessageBox.Show("Критерий уже существует");
-                }
-                else
-                    MessageBox.Show("Необходимо вести название критерия");
-            }
-            else
-            {
-                MessageBox.Show("Необходимо создать цель");
-                tab.SelectedTab = tabTask;
-            }
-
         }
         private void buttonAddOption_Click(object sender, EventArgs e)
         {
-            if (task != null)
-            {
-                if (task.fields.Count < 1)
-                {
-                    if (calculations.GetIndexAgreed(task.matrix) < 0.1)
-                    {
-                        string newOptionName = "";
-                        if (InputBoxs.InputBox("Добавить объект", "Введите название объекта", ref newOptionName) == DialogResult.Cancel)
-                            return;
-
-                        if (newOptionName != String.Empty)
-                        {
-                            if (!options.Contains(newOptionName))
-                            {
-                                AddOption(newOptionName);
-                            }
-                            else
-                                MessageBox.Show("Объект уже существует");
-                        }
-                        else
-                            MessageBox.Show("Необходимо вести название объекта");
-                    }
-                    else
-                        MessageBox.Show("Цель должна быть согласованна");
-                }
-                else
-                    MessageBox.Show("Необходимо добавить критерии");
-            }
-            else
-            {
-                MessageBox.Show("Необходимо создать цель");
-                tab.SelectedTab = tabTask;
-            }
+            string newOptionName = "";
+            if (!HaveErrors(7))                              
+                if (InputBoxs.InputBox("Добавить объект", "Введите название объекта", ref newOptionName) != DialogResult.Cancel)
+                    if (!HaveErrors(47, newOptionName))
+                        AddOption(newOptionName);
         }
 
         private void buttonSaveTaskInFile_Click(object sender, EventArgs e)
-        {         
-            if (task != null)
-            {
+        {
+            if (HaveErrors(1))
+                return;
                 
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.FileName = task.name;
-                saveFileDialog.Filter = "CSV|*.csv";
-                if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
-                    return;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = task.name;
+            saveFileDialog.Filter = "CSV|*.csv";
+
+            if (saveFileDialog.ShowDialog()!= DialogResult.Cancel)
                 SaveTaskInFile(saveFileDialog.FileName);
-            }
-            else
-                MessageBox.Show("Необходимо создать цель");
+
         }    
         private void buttonLoadTaskFromFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "CSV|*.csv";
-            if (task == null)
-            {            
-                if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-                    return;
-                LoadTaskFromFile(openFileDialog.FileName);
-            }
-            else
-            {
-                DialogResult dialogResult = MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                   
-                    if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-                        return;
-                    LoadTaskFromFile(openFileDialog.FileName);                    
-                }
-              
-            }
-
+            if ((HaveErrors(1, null, true)) || (!HaveErrors(1, null, true) && (MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)))
+                if (openFileDialog.ShowDialog() != DialogResult.Cancel)
+                    LoadTaskFromFile(openFileDialog.FileName);
         }
 
         private void buttonShowCalc_Click(object sender, EventArgs e)
         {
-            if(result==true)
-            { 
-                if ((NormResult != null) && (IdealResult != null))
-                {
-                    calc = true;
-                    UpdateDataGridView(dataGridViewOptions, IdealResult, "Идеализированные приоритеты", false);
-                    UpdateDataGridView(dataGridViewOptions, NormResult, "Нормированные приоритеты", false);
-                    calc = false;
-                }
+            if (HaveErrors(128))
+                return;
+
+            if ((NormResult != null) && (IdealResult != null))
+            {
+                calc = true;
+                UpdateDataGridView(dataGridViewOptions, IdealResult, "Идеализированные приоритеты", false);
+                UpdateDataGridView(dataGridViewOptions, NormResult, "Нормированные приоритеты", false);
+                calc = false;
             }
-            else
-                MessageBox.Show("Необходимо провести расчеты");
+
         }
     }
 }

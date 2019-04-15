@@ -1,0 +1,79 @@
+﻿using MathNet.Numerics.LinearAlgebra;
+using System.Collections.Generic;
+using System;
+using System.IO;
+using matrixTable = MatrixTable.MatrixTable;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
+namespace MatrixIO
+{
+    class MatrixIO
+    {
+        public static matrixTable LoadFromFile(string fileNameWithPath)
+        {
+            if (!System.IO.File.Exists(fileNameWithPath))
+            MessageBox.Show("выбрасываем исключение");
+            string matrixName = Path.GetFileNameWithoutExtension(fileNameWithPath);
+            using (StreamReader File = new StreamReader(fileNameWithPath))
+            {
+                List<string> criterions = new List<string>(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList());
+                matrixTable matrix = new matrixTable(matrixName, criterions);
+                Vector<double> vector = null;
+                string line = File.ReadLine();
+                int countLineInMatrix = criterions.Count;
+                int indexLineInFile = -1;
+                while ((line != null) && ((++indexLineInFile) < countLineInMatrix))
+                {
+                    vector = Vector<double>.Build.DenseOfArray(line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select(x => double.Parse(x)).ToArray());
+                    for (int j = 0; j < vector.Count; j++)
+                        matrix.matrix[indexLineInFile, j] = vector[j];
+                    line = File.ReadLine();
+                }
+                if (indexLineInFile != countLineInMatrix-1)
+                    MessageBox.Show("выбрасываем исключение");
+
+                File.Close();
+                return matrix;
+            }
+
+        }
+        public static matrixTable LoadFromFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CSV|*.csv";
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+                return null;
+
+               return LoadFromFile(openFileDialog.FileName);
+        }
+        public static void SaveInFile(matrixTable matrix, string fileNameWithPath)
+        {
+
+            if (matrix==null)
+                MessageBox.Show("выбрасываем исключение");
+
+            matrix.FillMatrix();
+            using (StreamWriter file = new StreamWriter(fileNameWithPath, false))
+            {
+                file.WriteLine(string.Join(",", matrix.fields));
+                for (int i = 0; i < matrix.matrix.RowCount; i++)
+                {
+                    file.WriteLine(string.Join(",", matrix.matrix.Row(i).ToList().Select(x => x.ToString()).ToList()));
+                }
+                file.Close();
+            }
+
+        }
+        public static bool SaveInFile(matrixTable matrix)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = matrix.name;
+            saveFileDialog.Filter = "CSV|*.csv";
+            if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+                return false;
+            SaveInFile(matrix, saveFileDialog.FileName);
+            return true;
+        }
+    }
+}
