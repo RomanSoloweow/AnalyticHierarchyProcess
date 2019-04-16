@@ -62,10 +62,14 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="InputBox.cs" />
+    <Compile Include="MatrixDataGridView.cs" />
     <Compile Include="MatrixIO.cs" />
     <Compile Include="MatrixTable.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Presenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

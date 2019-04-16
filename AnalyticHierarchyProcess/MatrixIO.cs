@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System;
 using System.IO;
-using matrixTable = MatrixTable.MatrixTable;
+using NamespaceMatrixTable;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-namespace MatrixIO
+namespace NamespaceMatrixIO
 {
     class MatrixIO
     {
-        public static matrixTable LoadFromFile(string fileNameWithPath)
+        public static MatrixTable LoadFromFile(string fileNameWithPath)
         {
             if (!System.IO.File.Exists(fileNameWithPath))
             MessageBox.Show("выбрасываем исключение");
@@ -18,7 +18,7 @@ namespace MatrixIO
             using (StreamReader File = new StreamReader(fileNameWithPath))
             {
                 List<string> criterions = new List<string>(File.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList());
-                matrixTable matrix = new matrixTable(matrixName, criterions);
+                MatrixTable matrix = new MatrixTable(matrixName, criterions);
                 Vector<double> vector = null;
                 string line = File.ReadLine();
                 int countLineInMatrix = criterions.Count;
@@ -38,7 +38,7 @@ namespace MatrixIO
             }
 
         }
-        public static matrixTable LoadFromFile()
+        public static MatrixTable LoadFromFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "CSV|*.csv";
@@ -47,7 +47,7 @@ namespace MatrixIO
 
                return LoadFromFile(openFileDialog.FileName);
         }
-        public static void SaveInFile(matrixTable matrix, string fileNameWithPath)
+        public static void SaveInFile(MatrixTable matrix, string fileNameWithPath)
         {
 
             if (matrix==null)
@@ -65,7 +65,7 @@ namespace MatrixIO
             }
 
         }
-        public static bool SaveInFile(matrixTable matrix)
+        public static bool SaveInFile(MatrixTable matrix)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = matrix.name;

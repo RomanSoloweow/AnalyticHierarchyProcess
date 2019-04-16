@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using NamespacePresenter;
+using NamespaceModel;
 namespace AnalyticHierarchyProcess
 {
     static class Program
@@ -16,7 +17,11 @@ namespace AnalyticHierarchyProcess
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            FormView view = new FormView();
+            Model model = new Model();
+            Presenter presenter = new Presenter(model,view);         
+            Application.Run(view);
         }
     }
 }

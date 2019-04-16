@@ -1,0 +1,9 @@
+﻿namespace NamespaceIView
+{
+
+    interface IView
+    {
+
+    }
+
+}

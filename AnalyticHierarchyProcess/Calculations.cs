@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace Calculations
+namespace NamespaceCalculations
 {
     public static class Calculations
     {
-
         public static Vector<double> Sole(Matrix<double> matrix)
         {
 

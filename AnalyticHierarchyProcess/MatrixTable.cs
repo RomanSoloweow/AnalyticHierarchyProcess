@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System.Collections.Generic;
 using System;
-namespace MatrixTable
+namespace NamespaceMatrixTable
 {
     public class MatrixTable
     {
@@ -69,6 +69,10 @@ namespace MatrixTable
             //сокращаем матрицу
             ContractMatrix(indexDeletingField);
         }
+        public void DeleteField(string nameDeletingField)
+        {
+            DeleteField(fields.IndexOf(nameDeletingField));
+        }
         /// <summary>
         /// Расширить матрицу (добавиться и строка и столбец)
         /// </summary>
@@ -116,6 +120,7 @@ namespace MatrixTable
         {
             matrix[fields.IndexOf(FieldRow), fields.IndexOf(FieldColumn)] = cellValue;
         }
+
         /// <summary>
         /// Получить значение ячейки марицы
         /// </summary>
@@ -154,7 +159,7 @@ namespace MatrixTable
                         /*чтобы сделать матрицу обратно - симметричной
                          * если текущее отношение не задано - берем обратное значение от симметричного элемента
                        */
-                        if (Math.Abs(matrix[i, j]) == 1)
+                        if (Math.Abs(matrix[i, j]) <=1)
                             matrix[i, j] = 1 / matrix[j, i];
                     }
 
