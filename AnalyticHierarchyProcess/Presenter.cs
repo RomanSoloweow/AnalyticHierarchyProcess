@@ -58,6 +58,7 @@ namespace NamespacePresenter
             for (int i = 0; i < matrix.matrix.RowCount; i++)
                 for (int j = 0; j < matrix.matrix.ColumnCount; j++)
                 {
+                    table.Rows.Add();
                     if (matrix.matrix[i, j] < 1)
                         table.Rows[i][j] = scalesInt[-1];
                     else
@@ -148,7 +149,13 @@ namespace NamespacePresenter
         }
         public bool UpdateCriterion(int indexRow, string nameNewCriterion=null)
         {
-            //nameNewCriterion = _view.
+            if (HaveErrors(1))
+                return false;
+
+            nameNewCriterion = _view.GetCriterion(indexRow);
+            if ((string.IsNullOrEmpty(nameNewCriterion)))
+                return false;
+
             _model.task.fields[indexRow] = nameNewCriterion;
             string oldkey = _model.matrixsCompare.Keys.ElementAt(indexRow);
             MatrixTable oldvalue = _model.matrixsCompare[oldkey];
@@ -208,6 +215,7 @@ namespace NamespacePresenter
             cellValue = _view.GetCellValueMatrixCompare(indexRow, indexColumn);
             if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
                 return false;
+
             _model.matrixsCompare[selectedMatrix].matrix[indexRow, indexColumn] = ValueMatrixStringToDouble(cellValue);
             _model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
             _view.UpdateValueCellValueMatrixCompare(indexColumn, indexRow, ValueMatrixDoubleToString(_model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow]));
@@ -217,9 +225,11 @@ namespace NamespacePresenter
         {
             if (HaveErrors(3))
                 return false;
+
             cellValue = _view.GetCellValueTaskMatrix(indexRow, indexColumn);
             if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
                 return false;
+
             _model.task.matrix[indexRow, indexColumn] = ValueMatrixStringToDouble(cellValue);
             _model.task.matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
             _view.UpdateValueCellTaskMatrix(indexColumn, indexRow, ValueMatrixDoubleToString(_model.task.matrix[indexColumn, indexRow]));
@@ -276,7 +286,7 @@ namespace NamespacePresenter
         }
         public bool Calculation()
         {
-            if (HaveErrors(1))
+            if (HaveErrors(7))
                 return false;
 
             _model.NormResult = Calculations.CalcGlobalDistributedPriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());

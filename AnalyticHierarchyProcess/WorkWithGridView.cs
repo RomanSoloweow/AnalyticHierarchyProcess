@@ -50,6 +50,7 @@ namespace NamespaceWorkWithGridView
             {
                 textError = "16";
             }
+      
 
             if (!string.IsNullOrEmpty(textError))
                 return true;
@@ -133,7 +134,7 @@ namespace NamespaceWorkWithGridView
         public static bool OutputTable(DataGridView dataGridView, DataTable table, bool clear = true)
         {
 
-            if (HaveErorInputData(codeError:1))
+            if (HaveErorInputData(codeError:1,dataGridView: dataGridView))
                 return false;
 
                 if (clear == true)

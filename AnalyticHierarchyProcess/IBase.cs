@@ -13,8 +13,5 @@
 
         bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue=null);
         bool UpdateValueCellTaskMatrix(int indexRow , int indexColumn, string cellValue=null);
-
-      
-
     }
 }

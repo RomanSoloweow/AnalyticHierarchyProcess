@@ -78,7 +78,7 @@ namespace AnalyticHierarchyProcess
         }
        public bool AskQuestion(string QuestionText)
         {
-            if (MessageBox.Show(QuestionText, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (MessageBox.Show(QuestionText, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return false;
 
             return true;
@@ -212,7 +212,7 @@ namespace AnalyticHierarchyProcess
             int indexRow = 0, indexColumn = 0; string cellValue = "";
 
             cellValue = WorkWithGridView.GetValueSelectedCell(dataGridViewTaskCompare, ref indexRow, ref indexColumn);
-            _presenter.UpdateValueCellTaskMatrix(indexRow, indexColumn, cellValue);
+            _presenter.UpdateValueCellTaskMatrix(indexRow, indexColumn);
         }
         private void dataGridViewCompare_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {

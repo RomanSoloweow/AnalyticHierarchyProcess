@@ -10,7 +10,5 @@ namespace NamespaceIPresenter
        bool SelectMatrixCompare(string SelectedMatrixCompareName);
        bool Calculation();
        bool ShowCalculation();
-       
-
     }
 }
