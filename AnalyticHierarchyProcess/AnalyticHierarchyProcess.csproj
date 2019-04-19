@@ -61,15 +61,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="IBase.cs" />
     <Compile Include="InputBox.cs" />
-    <Compile Include="MatrixDataGridView.cs" />
+    <Compile Include="IPresenter.cs" />
+    <Compile Include="WorkWithGridView.cs" />
     <Compile Include="MatrixIO.cs" />
     <Compile Include="MatrixTable.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Presenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="IView.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

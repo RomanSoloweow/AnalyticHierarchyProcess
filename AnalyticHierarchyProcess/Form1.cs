@@ -13,31 +13,92 @@ using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.IO;
-
+using NamespaceWorkWithGridView;
 using NamespaceIView;
-
+using NamespaceIPresenter;
+using NamespaceMatrixTable;
+using NamespaceInputBox;
 namespace AnalyticHierarchyProcess
 {
     public partial class FormView : Form, IView
     {
-        public FormView()
+       private IPresenter _presenter;
+       public FormView()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+           
             InitializeComponent();
+            dataGridViewOptions.Rows.Add("ter");
         }
-   
+
+       public bool SetIPresenter(IPresenter iPresenter)
+        {
+            _presenter = iPresenter;
+            return true;
+        }
+       public bool OuputTaskMatrix(MatrixTable matrixTable)
+        {
+            WorkWithGridView.OutputMatrix(dataGridViewTaskCompare, matrixTable);
+            return true;
+        }
+       public bool OuputCalculations(Vector<double> vectorCalculation1, Vector<double> vectorCalculation2)
+        {
+            WorkWithGridView.OutputVector(dataGridViewCalculation,vectorCalculation1, "", false);
+            WorkWithGridView.OutputVector(dataGridViewCalculation, vectorCalculation2, "", false);
+            return true;
+        }
+       public bool OuputMatrixCompare(MatrixTable matrixTable)
+        {
+            WorkWithGridView.OutputMatrix(dataGridViewTaskCompare, matrixTable);
+            return true;
+        }
+
+
+       public bool AddCriterion(string newCriterionName)
+        {
+            WorkWithGridView.AddRow(dataGridViewCriterions, newCriterionName);
+            return true;
+        }
+       public bool UpdateCriterion(int indexRow, string criterionNewName)
+        {
+            WorkWithGridView.UpdateRow(dataGridViewCriterions, indexRow, criterionNewName);
+            return true;
+        }
+       public bool DeleteCriterion(int indexDelitingCriterion)
+        {
+            WorkWithGridView.DeleteRow(dataGridViewCriterions, indexDelitingCriterion);
+            return true;
+        }
+       public bool AddOption(string newOptionName)
+        {
+            WorkWithGridView.AddRow(dataGridViewOptions, newOptionName);
+            return true;
+        }
+       public bool UpdateOption(int indexRow, string optionNewName)
+        {
+            WorkWithGridView.UpdateRow(dataGridViewOptions, indexRow, optionNewName);
+            return true;
+        }
+       public bool DeleteOption(int indeDelitingOption)
+        {
+            WorkWithGridView.DeleteRow(dataGridViewOptions, indeDelitingOption);
+            return true;
+        }
+       public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, double cellValue)
+        {
+            WorkWithGridView.SetCell(dataGridViewCompare, indexRow, indexColumn, cellValue);
+            return true;
+        }
+       public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, double cellValue)
+        {
+            WorkWithGridView.SetCell(dataGridViewTaskCompare, indexRow, indexColumn, cellValue);
+            return true;
+        }
+
         private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
-           /* if (HaveErrors(64))
-                return;
-            
-           
-            if (selectedMatrix != string.Empty)
-                MatrixDataGridView.UpdateMatrix(matrixsCompare[selectedMatrix], dataGridViewCompare);
-
-            selectedMatrix = comboBoxCompare.Text;
-
-            MatrixDataGridView.UpdateDataGridView(dataGridViewCompare, matrixsCompare[selectedMatrix]);*/
+            string SelectedMatrixCompareName = comboBoxCompare.Text;
+            _presenter.SelectMatrixCompare(SelectedMatrixCompareName);
         }
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -82,79 +143,99 @@ namespace AnalyticHierarchyProcess
             selectedtabIndex = tab.SelectedIndex;*/
         }
 
-
-
-
-
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
         {
-            //MatrixDataGridView.DeleteCellFromDataGridView(dataGridViewCriterions, e.KeyCode, DeleteCriterion);
-        }
-        private void dataGridViewCriterions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-           // MatrixDataGridView.SetValueCellFromDataGridView(dataGridViewCriterions, UpdateCriterion);
-        }
-        private void dataGridViewOptions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            //MatrixDataGridView.SetValueCellFromDataGridView(dataGridViewOptions, UpdateOption);
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
+            if (indexRow < 0)
+                return;
+             _presenter.DeleteCriterion(indexRow);
         }
         private void dataGridViewOptions_KeyDown(object sender, KeyEventArgs e)
         {
-           // MatrixDataGridView.DeleteCellFromDataGridView(dataGridViewCriterions, e.KeyCode, DeleteOption);
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
+            if (indexRow < 0)
+                return;
+              _presenter.DeleteOption(indexRow);
         }
+
         private void dataGridViewTaskCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-           // MatrixDataGridView.UpdateValueSymmetricCellDataGridView(dataGridViewTaskCompare);
+            int indexRow=0, indexColumn = 0; double cellValue=0;
+            WorkWithGridView.UpdateValueSymmetricCellDataGridView(dataGridViewTaskCompare,ref indexRow,ref indexColumn,ref cellValue);
+            _presenter.SetValueCellMatrixCompare(indexRow, indexColumn, cellValue);
         }
         private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-           // MatrixDataGridView.UpdateValueSymmetricCellDataGridView(dataGridViewCompare);
+            int indexRow = 0, indexColumn = 0; double cellValue = 0;
+            WorkWithGridView.UpdateValueSymmetricCellDataGridView(dataGridViewCompare, ref indexRow, ref indexColumn, ref cellValue);
+            _presenter.SetValueCellMatrixCompare(indexRow, indexColumn, cellValue);
         }
   
         private void buttonSaveTaskInFile_Click(object sender, EventArgs e)
         {
-           // SaveTaskInFile();
-
+            _presenter.SaveTaskInFile();
         }
         private void buttonLoadTaskFromFile_Click(object sender, EventArgs e)
         {
-           // LoadTaskFromFile();
+            _presenter.LoadTaskFromFile();
         }
         private void buttonShowCalc_Click(object sender, EventArgs e)
         {
-           // ShowCalc();
+            _presenter.ShowCalculation();
         }
         private void buttonGetResult_Click(object sender, EventArgs e)
         {
-           // Calc();
+            _presenter.Calculation();
         }
 
-
-
+        
 
 
         private void buttonAddTask_Click(object sender, EventArgs e)
-        {
-          /*  string newTaskName = String.Empty;
-            if ((HaveErrors(1,null, true))||(!HaveErrors(1, null, true)&&(MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)))
-                if (InputBoxs.InputBox("Создать цель", "Введите цель", ref newTaskName) != DialogResult.Cancel)
-                    AddTask(newTaskName);  */        
+        {      
+            string newTaskName = String.Empty;
+
+            if (InputBoxs.InputBox("Создать цель", "Введите цель", ref newTaskName) != DialogResult.OK)
+                return;
+            _presenter.AddTask(newTaskName);        
         }
         private void buttonAddCriterion_Click(object sender, EventArgs e)
         {
-           /* string newCriterionName = "";
-            if (!HaveErrors(1))
-                if (InputBoxs.InputBox("Создать критерий", "Введите критерий", ref newCriterionName) != DialogResult.Cancel)
-                    if (!HaveErrors(25, newCriterionName))
-                        AddCriterion(newCriterionName);*/
+            string newCriterionName = String.Empty;
+
+            if (InputBoxs.InputBox("Создать критерий", "Введите критерий", ref newCriterionName) != DialogResult.OK)
+                return;
+
+            _presenter.AddCriterion(newCriterionName);
         }
         private void buttonAddOption_Click(object sender, EventArgs e)
         {
-           /* string newOptionName = "";
-            if (!HaveErrors(7))                              
-                if (InputBoxs.InputBox("Создать объект", "Введите объект", ref newOptionName) != DialogResult.Cancel)
-                    if (!HaveErrors(47, newOptionName))
-                        AddOption(newOptionName);*/
+            string newOptionName = String.Empty;
+
+            if (InputBoxs.InputBox("Создать объект", "Введите объект", ref newOptionName) != DialogResult.OK)
+                return;
+
+            _presenter.AddOption(newOptionName);
         }
+
+        private void dataGridViewOptions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
+            if (indexRow < 0)
+                return;
+
+            string newValue = WorkWithGridView.ValueSelectedCell(dataGridViewOptions);
+            _presenter.UpdateOption(indexRow,newValue);
+        }
+        private void dataGridViewCriterions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
+            if (indexRow < 0)
+                return;
+
+            string newValue = WorkWithGridView.ValueSelectedCell(dataGridViewCriterions);
+            _presenter.UpdateCriterion(indexRow, newValue);
+        }
+
     }
 }

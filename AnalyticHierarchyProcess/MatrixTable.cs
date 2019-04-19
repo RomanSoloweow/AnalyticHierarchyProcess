@@ -30,7 +30,7 @@ namespace NamespaceMatrixTable
         /// </summary>
         /// <param name="indexAddingField">Индекс добавляемого критерия</param>
         /// <param name="newField">Добавляемый критерий</param>
-        public void AddField(int indexAddingField, string newField)
+        public void AddField(string newField,int indexAddingField)
         {            
             if (indexAddingField == -1)
                 indexAddingField = fields.Count;
@@ -54,7 +54,7 @@ namespace NamespaceMatrixTable
         /// <param name="newField">Добавляемый критерий</param>
         public void AddField(string newField)
         {
-            AddField(-1, newField);
+            AddField(newField,-1);
         }
         /// <summary>
         /// Удалить критерий. Матрица сравнений будет сокращена

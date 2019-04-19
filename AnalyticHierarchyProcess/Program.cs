@@ -20,7 +20,8 @@ namespace AnalyticHierarchyProcess
 
             FormView view = new FormView();
             Model model = new Model();
-            Presenter presenter = new Presenter(model,view);         
+            Presenter presenter = new Presenter(model,view);
+            view.SetIPresenter(presenter);
             Application.Run(view);
         }
     }
