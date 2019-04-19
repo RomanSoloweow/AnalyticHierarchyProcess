@@ -11,8 +11,10 @@
         bool UpdateOption(int indexRow,string optionNewName = null);
         bool DeleteOption(int indexDelitingOption);
 
-        bool SetValueCellMatrixCompare(int indexRow, int indexColumn, string cellValue);
-        bool SetValueCellTaskMatrixCompare(int indexRow , int indexColumn, string cellValue);
+        bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue=null);
+        bool UpdateValueCellTaskMatrix(int indexRow , int indexColumn, string cellValue=null);
+
+      
 
     }
 }

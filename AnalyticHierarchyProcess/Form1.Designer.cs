@@ -292,7 +292,7 @@
             this.dataGridViewCompare.RowTemplate.Height = 33;
             this.dataGridViewCompare.Size = new System.Drawing.Size(1586, 806);
             this.dataGridViewCompare.TabIndex = 0;
-            this.dataGridViewCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCompare_CellValueChanged);
+            this.dataGridViewCompare.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCompare_CellEndEdit);
             // 
             // tabTask
             // 
@@ -358,7 +358,7 @@
             this.dataGridViewTaskCompare.RowTemplate.Height = 33;
             this.dataGridViewTaskCompare.Size = new System.Drawing.Size(1592, 787);
             this.dataGridViewTaskCompare.TabIndex = 0;
-            this.dataGridViewTaskCompare.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTaskCompare_CellValueChanged);
+            this.dataGridViewTaskCompare.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTaskCompare_CellEndEdit);
             // 
             // tabCriterions
             // 

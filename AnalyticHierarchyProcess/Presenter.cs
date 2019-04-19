@@ -67,7 +67,18 @@ namespace NamespacePresenter
         }
         private List<string> VectorToList(Vector<double> vector)
         {
-            return vector.ToList<double>().Select(number => number.ToString()).ToList();
+            return vector.ToList().Select(number => number.ToString()).ToList();
+        }
+        private double ValueMatrixStringToDouble(string valueString)
+        {
+            return scalesString[valueString];
+        }
+        private string ValueMatrixDoubleToString(Double valueDouble)
+        {
+            if (valueDouble < 1)
+                return scalesInt[-1];
+
+            return scalesInt[Convert.ToInt32(valueDouble)];
         }
         private bool HaveErrors(int code, string nameNewObject = null, bool mute = false)
         {
@@ -84,7 +95,7 @@ namespace NamespacePresenter
             {
                 textError = "Цель должна быть согласованна";
             }
-            else if (((code & 8) > 0) && (nameNewObject == String.Empty))
+            else if (((code & 8) > 0) && (string.IsNullOrEmpty(nameNewObject)))
             {
                 textError = "Необходимо вести название";
             }
@@ -137,6 +148,7 @@ namespace NamespacePresenter
         }
         public bool UpdateCriterion(int indexRow, string nameNewCriterion=null)
         {
+            //nameNewCriterion = _view.
             _model.task.fields[indexRow] = nameNewCriterion;
             string oldkey = _model.matrixsCompare.Keys.ElementAt(indexRow);
             MatrixTable oldvalue = _model.matrixsCompare[oldkey];
@@ -187,16 +199,33 @@ namespace NamespacePresenter
             _model.options.RemoveAt(indexDelitingOption);
             _view.DeleteOption(indexDelitingOption);
             return true;
-        }           
+        }
+        public bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue)
+        {
+            if (HaveErrors(7))
+                return false;
 
-        public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, string cellValue)
-        {
+            cellValue = _view.GetCellValueMatrixCompare(indexRow, indexColumn);
+            if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
+                return false;
+            _model.matrixsCompare[selectedMatrix].matrix[indexRow, indexColumn] = ValueMatrixStringToDouble(cellValue);
+            _model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
+            _view.UpdateValueCellValueMatrixCompare(indexColumn, indexRow, ValueMatrixDoubleToString(_model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow]));
             return true;
         }
-        public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, string cellValue)
+        public bool UpdateValueCellTaskMatrix(int indexRow, int indexColumn, string cellValue)
         {
+            if (HaveErrors(3))
+                return false;
+            cellValue = _view.GetCellValueTaskMatrix(indexRow, indexColumn);
+            if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
+                return false;
+            _model.task.matrix[indexRow, indexColumn] = ValueMatrixStringToDouble(cellValue);
+            _model.task.matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
+            _view.UpdateValueCellTaskMatrix(indexColumn, indexRow, ValueMatrixDoubleToString(_model.task.matrix[indexColumn, indexRow]));
             return true;
         }
+       
 
 
         public bool AddTask()
