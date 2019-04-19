@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NamespaceIBase;
-using NamespaceMatrixTable;
-
+﻿using iBase = NamespaceIBase.IBase;
 namespace NamespaceIPresenter
 {
-   public  interface IPresenter: IBase
+   public  interface IPresenter: iBase
     {
-    
+       bool AddTask();
        bool SaveTaskInFile();
        bool LoadTaskFromFile();
-       bool AddTask(string newTaskName);
-      // MatrixTable GetTask();
-       List<string> GetAllCriterionsName();
-       List<string> GetAllOptionsName();
-       bool Calculation();
-       bool ShowCalculation();
-
 
        bool SelectMatrixCompare(string SelectedMatrixCompareName);
+       bool Calculation();
+       bool ShowCalculation();
+       
 
     }
 }

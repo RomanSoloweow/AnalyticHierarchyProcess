@@ -1,17 +1,18 @@
 ﻿namespace NamespaceIBase
 {
     public  interface IBase
-    {    
-        bool AddCriterion(string newCriterionName);
-        bool UpdateCriterion(int indexRowstring, string criterionNewName);
+    {
+        bool AddCriterion(string nameNewCriterion=null);
+        bool UpdateCriterion(int indexRow, string nameNewCriterion = null);
         bool DeleteCriterion(int indexDelitingCriterion);
 
 
-        bool AddOption(string newOptionName);
-        bool UpdateOption(int indexRow,string optionNewName);
+        bool AddOption(string nameNewOption=null);
+        bool UpdateOption(int indexRow,string optionNewName = null);
         bool DeleteOption(int indexDelitingOption);
 
-        bool SetValueCellMatrixCompare(int indexRow, int indexColumn, double cellValue);
-        bool SetValueCellTaskMatrixCompare(int indexRow , int indexColumn, double cellValue);
+        bool SetValueCellMatrixCompare(int indexRow, int indexColumn, string cellValue);
+        bool SetValueCellTaskMatrixCompare(int indexRow , int indexColumn, string cellValue);
+
     }
 }

@@ -1,52 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using NamespaceMatrixTable;
-using MathNet.Numerics.LinearAlgebra;
+using System.Data;
 
 namespace NamespaceWorkWithGridView
 {
-  
-   public  class WorkWithGridView
+
+    public class WorkWithGridView
     {
-        private static Dictionary<int, string> scalesInt = new Dictionary<int, string>()
+        private static List<string> itemsComboBox = new List<string>()
         {
-            {-1,"Обратное симметричному"},
-            {1, "Одинаковая значимость"},
-            {2, "Почти слабая значимость"},
-            {3, "Cлабая значимость"},
-            {4, "Почти существенная значимость"},
-            {5, "Существенная значимость"},
-            {6, "Почти очевидная значимость"},
-            {7, "Очевидная значимость"},
-            {8, "Почти абсолютная значимость"},
-            {9, "Абсолютная значимость"}
-        };
-        private static Dictionary<string, int> scalesString = new Dictionary<string, int>()
-        {
-            {"Обратное симметричному",-1},
-            {"Одинаковая значимость",1},
-            {"Почти слабая значимость",2},
-            {"Cлабая значимость",3},
-            {"Почти существенная значимость",4},
-            {"Существенная значимость",5},
-            {"Почти очевидная значимость",6},
-            {"Очевидная значимость",7},
-            {"Почти абсолютная значимость",8},
-            {"Абсолютная значимость",9}
+            {"Обратное симметричному"},
+            {"Одинаковая значимость"},
+            {"Почти слабая значимость"},
+            {"Cлабая значимость"},
+            {"Почти существенная значимость"},
+            {"Существенная значимость"},
+            {"Почти очевидная значимость"},
+            {"Очевидная значимость"},
+            {"Почти абсолютная значимость"},
+            {"Абсолютная значимость"}
         };
         public static DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
-            foreach (string value in scalesInt.Values)
-            {
-                dataGridViewComboBoxCell.Items.Add(value);
-            }
+            itemsComboBox.ForEach(item => dataGridViewComboBoxCell.Items.Add(item));
             return dataGridViewComboBoxCell;
         }
         public static bool AddRow(DataGridView dataGridView, string addingValue)
         {
-                dataGridView.Rows.Add(addingValue);
+            dataGridView.Rows.Add(addingValue);
             return true;
         }
         public static bool DeleteRow(DataGridView dataGridView, int indexDelitingRow)
@@ -57,7 +39,7 @@ namespace NamespaceWorkWithGridView
             dataGridView.Rows.RemoveAt(indexDelitingRow);
             return true;
         }
-        public static bool UpdateRow(DataGridView dataGridView, int indexRow,string newValue)
+        public static bool UpdateRow(DataGridView dataGridView, int indexRow, string newValue)
         {
             if ((dataGridView.Rows.Count < indexRow) || (indexRow < 0))
                 return false;
@@ -65,7 +47,7 @@ namespace NamespaceWorkWithGridView
             dataGridView.Rows[indexRow].Cells[0].Value = newValue;
             return true;
         }
-        public static bool SetCell(DataGridView dataGridView,int indexRow, int indexColumn, double cellValue)
+        public static bool SetCell(DataGridView dataGridView, int indexRow, int indexColumn, string cellValue)
         {
             if ((dataGridView.Rows.Count < indexRow) || (indexRow < 0) || (dataGridView.Columns.Count < indexColumn) || (indexColumn < 0))
                 return false;
@@ -77,104 +59,34 @@ namespace NamespaceWorkWithGridView
         {
             if (dataGridView.SelectedCells.Count < 1)
                 return -1;
-            
+
             return dataGridView.SelectedCells[0].RowIndex;
         }
+        public static string ValueSelectedCell(DataGridView dataGridView, ref int indexRow, ref int indexColumn)
+        {
+            if (dataGridView.SelectedCells.Count < 1)
+                return null;
+            indexRow = dataGridView.SelectedCells[0].RowIndex;
+            indexColumn = dataGridView.SelectedCells[0].ColumnIndex;
+            string valueSelectedCell = dataGridView.SelectedCells[0].Value.ToString();
 
-        
+            return valueSelectedCell;
+        }
         public static string ValueSelectedCell(DataGridView dataGridView)
         {
             if (dataGridView.SelectedCells.Count < 1)
                 return null;
 
-            string valueSelectedCell;
-
-            DataGridViewCell selectedCell = dataGridView.SelectedCells[0];
-
-            if (selectedCell.Value != null)
-                valueSelectedCell = selectedCell.Value.ToString();
-            else
-                valueSelectedCell = selectedCell.RowIndex.ToString() + "." + selectedCell.ColumnIndex.ToString();
-            selectedCell.Value = valueSelectedCell;
+            string valueSelectedCell = dataGridView.SelectedCells[0].Value.ToString();
 
             return valueSelectedCell;
         }
-        public static bool UpdateValueSymmetricCellDataGridView(DataGridView dataGridView, ref int indexRow, ref int indexColumn, ref double cellValue)
+        
+        public static bool OutputTable(DataGridView dataGridView, DataTable table, bool clear = true)
         {
-            //если ячейка выбрана
-            if (dataGridView.SelectedCells.Count == 1)
-            {
-                DataGridViewCell selectedCell = dataGridView.SelectedCells[0];
-                //если  элемент не диагональный
-                if (selectedCell.RowIndex != selectedCell.ColumnIndex)
-                {
-                    dataGridView.Rows[selectedCell.ColumnIndex].Cells[selectedCell.RowIndex].Value = scalesInt[-1];
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static bool UpdateValueSymmetricCellDataGridView(DataGridView dataGridView)
-        {
-            //если ячейка выбрана
-            if (dataGridView.SelectedCells.Count == 1)
-            {
-               DataGridViewCell selectedCell = dataGridView.SelectedCells[0];
-                //если  элемент не диагональный
-                if (selectedCell.RowIndex != selectedCell.ColumnIndex)
-                {
-                    dataGridView.Rows[selectedCell.ColumnIndex].Cells[selectedCell.RowIndex].Value = scalesInt[-1];
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        public static bool OutputMatrix(DataGridView dataGridView, MatrixTable table, bool clear = true)
-        {
-            if (clear == true)
-            {
-                dataGridView.Rows.Clear();
-                dataGridView.Columns.Clear();
-            }
-
-            if ((table == null) || (table.fields.Count < 0))
-                return false;
-
-            table.fields.ForEach(x => dataGridView.Columns.Add(x, x));
-            for (int i = 0; i < table.CountFiields(); i++)
-            {
-                dataGridView.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dataGridView.Rows.Add();
-                dataGridView.Rows[i].HeaderCell.Value = table.fields[i];
-            }
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridView.TopLeftHeaderCell.Value = table.name;
-
-            for (int i = 0; i < dataGridView.RowCount; i++)
-                for (int j = 0; j < dataGridView.Columns.Count; j++)
-                {
-                    dataGridView.Rows[i].Cells[j].ValueType = typeof(DataGridViewComboBoxCell);
-                    dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
-
-                    if (table.GetCellMatrix(i, j) % 1 == 0)
-                        dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
-                    else
-                        dataGridView.Rows[i].Cells[j].Value = scalesInt[-1].ToString();
-
-                    if (i == j)
-                    {
-                        dataGridView.Rows[i].Cells[j].Value = scalesInt[1].ToString();
-                        dataGridView.Rows[i].Cells[j].ReadOnly = true;
-                    }
-                };
-
-            return true;
-        }
-        public static bool OutputVector(DataGridView dataGridView, Vector<double> vector, string newColumnName, bool clear = true)
-        {
-            if ((vector == null) || (newColumnName == null) || (newColumnName == string.Empty))
-                return false;
+            if ((dataGridView == null)|| (table == null) || (table.Columns.Count < 1) || (table.Rows.Count < 1))
+                      return false;
 
                 if (clear == true)
                 {
@@ -182,32 +94,61 @@ namespace NamespaceWorkWithGridView
                     dataGridView.Columns.Clear();
                 }
 
-                dataGridView.Columns.Add(newColumnName, newColumnName);
-                dataGridView.Columns[dataGridView.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                int ColumnCount = dataGridView.ColumnCount;
-                for (int i = 0; i < vector.Count; i++)
+                foreach (DataColumn column in  table.Columns)
                 {
-                    dataGridView.Rows[i].Cells[ColumnCount - 1].ValueType = typeof(double);
-                    dataGridView.Rows[i].Cells[ColumnCount - 1].Value = vector[i].ToString();
-                    dataGridView.Rows[i].Cells[ColumnCount - 1].ReadOnly = true;
+                    DataGridViewColumn dataGridViewColumn = new DataGridViewColumn();
+                    dataGridViewColumn.HeaderText = column.Caption;
+                    dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridViewColumn.CellTemplate = new DataGridViewComboBoxCell();
+                    dataGridView.Columns.Add(dataGridViewColumn);
+                    
+                    DataGridViewRow dataGridViewRow = new DataGridViewRow();
+                    dataGridViewRow.HeaderCell.Value = column.Caption;
+                    dataGridView.Rows.Add(dataGridViewRow);
                 }
-            return true;
-        }
-        public static bool UpdateMatrix(MatrixTable table, DataGridView dataGridView)
+
+                  dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+                  dataGridView.TopLeftHeaderCell.Value = table.TableName;
+
+                  for (int i = 0; i < table.Columns.Count; i++)
+                      for (int j = 0; j < table.Columns.Count; j++)
+                      {
+                        dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
+                    dataGridView.Rows[i].Cells[j].Value = itemsComboBox[1]; //для теста
+                        //dataGridView.Rows[i].Cells[j].Value = table.Rows[i].ItemArray[j].ToString();              
+                      };
+
+                  return true;
+         }
+        public static bool OutputColumn(DataGridView dataGridView, List<string> column,string nameColumn="", bool clear = true)
         {
-            double valueCells = 0;
-            for (int i = 0; i < dataGridView.RowCount; i++)
-                for (int j = 0; j < dataGridView.Columns.Count; j++)
-                {
-                    valueCells = scalesString[dataGridView.Rows[i].Cells[j].Value.ToString()];
-                    if (valueCells == -1)
-                        valueCells = 1.0 / (scalesString[dataGridView.Rows[j].Cells[i].Value.ToString()]);
 
-                    table.matrix[i, j] = valueCells;
-                }
+            if ((dataGridView == null) || (column == null) || (column.Count < 1))
+                return false;
+
+            if (clear == true)
+            {
+                dataGridView.Rows.Clear();
+                dataGridView.Columns.Clear();
+            }
+
+            DataGridViewColumn dataGridViewColumn = new DataGridViewColumn();
+            dataGridViewColumn.HeaderText = nameColumn;
+            dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridViewColumn.CellTemplate = new DataGridViewTextBoxCell();
+            dataGridView.Columns.Add(dataGridViewColumn);
+
+
+            for (int i=0;i< column.Count;i++)
+            {
+                if (i == dataGridView.Rows.Count)
+                    dataGridView.Rows.Add();
+
+                dataGridView.Rows[i].Cells[dataGridView.ColumnCount - 1].Value = column[i];
+            }
 
             return true;
         }
+
     }
 }

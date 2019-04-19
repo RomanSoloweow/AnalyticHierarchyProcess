@@ -11,247 +11,63 @@ using NamespaceWorkWithGridView;
 using NamespaceCalculations;
 using System.Windows.Forms;
 using NamespaceIPresenter;
+using System.Data;
+using MathNet.Numerics.LinearAlgebra;
 namespace NamespacePresenter
 {
     class Presenter:IPresenter
-    {
+    {   
+        private static Dictionary<int, string> scalesInt = new Dictionary<int, string>()
+        {
+            {-1,"Обратное симметричному"},
+            {1, "Одинаковая значимость"},
+            {2, "Почти слабая значимость"},
+            {3, "Cлабая значимость"},
+            {4, "Почти существенная значимость"},
+            {5, "Существенная значимость"},
+            {6, "Почти очевидная значимость"},
+            {7, "Очевидная значимость"},
+            {8, "Почти абсолютная значимость"},
+            {9, "Абсолютная значимость"}
+        };
+        private static Dictionary<string, int> scalesString = new Dictionary<string, int>()
+        {
+            {"Обратное симметричному",-1},
+            {"Одинаковая значимость",1},
+            {"Почти слабая значимость",2},
+            {"Cлабая значимость",3},
+            {"Почти существенная значимость",4},
+            {"Существенная значимость",5},
+            {"Почти очевидная значимость",6},
+            {"Очевидная значимость",7},
+            {"Почти абсолютная значимость",8},
+            {"Абсолютная значимость",9}
+        };
         private IView _view;
         private Model _model;
     
         private string selectedMatrix = string.Empty;
-        private int selectedtabIndex = 0;
         private bool result = false;
-        private bool calc = false;
 
-        public Presenter(Model model, IView view)
+        private DataTable MatrixToDataTable(MatrixTable matrix)
         {
-            _model = model;
-            _view = view;
+            DataTable table = new DataTable();
+            table.TableName = matrix.name;
+            matrix.fields.ForEach(field => table.Columns.Add(field));
+
+            for (int i = 0; i < matrix.matrix.RowCount; i++)
+                for (int j = 0; j < matrix.matrix.ColumnCount; j++)
+                {
+                    if (matrix.matrix[i, j] < 1)
+                        table.Rows[i][j] = scalesInt[-1];
+                    else
+                        table.Rows[i][j] = scalesInt[Convert.ToInt32(matrix.matrix[i, j])];
+                }
+            return table;
         }
-        public bool AddCriterion(string newCriterionName)
+        private List<string> VectorToList(Vector<double> vector)
         {
-            _model.task.AddField(newCriterionName);
-            _model.matrixsCompare.Add(newCriterionName, new MatrixTable(newCriterionName, _model.options));
-            result = false;
-            _view.AddCriterion(newCriterionName);
-            return true;
-        }
-        public bool UpdateCriterion(int indexRowstring, string criterionNewName)
-        {
-            return true;
-        }
-        public bool DeleteCriterion(int indexDelitingCriterion)
-        {
-            _model.task.DeleteField(indexDelitingCriterion);
-            _model.matrixsCompare.Remove(_model.matrixsCompare.Keys.ElementAt(indexDelitingCriterion));
-            result = false;
-            _view.DeleteCriterion(indexDelitingCriterion);
-            return true;
-        }
-       
-        public bool UpdateOption(int indexRow, string optionNewName)
-        {
-
-            /* string newOptionName = "";
-       if (selectedCell.Value != null)
-           newOptionName = selectedCell.Value.ToString();
-       else
-           newOptionName = "Объект " + selectedCell.RowIndex.ToString();
-
-       _model.options[selectedCell.RowIndex] = newOptionName;
-       _model.matrixsCompare.Values.ToList().ForEach(x => x.fields[selectedCell.RowIndex] = newOptionName);*/
-            return true;
-        }
-        public bool AddOption(string newOptionName)
-        {
-            result = false;
-            _model.options.Add(newOptionName);
-            _model.matrixsCompare.Values.ToList().ForEach(x => x.AddField(newOptionName));
-            UpdateOptions();
-            return true;
-        }
-        public bool DeleteOption(int indexDelitingOption)
-        {
-            _model.matrixsCompare.Values.ToList().ForEach(x => x.DeleteField(indexDelitingOption));
-            _model.options.RemoveAt(indexDelitingOption);
-            UpdateOptions();
-            return true;
-        }           
-
-        public bool UpdateCriterion(DataGridViewCell selectedCell)
-        {
-            if (selectedCell.Value == null)
-            {
-                selectedCell.Value = "Критерий " + selectedCell.RowIndex.ToString();
-                // GMIKE dataGridViewCriterions.Rows[selectedCell.RowIndex].Cells[selectedCell.ColumnIndex].Value = selectedCell.Value;
-            }
-
-            string newCriterionName = selectedCell.Value.ToString();
-            _model.task.fields[selectedCell.RowIndex] = newCriterionName;
-            string oldkey = _model.matrixsCompare.Keys.ToList()[selectedCell.RowIndex];
-            MatrixTable oldvalue = _model.matrixsCompare[oldkey];
-            oldvalue.name = newCriterionName;
-            _model.matrixsCompare.Remove(oldkey);
-            _model.matrixsCompare.Add(newCriterionName, oldvalue);
-            result = false;
-            return true;
-        }
-        public bool DeleteCriterion(string delitingCriterionName)
-        {
-            // GMIKE dataGridViewCriterions.Rows.RemoveAt(DeletedRow.Index);
-            _model.task.DeleteField(delitingCriterionName);
-            _model.matrixsCompare.Remove(delitingCriterionName);
-            result = false;
-            return true;
-        }
-
-        public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, double cellValue)
-        {
-            return true;
-        }
-        public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, double cellValue)
-        {
-            return true;
-        }
-
-
-
-
-        public bool AddTask(string newTaskName)
-        {
-
-            // if ((HaveErrors(1,null, true))||(!HaveErrors(1, null, true)&&(MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)))
-            selectedMatrix = string.Empty;
-            _model.task = new MatrixTable(newTaskName);
-            result = false;
-            return true;
-        }
-
-
-        public void UpdateOptions()
-        {
-            // GMIKE dataGridViewOptions.Rows.Clear();
-            // GMIKE dataGridViewOptions.Columns.Clear();
-            // GMIKE labelNormResult.Text = String.Empty;
-            // GMIKE labelIdealResult.Text = String.Empty;
-            // GMIKE dataGridViewOptions.Columns.Add("Объекты", "Объекты");
-            // GMIKE dataGridViewOptions.Columns[dataGridViewOptions.Columns.Count - 1].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-            if (_model.task != null)
-            {
-                // GMIKE _model.options.ForEach(x => dataGridViewOptions.Rows.Add(x));
-                // GMIKE if (result)
-                // GMIKE buttonGetResult_Click(null, null);
-
-            }
-
-        }
-
-        public bool SaveTaskInFile()
-        {
-            if (HaveErrors(1))
-                return false;
-
-            MatrixIO.SaveInFile(_model.task);
-            return true;
-        }
-        public bool LoadTaskFromFile()
-        {
-            if (!HaveErrors(1, null, true) && (MessageBox.Show("Цель уже была создана, удалить предыдущую?", "Предупреждение", MessageBoxButtons.YesNo) != DialogResult.Yes))
-                return false;
-
-                selectedMatrix = string.Empty;
-                _model.matrixsCompare.Clear();                
-                _model.task = MatrixIO.LoadFromFile();
-                _model.task.fields.ForEach(x => _model.matrixsCompare.Add(x, new MatrixTable(x, _model.options)));
-                result = false;
-                return true;
-
-        }
-
-
-
-
-
-        public MatrixTable GetTask()
-        {
-            return _model.task;
-        }
-    
-
-
-
-
-      
-
-        public  List<string> GetAllCriterionsName()
-        {
-            return _model.task.fields;
-        }
-        public List<string> GetAllOptionsName()
-        {
-            return _model.options;
-        }
-
-
-        public bool UpdateOption(DataGridViewCell selectedCell)
-        {
-            string newOptionName = "";
-            if (selectedCell.Value != null)
-                newOptionName = selectedCell.Value.ToString();
-            else
-                newOptionName = "Объект " + selectedCell.RowIndex.ToString();
-
-            _model.options[selectedCell.RowIndex] = newOptionName;
-            _model.matrixsCompare.Values.ToList().ForEach(x => x.fields[selectedCell.RowIndex] = newOptionName);
-            UpdateOptions();
-            return true;
-        }
-
-
-        public bool ShowCalculation()
-        {
-            if (HaveErrors(128))
-                return false;
-
-            if ((_model.NormResult != null) && (_model.IdealResult != null))
-            {
-                calc = true;
-                // GMIKE MatrixDataGridView.UpdateDataGridView(dataGridViewOptions, _model.IdealResult, "Идеализированные приоритеты", false);
-                // GMIKE MatrixDataGridView.UpdateDataGridView(dataGridViewOptions, _model.NormResult, "Нормированные приоритеты", false);
-                calc = false;
-            }
-            return true;
-        }
-        public bool Calculation()
-        {
-            if (HaveErrors(1))
-                return false;
-
-            _model.NormResult = Calculations.CalcGlobalDistributedPriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
-            _model.IdealResult = Calculations.CalcGlobalIdealizePriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
-            if ((_model.NormResult != null) && (_model.IdealResult != null))
-            {
-                result = true;
-                // GMIKE  labelNormResult.Text = _model.options[_model.NormResult.MaximumIndex()].ToString();
-                // GMIKE labelIdealResult.Text = _model.options[_model.IdealResult.MaximumIndex()].ToString();
-                return true;
-            }
-
-            return false;
-        }
-        public bool SelectMatrixCompare(string SelectedMatrixCompareName)
-        {
-            if (!_model.matrixsCompare.ContainsKey(SelectedMatrixCompareName))
-                return false;
-            selectedMatrix = SelectedMatrixCompareName;
-
-            //GMIKE вывести выбранную матрицу
-            return true;
-        }
-        public MatrixTable GetMatrixCompare(string matrixCompareName)
-        {
-            return _model.matrixsCompare[matrixCompareName];
+            return vector.ToList<double>().Select(number => number.ToString()).ToList();
         }
         private bool HaveErrors(int code, string nameNewObject = null, bool mute = false)
         {
@@ -288,14 +104,182 @@ namespace NamespacePresenter
             {
                 textError = "Необходимо провести расчеты";
             }
+
             if (textError != String.Empty)
             {
                 if (!mute)
-                    MessageBox.Show(textError);
-
+                    _view.ShowError(textError);
                 return true;
             }
             return false;
         }
+
+        public Presenter(Model model, IView view)
+        {
+            _model = model;
+            _view = view;
+        }
+        public bool AddCriterion(string nameNewCriterion=null)
+        {
+            if (HaveErrors(1))
+                return false;
+
+            nameNewCriterion = _view.GetStringValue("Создать критерий", "Введите критерий");
+
+            if (HaveErrors(25, nameNewCriterion))
+                return false;
+
+            _model.task.AddField(nameNewCriterion);
+            _model.matrixsCompare.Add(nameNewCriterion, new MatrixTable(nameNewCriterion, _model.options));          
+            _view.AddCriterion(nameNewCriterion);
+            result = false;
+            return true;
+        }
+        public bool UpdateCriterion(int indexRow, string nameNewCriterion=null)
+        {
+            _model.task.fields[indexRow] = nameNewCriterion;
+            string oldkey = _model.matrixsCompare.Keys.ElementAt(indexRow);
+            MatrixTable oldvalue = _model.matrixsCompare[oldkey];
+            oldvalue.name = nameNewCriterion;
+            _model.matrixsCompare.Remove(oldkey);
+            _model.matrixsCompare.Add(nameNewCriterion, oldvalue);
+
+            _view.UpdateCriterion(indexRow, nameNewCriterion);
+            result = false;
+            return true;
+        }
+        public bool DeleteCriterion(int indexDelitingCriterion)
+        {
+            _model.task.DeleteField(indexDelitingCriterion);
+            _model.matrixsCompare.Remove(_model.matrixsCompare.Keys.ElementAt(indexDelitingCriterion));        
+            _view.DeleteCriterion(indexDelitingCriterion);
+            result = false;
+            return true;
+        }
+
+        public bool AddOption(string nameNewOption = null)
+        {
+
+            if (HaveErrors(7))
+                return false;
+
+            nameNewOption = _view.GetStringValue("Создать объект", "Введите объект");
+
+            if (HaveErrors(47, nameNewOption))
+                return false;
+
+            _model.options.Add(nameNewOption);
+            _model.matrixsCompare.Values.ToList().ForEach(x => x.AddField(nameNewOption));
+            _view.AddOption(nameNewOption);
+            result = false;
+            return true;
+        }
+        public bool UpdateOption(int indexRow, string optionNewName)
+        {
+           _model.options[indexRow] = optionNewName;
+           _model.matrixsCompare.Values.ToList().ForEach(x => x.fields[indexRow] = optionNewName);
+           _view.UpdateOption(indexRow, optionNewName);
+            return true;
+        }      
+        public bool DeleteOption(int indexDelitingOption)
+        {
+            _model.matrixsCompare.Values.ToList().ForEach(x => x.DeleteField(indexDelitingOption));
+            _model.options.RemoveAt(indexDelitingOption);
+            _view.DeleteOption(indexDelitingOption);
+            return true;
+        }           
+
+        public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, string cellValue)
+        {
+            return true;
+        }
+        public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, string cellValue)
+        {
+            return true;
+        }
+
+
+        public bool AddTask()
+        {
+            if ((!HaveErrors(1,null,true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+                return false;
+
+            string nameNewTask = _view.GetStringValue("Создать цель", "Введите цель");
+            if (nameNewTask == null)
+                nameNewTask = "Цель";
+
+            selectedMatrix = string.Empty;
+            _model.task = new MatrixTable(nameNewTask);
+            result = false;
+            return true;
+        }
+        public bool SaveTaskInFile()
+        {
+            if (HaveErrors(1))
+                return false;
+            
+            MatrixIO.SaveInFile(_model.task);
+            return true;
+        }
+        public bool LoadTaskFromFile()
+        {           
+            if ((!HaveErrors(1))&& (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+                return false;
+
+            _model.matrixsCompare.Clear();
+            _model.task = null;
+
+            _model.task = MatrixIO.LoadFromFile();
+            _model.task.fields.ForEach(x => _model.matrixsCompare.Add(x, new MatrixTable(x, _model.options)));
+            selectedMatrix = _model.task.name;
+            _view.OuputTaskMatrix(MatrixToDataTable(_model.task));
+            result = false;
+            return true;
+        }
+
+        public bool SelectMatrixCompare(string SelectedMatrixCompareName)
+        {
+            if (HaveErrors(64))
+                return false;
+            selectedMatrix = SelectedMatrixCompareName;
+            _view.OuputMatrixCompare(MatrixToDataTable(_model.matrixsCompare[selectedMatrix]));
+            return true;
+        }
+        public bool Calculation()
+        {
+            if (HaveErrors(1))
+                return false;
+
+            _model.NormResult = Calculations.CalcGlobalDistributedPriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+            _model.IdealResult = Calculations.CalcGlobalIdealizePriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
+
+            if ((_model.NormResult == null) || (_model.IdealResult == null))
+                return false;
+
+            result = true;
+            _view.OuputCalculationsResult(_model.options[_model.NormResult.MaximumIndex()], _model.options[_model.IdealResult.MaximumIndex()]);
+            return true;
+        }
+        public bool ShowCalculation()
+        {
+            if (HaveErrors(128))
+                return false;
+            
+            if ((_model.NormResult != null) && (_model.IdealResult != null))
+            {
+                _view.OuputVectorCalculations(VectorToList(_model.IdealResult), "IdealResult");
+                _view.OuputVectorCalculations(VectorToList(_model.NormResult), "NormResult");
+            }
+            return true;
+        }
+
+        /*это для матрицы
+         *if (table.GetCellMatrix(i, j) % 1 == 0)
+                   dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
+               else
+                   dataGridView.Rows[i].Cells[j].Value = scalesInt[-1].ToString();*/
+
+        //if (i == j)
+        //   dataGridView.Rows[i].Cells[j].ReadOnly = true;
     }
 }

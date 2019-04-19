@@ -1,23 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using System.IO;
 using NamespaceWorkWithGridView;
 using NamespaceIView;
 using NamespaceIPresenter;
-using NamespaceMatrixTable;
 using NamespaceInputBox;
+
 namespace AnalyticHierarchyProcess
 {
     public partial class FormView : Form, IView
@@ -36,27 +25,54 @@ namespace AnalyticHierarchyProcess
             _presenter = iPresenter;
             return true;
         }
-       public bool OuputTaskMatrix(MatrixTable matrixTable)
+       public bool OuputTaskMatrix(DataTable table)
         {
-            WorkWithGridView.OutputMatrix(dataGridViewTaskCompare, matrixTable);
+           WorkWithGridView.OutputTable(dataGridViewTaskCompare, table);
             return true;
         }
-       public bool OuputCalculations(Vector<double> vectorCalculation1, Vector<double> vectorCalculation2)
+       public bool OuputMatrixCompare(DataTable table)
         {
-            WorkWithGridView.OutputVector(dataGridViewCalculation,vectorCalculation1, "", false);
-            WorkWithGridView.OutputVector(dataGridViewCalculation, vectorCalculation2, "", false);
+           WorkWithGridView.OutputTable(dataGridViewTaskCompare, table,true);
             return true;
         }
-       public bool OuputMatrixCompare(MatrixTable matrixTable)
+       public bool OuputVectorCalculations(List<string> column, string nameColumn)
         {
-            WorkWithGridView.OutputMatrix(dataGridViewTaskCompare, matrixTable);
+            WorkWithGridView.OutputColumn(dataGridViewCalculation, column, nameColumn,true);
+            return true;
+        }
+       public bool OuputCalculationsResult(string idealizedResult, string normalizedResult)
+        {
+            labelIdealResult.Text = idealizedResult;
+            labelNormResult.Text = normalizedResult;
+            return true;
+        }
+      
+       
+       public bool ShowError(string errorText)
+        {
+            MessageBox.Show(errorText, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return true;
+        }
+       public bool AskQuestion(string QuestionText)
+        {
+            if (MessageBox.Show(QuestionText, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return false;
+
             return true;
         }
 
-
-       public bool AddCriterion(string newCriterionName)
+       public  string GetStringValue(string title, string label_text)
         {
-            WorkWithGridView.AddRow(dataGridViewCriterions, newCriterionName);
+            string stringValue = String.Empty;
+
+            if (InputBoxs.InputBox(title, label_text, ref stringValue) != DialogResult.OK)
+                return null;
+
+            return stringValue;
+        }
+       public bool AddCriterion(string nameNewCriterion)
+        {
+            WorkWithGridView.AddRow(dataGridViewCriterions, nameNewCriterion);
             return true;
         }
        public bool UpdateCriterion(int indexRow, string criterionNewName)
@@ -84,22 +100,25 @@ namespace AnalyticHierarchyProcess
             WorkWithGridView.DeleteRow(dataGridViewOptions, indeDelitingOption);
             return true;
         }
-       public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, double cellValue)
+       public bool SetValueCellMatrixCompare(int indexRow, int indexColumn, string cellValue)
         {
             WorkWithGridView.SetCell(dataGridViewCompare, indexRow, indexColumn, cellValue);
             return true;
         }
-       public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, double cellValue)
+       public bool SetValueCellTaskMatrixCompare(int indexRow, int indexColumn, string cellValue)
         {
             WorkWithGridView.SetCell(dataGridViewTaskCompare, indexRow, indexColumn, cellValue);
             return true;
         }
-
-        private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
+       private void comboBoxCompare_SelectedIndexChanged(object sender, EventArgs e)
         {
             string SelectedMatrixCompareName = comboBoxCompare.Text;
             _presenter.SelectMatrixCompare(SelectedMatrixCompareName);
         }
+
+
+
+
         private void tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
           /*  if((selectedtabIndex == 1)&&(selectedMatrix!=string.Empty))
@@ -142,35 +161,40 @@ namespace AnalyticHierarchyProcess
             }
             selectedtabIndex = tab.SelectedIndex;*/
         }
-
         private void dataGridViewCriterions_KeyDown(object sender, KeyEventArgs e)
         {
             int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
-            if (indexRow < 0)
-                return;
-             _presenter.DeleteCriterion(indexRow);
+            _presenter.DeleteCriterion(indexRow);
         }
         private void dataGridViewOptions_KeyDown(object sender, KeyEventArgs e)
         {
             int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
-            if (indexRow < 0)
-                return;
-              _presenter.DeleteOption(indexRow);
+                _presenter.DeleteOption(indexRow);
         }
-
         private void dataGridViewTaskCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            int indexRow=0, indexColumn = 0; double cellValue=0;
-            WorkWithGridView.UpdateValueSymmetricCellDataGridView(dataGridViewTaskCompare,ref indexRow,ref indexColumn,ref cellValue);
+            int indexRow=0, indexColumn = 0; string cellValue="";
+
+            cellValue = WorkWithGridView.ValueSelectedCell(dataGridViewTaskCompare,ref indexRow,ref indexColumn);
             _presenter.SetValueCellMatrixCompare(indexRow, indexColumn, cellValue);
         }
         private void dataGridViewCompare_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            int indexRow = 0, indexColumn = 0; double cellValue = 0;
-            WorkWithGridView.UpdateValueSymmetricCellDataGridView(dataGridViewCompare, ref indexRow, ref indexColumn, ref cellValue);
+            int indexRow = 0, indexColumn = 0; string cellValue = "";
+
+            cellValue = WorkWithGridView.ValueSelectedCell(dataGridViewCompare, ref indexRow, ref indexColumn);
             _presenter.SetValueCellMatrixCompare(indexRow, indexColumn, cellValue);
         }
-  
+        private void dataGridViewOptions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
+            _presenter.UpdateOption(indexRow);
+        }
+        private void dataGridViewCriterions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
+            _presenter.UpdateCriterion(indexRow);
+        }
         private void buttonSaveTaskInFile_Click(object sender, EventArgs e)
         {
             _presenter.SaveTaskInFile();
@@ -187,55 +211,66 @@ namespace AnalyticHierarchyProcess
         {
             _presenter.Calculation();
         }
-
-        
-
-
         private void buttonAddTask_Click(object sender, EventArgs e)
-        {      
-            string newTaskName = String.Empty;
+        {
+            
+            System.Data.DataTable table = new DataTable("ParentTable");
+            // Declare variables for DataColumn and DataRow objects.
+            DataColumn column;
+            DataRow row;
 
-            if (InputBoxs.InputBox("Создать цель", "Введите цель", ref newTaskName) != DialogResult.OK)
-                return;
-            _presenter.AddTask(newTaskName);        
+            // Create new DataColumn, set DataType, 
+            // ColumnName and add to DataTable.    
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.Int32");
+            column.ColumnName = "id";
+            column.ReadOnly = true;
+            column.Unique = true;
+            // Add the Column to the DataColumnCollection.
+            table.Columns.Add(column);
+
+            // Create second column.
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "ParentItem";
+            column.AutoIncrement = false;
+            column.Caption = "ParentItem";
+            column.ReadOnly = false;
+            column.Unique = false;
+            // Add the column to the table.
+            table.Columns.Add(column);
+
+            // Make the ID column the primary key column.
+            DataColumn[] PrimaryKeyColumns = new DataColumn[1];
+            PrimaryKeyColumns[0] = table.Columns["id"];
+            table.PrimaryKey = PrimaryKeyColumns;
+
+            // Instantiate the DataSet variable.
+          DataSet  dataSet = new DataSet();
+            // Add the new DataTable to the DataSet.
+            dataSet.Tables.Add(table);
+
+            // Create three new DataRow objects and add 
+            // them to the DataTable
+            for (int i = 0; i <= 2; i++)
+            {
+                row = table.NewRow();
+                row["id"] = i;
+                row["ParentItem"] = "ParentItem " + i;
+                table.Rows.Add(row);
+            }
+            WorkWithGridView.OutputTable(dataGridViewTaskCompare, table, true);
+            // _presenter.AddTask();        
         }
         private void buttonAddCriterion_Click(object sender, EventArgs e)
-        {
-            string newCriterionName = String.Empty;
-
-            if (InputBoxs.InputBox("Создать критерий", "Введите критерий", ref newCriterionName) != DialogResult.OK)
-                return;
-
-            _presenter.AddCriterion(newCriterionName);
+        {      
+            _presenter.AddCriterion();
         }
         private void buttonAddOption_Click(object sender, EventArgs e)
         {
-            string newOptionName = String.Empty;
-
-            if (InputBoxs.InputBox("Создать объект", "Введите объект", ref newOptionName) != DialogResult.OK)
-                return;
-
-            _presenter.AddOption(newOptionName);
+            _presenter.AddOption();
         }
-
-        private void dataGridViewOptions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
-            if (indexRow < 0)
-                return;
-
-            string newValue = WorkWithGridView.ValueSelectedCell(dataGridViewOptions);
-            _presenter.UpdateOption(indexRow,newValue);
-        }
-        private void dataGridViewCriterions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
-            if (indexRow < 0)
-                return;
-
-            string newValue = WorkWithGridView.ValueSelectedCell(dataGridViewCriterions);
-            _presenter.UpdateCriterion(indexRow, newValue);
-        }
+        
 
     }
 }

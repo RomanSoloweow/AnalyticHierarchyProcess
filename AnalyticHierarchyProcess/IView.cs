@@ -1,19 +1,20 @@
-﻿using NamespaceIPresenter;
-using NamespaceMatrixTable;
-using MathNet.Numerics.LinearAlgebra;
-using System.Collections.Generic;
-using NamespaceIBase;
+﻿using dataTable = System.Data.DataTable;
+using Presenter = NamespaceIPresenter.IPresenter;
+using iBase = NamespaceIBase.IBase;
+using listString = System.Collections.Generic.List<string>;
 namespace NamespaceIView
 {
 
-    public interface IView:IBase
+    public interface IView:iBase
     {
-        bool SetIPresenter(IPresenter iPresenter);
-        bool OuputTaskMatrix(MatrixTable matrixTable);
-        bool OuputCalculations(Vector<double> vectorCalculation1, Vector<double> vectorCalculation2);
-        bool OuputMatrixCompare(MatrixTable matrixTable);
-        //bool OuputCriterions(List<string> criterions);
-        //bool OuputListOptions(List<string> Options);
+        bool SetIPresenter(Presenter iPresenter);
+        bool OuputTaskMatrix(dataTable table);
+        bool OuputMatrixCompare(dataTable table);
+        bool OuputVectorCalculations(listString column, string nameColumn);
+        bool OuputCalculationsResult(string idealizedResult, string normalizedResult);
+        bool ShowError(string errorText);
+        bool AskQuestion(string QuestionText);
+        string GetStringValue(string title, string label_text);
     }
 
 }
