@@ -273,6 +273,7 @@
             this.comboBoxCompare.Name = "comboBoxCompare";
             this.comboBoxCompare.Size = new System.Drawing.Size(1616, 33);
             this.comboBoxCompare.TabIndex = 2;
+            this.comboBoxCompare.DropDown += new System.EventHandler(this.comboBoxCompare_DropDown);
             this.comboBoxCompare.SelectedIndexChanged += new System.EventHandler(this.comboBoxCompare_SelectedIndexChanged);
             // 
             // dataGridViewCompare

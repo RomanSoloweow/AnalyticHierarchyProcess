@@ -19,7 +19,7 @@ namespace AnalyticHierarchyProcess
             InitializeComponent();
             dataGridViewOptions.Rows.Add("ter");
         }
-
+        /*
         public string GetCriterion(int indexCriterion)
         {
             string criterion = WorkWithGridView.GetRow(dataGridViewCriterions, indexCriterion);
@@ -39,7 +39,7 @@ namespace AnalyticHierarchyProcess
         {
             string value = WorkWithGridView.GetValueCell(dataGridViewTaskCompare, indexRow, indexColumn);
             return value;
-        }
+        }*/
 
 
 
@@ -199,13 +199,16 @@ namespace AnalyticHierarchyProcess
         }
         private void dataGridViewOptions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewOptions);
-            _presenter.UpdateOption(indexRow);
+
+            int indexRow = 0, indexColumn = 0; string cellValue = "";
+            cellValue = WorkWithGridView.GetValueSelectedCell(dataGridViewCriterions, ref indexRow, ref indexColumn);
+            _presenter.UpdateOption(indexRow, cellValue);
         }
         private void dataGridViewCriterions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            int indexRow = WorkWithGridView.GetIndexSelectedRow(dataGridViewCriterions);
-            _presenter.UpdateCriterion(indexRow);
+            int indexRow = 0, indexColumn = 0; string cellValue = "";
+            cellValue = WorkWithGridView.GetValueSelectedCell(dataGridViewCriterions, ref indexRow, ref indexColumn);
+            _presenter.UpdateCriterion(indexRow, cellValue);
         }
         private void dataGridViewTaskCompare_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -251,5 +254,9 @@ namespace AnalyticHierarchyProcess
             _presenter.AddOption();
         }
 
+        private void comboBoxCompare_DropDown(object sender, EventArgs e)
+        {
+            _presenter.SelectingMatrixCompare();
+        }
     }
 }

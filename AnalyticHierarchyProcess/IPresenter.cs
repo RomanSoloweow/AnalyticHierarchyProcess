@@ -8,6 +8,7 @@ namespace NamespaceIPresenter
        bool LoadTaskFromFile();
 
        bool SelectMatrixCompare(string SelectedMatrixCompareName);
+       bool SelectingMatrixCompare();
        bool Calculation();
        bool ShowCalculation();
     }

@@ -8,10 +8,10 @@ namespace NamespaceIView
     public interface IView:iBase
     {
 
-        string GetCriterion(int indexCriterion);
+        /*string GetCriterion(int indexCriterion);
         string GetOption(int indexOption);
         string GetCellValueMatrixCompare(int indexRow, int indexColumn);
-        string GetCellValueTaskMatrix(int indexRow, int indexColumn);
+        string GetCellValueTaskMatrix(int indexRow, int indexColumn);*/
 
 
         bool SetIPresenter(Presenter iPresenter);

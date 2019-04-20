@@ -151,11 +151,7 @@ namespace NamespacePresenter
         {
             if (HaveErrors(1))
                 return false;
-
-            nameNewCriterion = _view.GetCriterion(indexRow);
-            if ((string.IsNullOrEmpty(nameNewCriterion)))
-                return false;
-
+            //проверить на пустоту
             _model.task.fields[indexRow] = nameNewCriterion;
             string oldkey = _model.matrixsCompare.Keys.ElementAt(indexRow);
             MatrixTable oldvalue = _model.matrixsCompare[oldkey];
@@ -195,7 +191,8 @@ namespace NamespacePresenter
         }
         public bool UpdateOption(int indexRow, string optionNewName)
         {
-           _model.options[indexRow] = optionNewName;
+            //проверить на пустоту
+            _model.options[indexRow] = optionNewName;
            _model.matrixsCompare.Values.ToList().ForEach(x => x.fields[indexRow] = optionNewName);
            _view.UpdateOption(indexRow, optionNewName);
             return true;
@@ -212,7 +209,6 @@ namespace NamespacePresenter
             if (HaveErrors(7))
                 return false;
 
-            cellValue = _view.GetCellValueMatrixCompare(indexRow, indexColumn);
             if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
                 return false;
 
@@ -226,7 +222,7 @@ namespace NamespacePresenter
             if (HaveErrors(3))
                 return false;
 
-            cellValue = _view.GetCellValueTaskMatrix(indexRow, indexColumn);
+           // cellValue = _view.GetCellValueTaskMatrix(indexRow, indexColumn);
             if ((string.IsNullOrEmpty(cellValue)) || (indexRow < 0) || (indexColumn < 0))
                 return false;
 
@@ -282,6 +278,13 @@ namespace NamespacePresenter
                 return false;
             selectedMatrix = SelectedMatrixCompareName;
             _view.OuputMatrixCompare(MatrixToDataTable(_model.matrixsCompare[selectedMatrix]));
+            return true;
+        }
+        public bool SelectingMatrixCompare()
+        {
+            if (HaveErrors(7))
+                return false;
+
             return true;
         }
         public bool Calculation()
