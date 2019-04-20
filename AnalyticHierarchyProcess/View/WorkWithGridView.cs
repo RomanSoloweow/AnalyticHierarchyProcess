@@ -1,30 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Data;
-
+using Const = NamespaceConst.Const;
 namespace NamespaceWorkWithGridView
 {
 
     public class WorkWithGridView
     {
-        private static List<string> itemsComboBox = new List<string>()
-        {
-            {"Обратное симметричному"},
-            {"Одинаковая значимость"},
-            {"Почти слабая значимость"},
-            {"Cлабая значимость"},
-            {"Почти существенная значимость"},
-            {"Существенная значимость"},
-            {"Почти очевидная значимость"},
-            {"Очевидная значимость"},
-            {"Почти абсолютная значимость"},
-            {"Абсолютная значимость"}
-        };
+
         const int defaultValueCombobox = 1;
         public static DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
-            itemsComboBox.ForEach(item => dataGridViewComboBoxCell.Items.Add(item));
+            Const.Scale().ForEach(item => dataGridViewComboBoxCell.Items.Add(item));
             return dataGridViewComboBoxCell;
         }
         private static bool HaveErorInputData(int codeError, DataGridView dataGridView=null, int indexRow=-1, int indexColumn=-1, string inputValue=null)
@@ -89,7 +77,6 @@ namespace NamespaceWorkWithGridView
 
             return dataGridView.Rows[indexRow].Cells[0].Value.ToString();
         }
-
         public static bool UpdateCellValue(DataGridView dataGridView, int indexRow, int indexColumn, string cellValue)
         {
             if (HaveErorInputData(codeError: 15, dataGridView: dataGridView, indexRow: indexRow,indexColumn: indexColumn,inputValue: cellValue))
@@ -163,7 +150,7 @@ namespace NamespaceWorkWithGridView
                       for (int j = 0; j < table.Columns.Count; j++)
                       {
                         dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
-                    dataGridView.Rows[i].Cells[j].Value = itemsComboBox[1]; //для теста
+                    dataGridView.Rows[i].Cells[j].Value = Const.Scale(1); //для теста
                         //dataGridView.Rows[i].Cells[j].Value = table.Rows[i].ItemArray[j].ToString();              
                       };
 
