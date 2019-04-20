@@ -69,10 +69,6 @@ namespace NamespaceMatrixTable
             //сокращаем матрицу
             ContractMatrix(indexDeletingField);
         }
-        public void DeleteField(string nameDeletingField)
-        {
-            DeleteField(fields.IndexOf(nameDeletingField));
-        }
         /// <summary>
         /// Расширить матрицу (добавиться и строка и столбец)
         /// </summary>
@@ -97,6 +93,11 @@ namespace NamespaceMatrixTable
         /// <param name="indexDeleting">Номер удаляемого элемента</param>
         public void ContractMatrix(int indexDeleting)
         {
+            if ((indexDeleting == 0)&&(matrix.ColumnCount==1))
+            {
+                matrix.Clear();
+                  return;
+            }
             matrix = matrix.RemoveColumn(indexDeleting);
             matrix = matrix.RemoveRow(indexDeleting);
         }
@@ -109,27 +110,6 @@ namespace NamespaceMatrixTable
         public void SetCellMatrix(int numberRow, int numberColumn, double cellValue)
         {
             matrix[numberRow, numberColumn] = cellValue;
-        }
-        /// <summary>
-        /// Установить значение ячейки матрицы
-        /// </summary>
-        /// <param name="numberRow">Критерий по строке</param>
-        /// <param name="numberColumn">Критерий по столбцу</param>
-        /// <param name="cellValue">Значение</param>
-        public void SetCellMatrix(string FieldRow, string FieldColumn, double cellValue)
-        {
-            matrix[fields.IndexOf(FieldRow), fields.IndexOf(FieldColumn)] = cellValue;
-        }
-
-        /// <summary>
-        /// Получить значение ячейки марицы
-        /// </summary>
-        /// <param name="numberRow">Номер строки</param>
-        /// <param name="numberColumn">Номер столбца</param>
-        /// <returns></returns>
-        public double GetCellMatrix(string FieldRow, string FieldColumn)
-        {
-            return matrix[fields.IndexOf(FieldRow), fields.IndexOf(FieldColumn)];
         }
         /// <summary>
         /// Получить значение ячейки марицы

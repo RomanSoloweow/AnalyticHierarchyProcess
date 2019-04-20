@@ -8,14 +8,17 @@ namespace NamespaceIView
     public interface IView:iBase
     {
 
-        /*string GetCriterion(int indexCriterion);
-        string GetOption(int indexOption);
-        string GetCellValueMatrixCompare(int indexRow, int indexColumn);
-        string GetCellValueTaskMatrix(int indexRow, int indexColumn);*/
-
-
         bool SetIPresenter(Presenter iPresenter);
-        bool OuputTaskMatrix(dataTable table);
+        bool ContractMatrixCompare(int indexExpand);
+        bool ExpandMatrixCompare(string nameNewElement);
+        bool ContractMatrixTask(int indexAdding);
+        bool ExpandMatrixTask(string nameNewElement);
+
+        bool addCriterionInList(string nameNewCriterion);
+        bool UpdateCriterionInList(int indexRow, string nameNewCriterion);
+        bool DeleteCriterionInList(int indexRow);
+
+        bool OuputMatrixTask(dataTable table);
         bool OuputMatrixCompare(dataTable table);
         bool OuputVectorCalculations(listString column, string nameColumn);
         bool OuputCalculationsResult(string idealizedResult, string normalizedResult);

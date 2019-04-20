@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelResultHeader = new System.Windows.Forms.Label();
             this.tabOptions = new System.Windows.Forms.TabPage();
+            this.buttonDeleteOption = new System.Windows.Forms.Button();
             this.labelIdealResult = new System.Windows.Forms.Label();
             this.labelNormResult = new System.Windows.Forms.Label();
             this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
@@ -52,6 +53,7 @@
             this.buttonAddTask = new System.Windows.Forms.Button();
             this.dataGridViewTaskCompare = new System.Windows.Forms.DataGridView();
             this.tabCriterions = new System.Windows.Forms.TabPage();
+            this.buttonDeleteCriterion = new System.Windows.Forms.Button();
             this.buttonAddCriterion = new System.Windows.Forms.Button();
             this.dataGridViewCriterions = new System.Windows.Forms.DataGridView();
             this.ColumnCriterions = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -100,7 +102,7 @@
             this.tab.SelectedIndex = 0;
             this.tab.Size = new System.Drawing.Size(1656, 992);
             this.tab.TabIndex = 11;
-            this.tab.SelectedIndexChanged += new System.EventHandler(this.tabs_SelectedIndexChanged);
+            this.tab.SelectedIndexChanged += new System.EventHandler(this.tab_SelectedIndexChanged);
             // 
             // tabCalculation
             // 
@@ -170,6 +172,7 @@
             // tabOptions
             // 
             this.tabOptions.AutoScroll = true;
+            this.tabOptions.Controls.Add(this.buttonDeleteOption);
             this.tabOptions.Controls.Add(this.labelIdealResult);
             this.tabOptions.Controls.Add(this.labelNormResult);
             this.tabOptions.Controls.Add(this.dataGridViewOptions);
@@ -182,6 +185,17 @@
             this.tabOptions.TabIndex = 0;
             this.tabOptions.Text = "Объекты";
             this.tabOptions.UseVisualStyleBackColor = true;
+            // 
+            // buttonDeleteOption
+            // 
+            this.buttonDeleteOption.Location = new System.Drawing.Point(278, 14);
+            this.buttonDeleteOption.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteOption.Name = "buttonDeleteOption";
+            this.buttonDeleteOption.Size = new System.Drawing.Size(264, 65);
+            this.buttonDeleteOption.TabIndex = 19;
+            this.buttonDeleteOption.Text = "Удалить выбранный объект";
+            this.buttonDeleteOption.UseVisualStyleBackColor = true;
+            this.buttonDeleteOption.Click += new System.EventHandler(this.buttonDeleteOption_Click);
             // 
             // labelIdealResult
             // 
@@ -204,6 +218,7 @@
             // dataGridViewOptions
             // 
             this.dataGridViewOptions.AllowUserToAddRows = false;
+            this.dataGridViewOptions.AllowUserToDeleteRows = false;
             this.dataGridViewOptions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridViewOptions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridViewOptions.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -221,7 +236,7 @@
             this.dataGridViewOptions.Size = new System.Drawing.Size(1580, 790);
             this.dataGridViewOptions.TabIndex = 11;
             this.dataGridViewOptions.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOptions_CellEndEdit);
-            this.dataGridViewOptions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewOptions_KeyDown);
+            this.dataGridViewOptions.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewOptions_CellValidating);
             // 
             // ColumnOptions
             // 
@@ -294,6 +309,7 @@
             this.dataGridViewCompare.Size = new System.Drawing.Size(1586, 806);
             this.dataGridViewCompare.TabIndex = 0;
             this.dataGridViewCompare.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCompare_CellEndEdit);
+            this.dataGridViewCompare.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewCompare_CellValidating);
             // 
             // tabTask
             // 
@@ -314,7 +330,7 @@
             this.buttonLoadTaskFromFile.Location = new System.Drawing.Point(540, 13);
             this.buttonLoadTaskFromFile.Margin = new System.Windows.Forms.Padding(4);
             this.buttonLoadTaskFromFile.Name = "buttonLoadTaskFromFile";
-            this.buttonLoadTaskFromFile.Size = new System.Drawing.Size(298, 79);
+            this.buttonLoadTaskFromFile.Size = new System.Drawing.Size(258, 79);
             this.buttonLoadTaskFromFile.TabIndex = 4;
             this.buttonLoadTaskFromFile.Text = "Загрузить из файла";
             this.buttonLoadTaskFromFile.UseVisualStyleBackColor = true;
@@ -322,10 +338,10 @@
             // 
             // buttonSaveTaskInFile
             // 
-            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(272, 13);
+            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(274, 13);
             this.buttonSaveTaskInFile.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSaveTaskInFile.Name = "buttonSaveTaskInFile";
-            this.buttonSaveTaskInFile.Size = new System.Drawing.Size(264, 79);
+            this.buttonSaveTaskInFile.Size = new System.Drawing.Size(258, 79);
             this.buttonSaveTaskInFile.TabIndex = 3;
             this.buttonSaveTaskInFile.Text = "Сохранить в файл";
             this.buttonSaveTaskInFile.UseVisualStyleBackColor = true;
@@ -360,10 +376,12 @@
             this.dataGridViewTaskCompare.Size = new System.Drawing.Size(1592, 787);
             this.dataGridViewTaskCompare.TabIndex = 0;
             this.dataGridViewTaskCompare.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTaskCompare_CellEndEdit);
+            this.dataGridViewTaskCompare.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewTaskCompare_CellValidating);
             // 
             // tabCriterions
             // 
             this.tabCriterions.AutoScroll = true;
+            this.tabCriterions.Controls.Add(this.buttonDeleteCriterion);
             this.tabCriterions.Controls.Add(this.buttonAddCriterion);
             this.tabCriterions.Controls.Add(this.dataGridViewCriterions);
             this.tabCriterions.Location = new System.Drawing.Point(8, 43);
@@ -374,6 +392,17 @@
             this.tabCriterions.TabIndex = 1;
             this.tabCriterions.Text = "Критерии";
             this.tabCriterions.UseVisualStyleBackColor = true;
+            // 
+            // buttonDeleteCriterion
+            // 
+            this.buttonDeleteCriterion.Location = new System.Drawing.Point(272, 6);
+            this.buttonDeleteCriterion.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteCriterion.Name = "buttonDeleteCriterion";
+            this.buttonDeleteCriterion.Size = new System.Drawing.Size(258, 71);
+            this.buttonDeleteCriterion.TabIndex = 2;
+            this.buttonDeleteCriterion.Text = "Удалить выбранный критерий";
+            this.buttonDeleteCriterion.UseVisualStyleBackColor = true;
+            this.buttonDeleteCriterion.Click += new System.EventHandler(this.buttonDeleteCriterion_Click);
             // 
             // buttonAddCriterion
             // 
@@ -389,6 +418,7 @@
             // dataGridViewCriterions
             // 
             this.dataGridViewCriterions.AllowUserToAddRows = false;
+            this.dataGridViewCriterions.AllowUserToDeleteRows = false;
             this.dataGridViewCriterions.AllowUserToResizeColumns = false;
             this.dataGridViewCriterions.AllowUserToResizeRows = false;
             this.dataGridViewCriterions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
@@ -408,7 +438,7 @@
             this.dataGridViewCriterions.Size = new System.Drawing.Size(1584, 800);
             this.dataGridViewCriterions.TabIndex = 0;
             this.dataGridViewCriterions.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCriterions_CellEndEdit);
-            this.dataGridViewCriterions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCriterions_KeyDown);
+            this.dataGridViewCriterions.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewCriterions_CellValidating);
             // 
             // ColumnCriterions
             // 
@@ -473,6 +503,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabCalculation;
         private System.Windows.Forms.DataGridView dataGridViewCalculation;
+        private System.Windows.Forms.Button buttonDeleteOption;
+        private System.Windows.Forms.Button buttonDeleteCriterion;
     }
 }
 

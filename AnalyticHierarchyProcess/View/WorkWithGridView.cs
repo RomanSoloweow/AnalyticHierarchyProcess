@@ -1,19 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Data;
-using Const = NamespaceConst.Const;
+using NamespaceConst;
 namespace NamespaceWorkWithGridView
 {
 
     public class WorkWithGridView
-    {
-
-        const int defaultValueCombobox = 1;
-        public static DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
+    {  
+        private static DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
             Const.Scale().ForEach(item => dataGridViewComboBoxCell.Items.Add(item));
             return dataGridViewComboBoxCell;
+        }
+        public static bool Contract(DataGridView dataGridView,int indexExpand)
+        {
+            if (HaveErorInputData(7, dataGridView, indexColumn: indexExpand, indexRow: indexExpand))
+                return false;
+
+            dataGridView.Columns.RemoveAt(indexExpand);
+            dataGridView.Rows.RemoveAt(indexExpand);
+            return true;
+        }
+        public static bool Expand(DataGridView dataGridView, string header)
+        {
+            if (HaveErorInputData(9, dataGridView,  inputValue: header))
+                return false;
+
+            DataGridViewColumn dataGridViewColumn = new DataGridViewColumn();
+            dataGridViewColumn.HeaderText = header;
+            dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridViewColumn.CellTemplate = new DataGridViewComboBoxCell();
+            dataGridView.Columns.Add(dataGridViewColumn);
+            DataGridViewRow dataGridViewRow = new DataGridViewRow();
+            dataGridViewRow.HeaderCell.Value = header;
+            dataGridView.Rows.Add(dataGridViewRow);
+
+            int IndexNewRow = dataGridView.RowCount- 1;
+            int IndexNewColumn = dataGridView.ColumnCount - 1;
+            for (int i = 0; i < dataGridView.RowCount; i++)
+            {
+                dataGridView.Rows[i].Cells[IndexNewColumn] = GetDataGridViewComboBoxCell();
+                dataGridView.Rows[i].Cells[IndexNewColumn].Value = Const.defaultScaleValue;
+                if (IndexNewColumn == i)
+                    dataGridView.Rows[i].Cells[IndexNewColumn].ReadOnly = true;
+            }
+            for (int i = 0; i < dataGridView.Columns.Count; i++)
+            {
+                dataGridView.Rows[IndexNewRow].Cells[i] = GetDataGridViewComboBoxCell();
+                dataGridView.Rows[IndexNewRow].Cells[i].Value = Const.defaultScaleValue;
+                if (IndexNewRow == i)
+                    dataGridView.Rows[IndexNewRow].Cells[i].ReadOnly = true;
+            }
+            return true;
         }
         private static bool HaveErorInputData(int codeError, DataGridView dataGridView=null, int indexRow=-1, int indexColumn=-1, string inputValue=null)
         {
@@ -92,14 +131,12 @@ namespace NamespaceWorkWithGridView
 
             return dataGridView.SelectedCells[0].RowIndex;
         }
-        public static string GetValueSelectedCell(DataGridView dataGridView, ref int indexRow, ref int indexColumn)
+        public static string GetValue(DataGridView dataGridView,  int indexRow,  int indexColumn)
         {
-            if (HaveErorInputData(codeError: 17, dataGridView: dataGridView))
+            if (HaveErorInputData(codeError: 7, dataGridView: dataGridView, indexRow: indexRow, indexColumn: indexColumn))
                 return null;
 
-            indexRow = dataGridView.SelectedCells[0].RowIndex;
-            indexColumn = dataGridView.SelectedCells[0].ColumnIndex;
-            string valueSelectedCell = dataGridView.SelectedCells[0].Value.ToString();
+            string valueSelectedCell = dataGridView.Rows[indexRow].Cells[indexColumn].Value.ToString();
             return valueSelectedCell;
         }
         public static string ValueSelectedCell(DataGridView dataGridView)
@@ -111,13 +148,6 @@ namespace NamespaceWorkWithGridView
 
             return valueSelectedCell;
         }      
-        public static string GetValueCell(DataGridView dataGridView, int indexRow, int indexColumn)
-        {
-           if (HaveErorInputData(codeError: 7, dataGridView: dataGridView, indexRow: indexRow, indexColumn: indexColumn))
-                return null;
-
-            return dataGridView.Rows[indexRow].Cells[indexColumn].Value.ToString();
-        }
         public static bool OutputTable(DataGridView dataGridView, DataTable table, bool clear = true)
         {
 
@@ -150,8 +180,9 @@ namespace NamespaceWorkWithGridView
                       for (int j = 0; j < table.Columns.Count; j++)
                       {
                         dataGridView.Rows[i].Cells[j] = GetDataGridViewComboBoxCell();
-                    dataGridView.Rows[i].Cells[j].Value = Const.Scale(1); //для теста
-                        //dataGridView.Rows[i].Cells[j].Value = table.Rows[i].ItemArray[j].ToString();              
+                        dataGridView.Rows[i].Cells[j].Value = table.Rows[i].ItemArray[j].ToString();
+                        if (i == j)
+                            dataGridView.Rows[i].Cells[j].ReadOnly = true;
                       };
 
                   return true;

@@ -24,15 +24,72 @@ namespace NamespacePresenter
 
         private string selectedMatrix = string.Empty;
         private bool result = false;
-
+        private static Dictionary<string,int> CodesErrorsState = new Dictionary<string, int>()
+        {
+            {"AddCriterion",1},
+            {"UpdateCriterion",3},
+            {"DeleteCriterion",3},
+            {"AddOption",7},
+            {"UpdateOption",15},
+            {"DeleteOption",15},
+            {"UpdateValueCellValueMatrixCompare",79},
+            {"UpdateValueCellTaskMatrix",3},
+             {"AddTask",32},
+            {"SaveTaskInFile",3},
+            {"LoadTaskFromFile",32},
+            {"SelectMatrixCompare",15},
+            {"SelectingMatrixCompare",15},
+            {"Calculation",15},
+            {"ShowCalculation",31},
+        };
+        private static Dictionary<string, int> CodesErrorsInputData = new Dictionary<string, int>()
+        {
+            {"AddCriterion",3},
+            {"UpdateCriterion",3},
+            {"DeleteCriterion",9},
+            {"AddOption",5},
+            {"UpdateOption",5},
+            {"DeleteOption",17},
+            {"UpdateValueCellValueMatrixCompare",1},
+            {"UpdateValueCellTaskMatrix",1},            
+            {"AddTask",1},
+            {"SaveTaskInFile",0},
+            {"LoadTaskFromFile",0},
+            {"SelectMatrixCompare",9},
+            {"SelectingMatrixCompare",9},
+            {"Calculation",0},
+            {"ShowCalculation",0},
+        };
+        private static Dictionary<string, int> CodesErrorsIndexs = new Dictionary<string, int>()
+        {
+            {"AddCriterion",0},
+            {"UpdateCriterion",1},
+            {"DeleteCriterion",1},
+            {"AddOption",0},
+            {"UpdateOption",2},
+            {"DeleteOption",2},
+            {"UpdateValueCellValueMatrixCompare",48},
+            {"UpdateValueCellTaskMatrix",12},
+             {"AddTask",0},
+            {"SaveTaskInFile",0},
+            {"LoadTaskFromFile",0},
+            {"SelectMatrixCompare",0},
+            {"SelectingMatrixCompare",0},
+            {"Calculation",0},
+            {"ShowCalculation",0},
+        };
         private DataTable MatrixToDataTable(MatrixTable matrix)
         {
+          
             DataTable table = new DataTable();
-            table.TableName = matrix.name;
+
+            if (matrix == null)
+                return table;
+            table.TableName = matrix?.name;
             matrix.fields.ForEach(field => table.Columns.Add(field));
 
             for (int i = 0; i < matrix.matrix.RowCount; i++)
-                for (int j = 0; j < matrix.matrix.ColumnCount; j++)
+                for (int j = 0; j < matrix?.matrix.ColumnCount; j++)
                 {
                     table.Rows.Add();
                     table.Rows[i][j] = Const.Scale(matrix.matrix[i, j]);
@@ -41,12 +98,19 @@ namespace NamespacePresenter
         }
         private List<string> VectorToList(Vector<double> vector)
         {
+            if (vector == null)
+                return null;
             return vector.ToList().Select(number => number.ToString()).ToList();
         }
 
-        private bool HaveErrorsState(int codeError, bool mute = false)
+        private bool HaveErrorsState(string functionName,bool mute = false)
         {
+            int codeError = CodesErrorsState[functionName];
             string textError = String.Empty;
+
+            if (codeError < 1)
+                return false;
+            
             if (((codeError & 1) > 0) && (_model.task == null))
             {
                 textError = "Необходимо создать цель";
@@ -59,16 +123,22 @@ namespace NamespacePresenter
             {
                 textError = "Цель должна быть согласованна";
             }
-            else if (((codeError & 8) > 0) && (_model.matrixsCompare.Count < 1))
+            else if (((codeError & 8) > 0) && (_model.matrixsCompare.Values.First().matrix == null))
             {
                 textError = "Необходимо добавить объекты";
             }
-            else if (((codeError & 16) > 0) && ((!result) || (_model.NormResult != null) || (_model.IdealResult != null)))
+            else if (((codeError & 16) > 0) && ((!result) || (_model.NormResult == null) || (_model.IdealResult == null)))
             {
                 textError = "Необходимо провести расчеты";
             }
-
-
+            else if(((codeError & 32) > 0) && (_model.task!= null))
+            {
+                textError = "Цель уже существует";
+            }
+            else if (((codeError & 64) > 0) && (string.IsNullOrEmpty(selectedMatrix)))
+            {
+                textError = "Матрица не выбрана";
+            }
             if (textError != String.Empty)
             {
                 if (!mute)
@@ -77,9 +147,14 @@ namespace NamespacePresenter
             }
             return false;
         }
-        private bool HaveErrorsInputData(int codeError, string newValue = null, int indexRow = -1, int indexColumn = -1,bool mute = false)
+        private bool HaveErrorsInputData(string functionName, string newValue = null,bool mute = false)
         {
+            int codeError = CodesErrorsInputData[functionName];
             string textError = String.Empty;
+
+            if (codeError < 1)
+                return false;
+
             if (((codeError & 1) > 0) && (string.IsNullOrEmpty(newValue)))
             {
                 textError = "Необходимо вести значение";
@@ -110,28 +185,42 @@ namespace NamespacePresenter
             }
             return false;
         }
-        private bool HaveErrorsIndexs(int codeError, int indexRow = -1, int indexColumn = -1, bool mute = false)
+        private bool HaveErrorsIndexs(string functionName, int indexRow = -1, int indexColumn = -1, bool mute = false)
         {
+            int codeError = CodesErrorsIndexs[functionName];
             string textError = String.Empty;
-            if (((codeError & 1) > 0) && ((indexRow < 0) || (_model.task.matrix.RowCount < indexRow)))
+
+            if (codeError < 1)
+                return false;
+
+            if (((codeError & 1) > 0) && ((indexRow < 0) || (_model.task.fields.Count < indexRow)))
+            {
+                textError = "Ошибка в работе с матрицей Критерив";
+            }
+            if (((codeError & 2) > 0) && ((indexRow < 0) || (_model.matrixsCompare.Keys.Count < indexRow)))
+            {
+                textError = "Ошибка в работе с матрицей Объектов";
+            }
+            if (((codeError & 4) > 0) && ((indexRow < 0) || (_model.task.matrix.RowCount < indexRow)))
             {
                 textError = "Ошибка в работе с матрицей Цели";
             }
-            else if (((codeError & 2) > 0) && ((indexColumn < 0) || (_model.task.matrix.ColumnCount < indexColumn)))
+            else if (((codeError & 8) > 0) && ((indexColumn < 0) || (_model.task.matrix.ColumnCount < indexColumn)))
             {
                 textError = "Ошибка в работе с матрицей Цели";
             }
-            else if (((codeError & 4) > 0) && ((indexRow < 0) || (_model.matrixsCompare[selectedMatrix].matrix.ColumnCount < indexRow)))
+            else if (((codeError & 16) > 0) && ((indexRow < 0) || (_model.matrixsCompare[selectedMatrix].matrix.ColumnCount < indexRow)))
             {
                 textError = "Ошибка в работе с матрицей Сравнений";
             }
-            else if (((codeError & 8) > 0) && ((indexColumn < 0) || (_model.matrixsCompare[selectedMatrix].matrix.ColumnCount < indexColumn)))
+            else if (((codeError & 32) > 0) && ((indexColumn < 0) || (_model.matrixsCompare[selectedMatrix].matrix.ColumnCount < indexColumn)))
             {
                 textError = "Ошибка в работе с матрицей Сравнений";
             }
 
             if (textError != String.Empty)
             {
+                textError = "Ошибка в работе с матрицей " + textError;
                 if (!mute)
                     _view.ShowError(textError);
                 return true;
@@ -147,24 +236,34 @@ namespace NamespacePresenter
         }
         public bool AddCriterion(string nameNewCriterion = null)
         {
-            if (HaveErrorsState(1))
+            string functionName = "AddCriterion";
+            if (HaveErrorsState(functionName))
                 return false;
 
             nameNewCriterion = _view.GetStringValue("Создать критерий", "Введите критерий");
 
-            if (HaveErrorsInputData(3, nameNewCriterion))
+            if (HaveErrorsInputData(functionName, nameNewCriterion))
                 return false;
 
             _model.task.AddField(nameNewCriterion);
             _model.matrixsCompare.Add(nameNewCriterion, new MatrixTable(nameNewCriterion, _model.options));
+
             _view.AddCriterion(nameNewCriterion);
+            _view.addCriterionInList(nameNewCriterion);
+            _view.ExpandMatrixTask(nameNewCriterion);
+
             result = false;
             return true;
         }
-        public bool UpdateCriterion(int indexRow, string nameNewCriterion = null)
+        public bool UpdateCriterion(int indexRow, string nameNewCriterion)
         {
-            if (HaveErrorsState(3) || HaveErrorsInputData(3, nameNewCriterion))
+            string functionName = "UpdateCriterion";
+            if (HaveErrorsState(functionName) ||HaveErrorsIndexs(functionName, indexRow)|| (_model.task.fields[indexRow] == nameNewCriterion))
                 return false;
+
+
+           while(HaveErrorsInputData(functionName, nameNewCriterion))
+                nameNewCriterion += indexRow.ToString();
 
             _model.task.fields[indexRow] = nameNewCriterion;
             string oldkey = _model.matrixsCompare.Keys.ElementAt(indexRow);
@@ -174,27 +273,36 @@ namespace NamespacePresenter
             _model.matrixsCompare.Add(nameNewCriterion, oldvalue);
 
             _view.UpdateCriterion(indexRow, nameNewCriterion);
+            _view.UpdateCriterionInList(indexRow, nameNewCriterion);
+
             result = false;
             return true;
         }
         public bool DeleteCriterion(int indexDelitingCriterion)
         {
+            string functionName = "DeleteCriterion";
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexDelitingCriterion))
+                return false;
+
             _model.task.DeleteField(indexDelitingCriterion);
             _model.matrixsCompare.Remove(_model.matrixsCompare.Keys.ElementAt(indexDelitingCriterion));
+
             _view.DeleteCriterion(indexDelitingCriterion);
+            _view.DeleteCriterionInList(indexDelitingCriterion);
+
             result = false;
             return true;
         }
 
         public bool AddOption(string nameNewOption = null)
         {
-
-            if (HaveErrorsState(7))
+            string functionName = "AddOption";
+            if (HaveErrorsState(functionName))
                 return false;
 
             nameNewOption = _view.GetStringValue("Создать объект", "Введите объект");
 
-            if (HaveErrorsInputData(5, nameNewOption))
+            if (HaveErrorsInputData(functionName, nameNewOption))
                 return false;
 
             _model.options.Add(nameNewOption);
@@ -205,7 +313,13 @@ namespace NamespacePresenter
         }
         public bool UpdateOption(int indexRow, string optionNewName)
         {
-            //проверить на пустоту
+            string functionName = "UpdateOption";
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexRow) || (_model.task.fields[indexRow] == optionNewName))
+                return false;
+
+            while (HaveErrorsInputData(functionName, optionNewName))
+                optionNewName += indexRow.ToString();
+
             _model.options[indexRow] = optionNewName;
             _model.matrixsCompare.Values.ToList().ForEach(x => x.fields[indexRow] = optionNewName);
             _view.UpdateOption(indexRow, optionNewName);
@@ -213,6 +327,9 @@ namespace NamespacePresenter
         }
         public bool DeleteOption(int indexDelitingOption)
         {
+            string functionName = "DeleteOption";
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexDelitingOption))
+                return false;
             _model.matrixsCompare.Values.ToList().ForEach(x => x.DeleteField(indexDelitingOption));
             _model.options.RemoveAt(indexDelitingOption);
             _view.DeleteOption(indexDelitingOption);
@@ -220,7 +337,8 @@ namespace NamespacePresenter
         }
         public bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue)
         {
-            if (HaveErrorsState(7) || HaveErrorsInputData(193, newValue: cellValue, indexRow: indexRow, indexColumn: indexColumn))
+            string functionName = "UpdateValueCellValueMatrixCompare";
+            if (HaveErrorsState(functionName) || HaveErrorsInputData(functionName, newValue: cellValue)||HaveErrorsIndexs(functionName, indexRow, indexColumn))
                 return false;
 
 
@@ -231,7 +349,8 @@ namespace NamespacePresenter
         }
         public bool UpdateValueCellTaskMatrix(int indexRow, int indexColumn, string cellValue)
         {
-            if (HaveErrorsState(3)||HaveErrorsInputData(49,newValue:cellValue,indexRow: indexRow,indexColumn: indexColumn))
+            string functionName = "UpdateValueCellTaskMatrix";
+            if (HaveErrorsState(functionName) || HaveErrorsInputData(functionName, newValue: cellValue) || HaveErrorsIndexs(functionName, indexRow, indexColumn))
                 return false;
 
             _model.task.matrix[indexRow, indexColumn] = Const.Scale(cellValue);
@@ -244,12 +363,13 @@ namespace NamespacePresenter
 
         public bool AddTask()
         {
-            if ((!HaveErrorsState(1,mute:true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+            string functionName = "AddTask";
+            if ((HaveErrorsState(functionName, mute:true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
                 return false;
 
             string nameNewTask = _view.GetStringValue("Создать цель", "Введите цель");
 
-            if (HaveErrorsInputData(1, nameNewTask))
+            if (HaveErrorsInputData(functionName, nameNewTask))
                 return false;
 
             selectedMatrix = string.Empty;
@@ -260,15 +380,17 @@ namespace NamespacePresenter
         }
         public bool SaveTaskInFile()
         {
-            if (HaveErrorsState(1))
+            string functionName = "SaveTaskInFile";
+            if (HaveErrorsState(functionName))
                 return false;
             
             MatrixIO.SaveInFile(_model.task);
             return true;
         }
         public bool LoadTaskFromFile()
-        {           
-            if ((!HaveErrorsState(1))&& (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+        {
+            string functionName = "LoadTaskFromFile";
+            if ((HaveErrorsState(functionName))&& (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
                 return false;
 
             _model.matrixsCompare.Clear();
@@ -276,19 +398,19 @@ namespace NamespacePresenter
 
             _model.task = MatrixIO.LoadFromFile();
 
-            if(HaveErrorsState(1))
-                return false;
+    
 
-            _model.task.fields.ForEach(x => _model.matrixsCompare.Add(x, new MatrixTable(x, _model.options)));
-            selectedMatrix = _model.task.name;
-            _view.OuputTaskMatrix(MatrixToDataTable(_model.task));
+            _model.task?.fields.ForEach(x => _model.matrixsCompare.Add(x, new MatrixTable(x, _model.options)));
+            selectedMatrix = _model.task?.name;
+            _view.OuputMatrixTask(MatrixToDataTable(_model.task));
             result = false;
             return true;
         }
 
         public bool SelectMatrixCompare(string SelectedMatrixCompareName)
         {
-            if (!HaveErrors(64))
+            string functionName = "SelectMatrixCompare";
+            if (HaveErrorsState(functionName)||HaveErrorsInputData(functionName, SelectedMatrixCompareName,mute:true))
                 return false;
 
             selectedMatrix = SelectedMatrixCompareName;
@@ -297,21 +419,20 @@ namespace NamespacePresenter
         }
         public bool SelectingMatrixCompare()
         {
-            if (HaveErrors(7))
+            string functionName = "SelectingMatrixCompare";
+            if (HaveErrorsState(functionName))
                 return false;
 
             return true;
         }
         public bool Calculation()
         {
-            if (HaveErrors(7))
+            string functionName = "Calculation";
+            if (HaveErrorsState(functionName))
                 return false;
 
             _model.NormResult = Calculations.CalcGlobalDistributedPriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
             _model.IdealResult = Calculations.CalcGlobalIdealizePriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
-
-            if ((_model.NormResult == null) || (_model.IdealResult == null))
-                return false;
 
             result = true;
             _view.OuputCalculationsResult(_model.options[_model.NormResult.MaximumIndex()], _model.options[_model.IdealResult.MaximumIndex()]);
@@ -319,7 +440,8 @@ namespace NamespacePresenter
         }
         public bool ShowCalculation()
         {
-            if (HaveErrors(128))
+            string functionName = "ShowCalculation";
+            if (HaveErrorsState(functionName))
                 return false;
             
             if ((_model.NormResult != null) && (_model.IdealResult != null))
