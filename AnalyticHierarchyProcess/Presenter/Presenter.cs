@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using NamespaceCalculations;
 using System.Windows.Forms;
 using NamespaceIPresenter;
@@ -20,12 +19,12 @@ namespace NamespacePresenter
 {
     class Presenter : IPresenter
     {
-
         private IView _view;
         private Model _model;
 
         private string selectedMatrix = string.Empty;
         private bool result = false;
+
         private static Dictionary<string,int> CodesErrorsState = new Dictionary<string, int>()
         {
             {"AddCriterion",1},
@@ -80,6 +79,7 @@ namespace NamespacePresenter
             {"Calculation",0},
             {"ShowCalculation",0},
         };
+
         private DataTable MatrixToDataTable(MatrixTable matrix)
         {
           
@@ -105,9 +105,9 @@ namespace NamespacePresenter
             return vector.ToList().Select(number => number.ToString()).ToList();
         }
 
-        private bool HaveErrorsState(MethodBase function,bool mute = false)
+        private bool HaveErrorsState(string functionName,bool mute = false)
         {
-            int codeError = CodesErrorsState[function.Name];
+            int codeError = CodesErrorsState[functionName];
             string textError = String.Empty;
 
             if (codeError < 1)
@@ -149,9 +149,9 @@ namespace NamespacePresenter
             }
             return false;
         }
-        private bool HaveErrorsInputData(MethodBase function, string newValue = null,bool mute = false)
+        private bool HaveErrorsInputData(string functionName, string newValue = null,bool mute = false)
         {
-            int codeError = CodesErrorsInputData[function.Name];
+            int codeError = CodesErrorsInputData[functionName];
             string textError = String.Empty;
 
             if (codeError < 1)
@@ -187,9 +187,9 @@ namespace NamespacePresenter
             }
             return false;
         }
-        private bool HaveErrorsIndexs(MethodBase function, int indexRow = -1, int indexColumn = -1, bool mute = false)
+        private bool HaveErrorsIndexs(string functionName, int indexRow = -1, int indexColumn = -1, bool mute = false)
         {
-            int codeError = CodesErrorsIndexs[function.Name];
+            int codeError = CodesErrorsIndexs[functionName];
             string textError = String.Empty;
 
             if (codeError < 1)
@@ -238,14 +238,14 @@ namespace NamespacePresenter
         }
         public bool AddCriterion(string nameNewCriterion = null)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
+            string functionName = MethodInfo.GetCurrentMethod().Name;
 
-            if (HaveErrorsState(function))
+            if (HaveErrorsState(functionName))
                 return false;
 
             nameNewCriterion = _view.GetStringValue("Создать критерий", "Введите критерий");
 
-            if (HaveErrorsInputData(function, nameNewCriterion))
+            if (HaveErrorsInputData(functionName, nameNewCriterion))
                 return false;
 
             _model.task.AddField(nameNewCriterion);
@@ -260,12 +260,12 @@ namespace NamespacePresenter
         }
         public bool UpdateCriterion(int indexRow, string nameNewCriterion)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) ||HaveErrorsIndexs(function, indexRow)|| (_model.task.fields[indexRow] == nameNewCriterion))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) ||HaveErrorsIndexs(functionName, indexRow)|| (_model.task.fields[indexRow] == nameNewCriterion))
                 return false;
 
 
-           while(HaveErrorsInputData(function, nameNewCriterion))
+           while(HaveErrorsInputData(functionName, nameNewCriterion))
                 nameNewCriterion += indexRow.ToString();
 
             _model.task.fields[indexRow] = nameNewCriterion;
@@ -283,8 +283,8 @@ namespace NamespacePresenter
         }
         public bool DeleteCriterion(int indexDelitingCriterion)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) || HaveErrorsIndexs(function, indexDelitingCriterion))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexDelitingCriterion))
                 return false;
 
             _model.task.DeleteField(indexDelitingCriterion);
@@ -299,13 +299,13 @@ namespace NamespacePresenter
 
         public bool AddOption(string nameNewOption = null)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
                 return false;
 
             nameNewOption = _view.GetStringValue("Создать объект", "Введите объект");
 
-            if (HaveErrorsInputData(function, nameNewOption))
+            if (HaveErrorsInputData(functionName, nameNewOption))
                 return false;
 
             _model.options.Add(nameNewOption);
@@ -316,11 +316,11 @@ namespace NamespacePresenter
         }
         public bool UpdateOption(int indexRow, string optionNewName)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) || HaveErrorsIndexs(function, indexRow) || (_model.task.fields[indexRow] == optionNewName))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexRow) || (_model.task.fields[indexRow] == optionNewName))
                 return false;
 
-            while (HaveErrorsInputData(function, optionNewName))
+            while (HaveErrorsInputData(functionName, optionNewName))
                 optionNewName += indexRow.ToString();
 
             _model.options[indexRow] = optionNewName;
@@ -330,8 +330,8 @@ namespace NamespacePresenter
         }
         public bool DeleteOption(int indexDelitingOption)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) || HaveErrorsIndexs(function, indexDelitingOption))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) || HaveErrorsIndexs(functionName, indexDelitingOption))
                 return false;
             _model.matrixsCompare.Values.ToList().ForEach(x => x.DeleteField(indexDelitingOption));
             _model.options.RemoveAt(indexDelitingOption);
@@ -340,24 +340,28 @@ namespace NamespacePresenter
         }
         public bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) || HaveErrorsInputData(function, newValue: cellValue)||HaveErrorsIndexs(function, indexRow, indexColumn))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) || HaveErrorsInputData(functionName, newValue: cellValue)||HaveErrorsIndexs(functionName, indexRow, indexColumn))
                 return false;
 
 
-            _model.matrixsCompare[selectedMatrix].matrix[indexRow, indexColumn] = Const.Scale(cellValue);
-            _model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
-            _view.UpdateValueCellValueMatrixCompare(indexColumn, indexRow, Const.Scale(_model.matrixsCompare[selectedMatrix].matrix[indexColumn, indexRow]));
+            _model.matrixsCompare[selectedMatrix].SetCellMatrix(indexRow, indexColumn,Const.Scale(cellValue));
+            double value = 1.0 / _model.matrixsCompare[selectedMatrix].GetCellMatrix(indexRow, indexColumn);
+            _model.matrixsCompare[selectedMatrix].SetCellMatrix(indexRow, indexColumn, value);
+
+            _view.UpdateValueCellValueMatrixCompare(indexColumn, indexRow, Const.Scale(value));
             return true;
         }
         public bool UpdateValueCellTaskMatrix(int indexRow, int indexColumn, string cellValue)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) || HaveErrorsInputData(function, newValue: cellValue) || HaveErrorsIndexs(function, indexRow, indexColumn))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) || HaveErrorsInputData(functionName, newValue: cellValue) || HaveErrorsIndexs(functionName, indexRow, indexColumn))
                 return false;
 
-            _model.task.matrix[indexRow, indexColumn] = Const.Scale(cellValue);
-            _model.task.matrix[indexColumn, indexRow] = 1 / _model.task.matrix[indexColumn, indexRow];
+            _model.task.SetCellMatrix(indexRow, indexColumn, Const.Scale(cellValue));
+            double value = 1.0 / _model.task.GetCellMatrix(indexRow, indexColumn);
+            _model.task.SetCellMatrix(indexColumn, indexRow, value);
+
             _view.UpdateValueCellTaskMatrix(indexColumn, indexRow, Const.Scale(_model.task.matrix[indexColumn, indexRow]));
             return true;
         }
@@ -367,14 +371,14 @@ namespace NamespacePresenter
         public bool AddTask()
         {
 
-            MethodBase function =  System.Reflection.MethodInfo.GetCurrentMethod();
+            string functionName =  MethodInfo.GetCurrentMethod().Name;
              
-            if ((HaveErrorsState(function, mute:true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+            if ((HaveErrorsState(functionName, mute:true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
                 return false;
 
             string nameNewTask = _view.GetStringValue("Создать цель", "Введите цель");
 
-            if (HaveErrorsInputData(function, nameNewTask))
+            if (HaveErrorsInputData(functionName, nameNewTask))
                 return false;
 
             selectedMatrix = string.Empty;
@@ -385,8 +389,8 @@ namespace NamespacePresenter
         }
         public bool SaveTaskInFile()
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
                 return false;
             
             MatrixIO.SaveInFile(_model.task);
@@ -394,8 +398,8 @@ namespace NamespacePresenter
         }
         public bool LoadTaskFromFile()
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if ((HaveErrorsState(function))&& (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if ((HaveErrorsState(functionName))&& (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
                 return false;
 
             _model.matrixsCompare.Clear();
@@ -414,8 +418,8 @@ namespace NamespacePresenter
 
         public bool SelectMatrixCompare(string SelectedMatrixCompareName)
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function) ||HaveErrorsInputData(function, SelectedMatrixCompareName,mute:true))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName) ||HaveErrorsInputData(functionName, SelectedMatrixCompareName,mute:true))
                 return false;
 
             selectedMatrix = SelectedMatrixCompareName;
@@ -424,46 +428,34 @@ namespace NamespacePresenter
         }
         public bool SelectingMatrixCompare()
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
                 return false;
 
             return true;
         }
         public bool Calculation()
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
                 return false;
 
             _model.NormResult = Calculations.CalcGlobalDistributedPriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
             _model.IdealResult = Calculations.CalcGlobalIdealizePriority(Calculations.GetVectorPriority(_model.task.matrix), _model.matrixsCompare.Values.ToList().Select(x => x.matrix).ToList());
 
             result = true;
-            _view.OuputCalculationsResult(_model.options[_model.NormResult.MaximumIndex()], _model.options[_model.IdealResult.MaximumIndex()]);
             return true;
         }
         public bool ShowCalculation()
         {
-            MethodBase function = System.Reflection.MethodInfo.GetCurrentMethod();
-            if (HaveErrorsState(function))
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
                 return false;
-            
-            if ((_model.NormResult != null) && (_model.IdealResult != null))
-            {
-                _view.OuputVectorCalculations(VectorToList(_model.IdealResult), "IdealResult");
-                _view.OuputVectorCalculations(VectorToList(_model.NormResult), "NormResult");
-            }
+
+            _view.OuputCalculationsResult(_model.options[_model.NormResult.MaximumIndex()], _model.options[_model.IdealResult.MaximumIndex()]);
+            _view.OuputVectorCalculations(VectorToList(_model.IdealResult), "IdealResult");
+            _view.OuputVectorCalculations(VectorToList(_model.NormResult), "NormResult");
             return true;
         }
-
-        /*это для матрицы
-         *if (table.GetCellMatrix(i, j) % 1 == 0)
-                   dataGridView.Rows[i].Cells[j].Value = scalesInt[Convert.ToInt32(table.GetCellMatrix(i, j))].ToString();
-               else
-                   dataGridView.Rows[i].Cells[j].Value = scalesInt[-1].ToString();*/
-
-        //if (i == j)
-        //   dataGridView.Rows[i].Cells[j].ReadOnly = true;
     }
 }

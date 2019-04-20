@@ -28,18 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataSet1 = new System.Data.DataSet();
             this.buttonGetResult = new System.Windows.Forms.Button();
             this.tab = new System.Windows.Forms.TabControl();
             this.tabCalculation = new System.Windows.Forms.TabPage();
             this.dataGridViewCalculation = new System.Windows.Forms.DataGridView();
             this.buttonShowCalc = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.labelResultHeader = new System.Windows.Forms.Label();
             this.tabOptions = new System.Windows.Forms.TabPage();
             this.buttonDeleteOption = new System.Windows.Forms.Button();
-            this.labelIdealResult = new System.Windows.Forms.Label();
-            this.labelNormResult = new System.Windows.Forms.Label();
             this.dataGridViewOptions = new System.Windows.Forms.DataGridView();
             this.ColumnOptions = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonAddOption = new System.Windows.Forms.Button();
@@ -57,6 +54,8 @@
             this.buttonAddCriterion = new System.Windows.Forms.Button();
             this.dataGridViewCriterions = new System.Windows.Forms.DataGridView();
             this.ColumnCriterions = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewCalculationResult = new System.Windows.Forms.DataGridView();
+            this.ColumnResult = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tab.SuspendLayout();
             this.tabCalculation.SuspendLayout();
@@ -69,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTaskCompare)).BeginInit();
             this.tabCriterions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).BeginInit();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -78,7 +78,7 @@
             // buttonGetResult
             // 
             this.buttonGetResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonGetResult.Location = new System.Drawing.Point(14, 25);
+            this.buttonGetResult.Location = new System.Drawing.Point(4, 4);
             this.buttonGetResult.Margin = new System.Windows.Forms.Padding(4);
             this.buttonGetResult.Name = "buttonGetResult";
             this.buttonGetResult.Size = new System.Drawing.Size(248, 65);
@@ -106,11 +106,10 @@
             // 
             // tabCalculation
             // 
+            this.tabCalculation.Controls.Add(this.dataGridViewCalculationResult);
             this.tabCalculation.Controls.Add(this.dataGridViewCalculation);
             this.tabCalculation.Controls.Add(this.buttonGetResult);
             this.tabCalculation.Controls.Add(this.buttonShowCalc);
-            this.tabCalculation.Controls.Add(this.label1);
-            this.tabCalculation.Controls.Add(this.labelResultHeader);
             this.tabCalculation.Location = new System.Drawing.Point(8, 43);
             this.tabCalculation.Margin = new System.Windows.Forms.Padding(6);
             this.tabCalculation.Name = "tabCalculation";
@@ -131,16 +130,17 @@
             this.dataGridViewCalculation.Enabled = false;
             this.dataGridViewCalculation.EnableHeadersVisualStyles = false;
             this.dataGridViewCalculation.GridColor = System.Drawing.SystemColors.ActiveBorder;
-            this.dataGridViewCalculation.Location = new System.Drawing.Point(14, 94);
+            this.dataGridViewCalculation.Location = new System.Drawing.Point(-1, 102);
             this.dataGridViewCalculation.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewCalculation.Name = "dataGridViewCalculation";
+            this.dataGridViewCalculation.RowHeadersVisible = false;
             this.dataGridViewCalculation.RowTemplate.Height = 33;
             this.dataGridViewCalculation.Size = new System.Drawing.Size(1586, 806);
             this.dataGridViewCalculation.TabIndex = 18;
             // 
             // buttonShowCalc
             // 
-            this.buttonShowCalc.Location = new System.Drawing.Point(850, 25);
+            this.buttonShowCalc.Location = new System.Drawing.Point(260, 4);
             this.buttonShowCalc.Margin = new System.Windows.Forms.Padding(4);
             this.buttonShowCalc.Name = "buttonShowCalc";
             this.buttonShowCalc.Size = new System.Drawing.Size(244, 65);
@@ -149,32 +149,10 @@
             this.buttonShowCalc.UseVisualStyleBackColor = true;
             this.buttonShowCalc.Click += new System.EventHandler(this.buttonShowCalc_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(270, 65);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(564, 25);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "Расчет на основании нормализированых приоритетов:";
-            // 
-            // labelResultHeader
-            // 
-            this.labelResultHeader.AutoSize = true;
-            this.labelResultHeader.Location = new System.Drawing.Point(270, 40);
-            this.labelResultHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelResultHeader.Name = "labelResultHeader";
-            this.labelResultHeader.Size = new System.Drawing.Size(549, 25);
-            this.labelResultHeader.TabIndex = 14;
-            this.labelResultHeader.Text = "Расчет на основании идеализированых приоритетов:";
-            // 
             // tabOptions
             // 
             this.tabOptions.AutoScroll = true;
             this.tabOptions.Controls.Add(this.buttonDeleteOption);
-            this.tabOptions.Controls.Add(this.labelIdealResult);
-            this.tabOptions.Controls.Add(this.labelNormResult);
             this.tabOptions.Controls.Add(this.dataGridViewOptions);
             this.tabOptions.Controls.Add(this.buttonAddOption);
             this.tabOptions.Location = new System.Drawing.Point(8, 43);
@@ -188,7 +166,7 @@
             // 
             // buttonDeleteOption
             // 
-            this.buttonDeleteOption.Location = new System.Drawing.Point(278, 14);
+            this.buttonDeleteOption.Location = new System.Drawing.Point(278, 6);
             this.buttonDeleteOption.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDeleteOption.Name = "buttonDeleteOption";
             this.buttonDeleteOption.Size = new System.Drawing.Size(264, 65);
@@ -196,24 +174,6 @@
             this.buttonDeleteOption.Text = "Удалить выбранный объект";
             this.buttonDeleteOption.UseVisualStyleBackColor = true;
             this.buttonDeleteOption.Click += new System.EventHandler(this.buttonDeleteOption_Click);
-            // 
-            // labelIdealResult
-            // 
-            this.labelIdealResult.AutoSize = true;
-            this.labelIdealResult.Location = new System.Drawing.Point(1096, 19);
-            this.labelIdealResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelIdealResult.Name = "labelIdealResult";
-            this.labelIdealResult.Size = new System.Drawing.Size(0, 25);
-            this.labelIdealResult.TabIndex = 18;
-            // 
-            // labelNormResult
-            // 
-            this.labelNormResult.AutoSize = true;
-            this.labelNormResult.Location = new System.Drawing.Point(1100, 56);
-            this.labelNormResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelNormResult.Name = "labelNormResult";
-            this.labelNormResult.Size = new System.Drawing.Size(0, 25);
-            this.labelNormResult.TabIndex = 15;
             // 
             // dataGridViewOptions
             // 
@@ -246,7 +206,7 @@
             // 
             // buttonAddOption
             // 
-            this.buttonAddOption.Location = new System.Drawing.Point(6, 15);
+            this.buttonAddOption.Location = new System.Drawing.Point(6, 6);
             this.buttonAddOption.Margin = new System.Windows.Forms.Padding(4);
             this.buttonAddOption.Name = "buttonAddOption";
             this.buttonAddOption.Size = new System.Drawing.Size(264, 65);
@@ -272,7 +232,7 @@
             // labelChoiseCriterion
             // 
             this.labelChoiseCriterion.AutoSize = true;
-            this.labelChoiseCriterion.Location = new System.Drawing.Point(10, 12);
+            this.labelChoiseCriterion.Location = new System.Drawing.Point(6, 6);
             this.labelChoiseCriterion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelChoiseCriterion.Name = "labelChoiseCriterion";
             this.labelChoiseCriterion.Size = new System.Drawing.Size(163, 25);
@@ -283,7 +243,7 @@
             // 
             this.comboBoxCompare.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCompare.FormattingEnabled = true;
-            this.comboBoxCompare.Location = new System.Drawing.Point(8, 44);
+            this.comboBoxCompare.Location = new System.Drawing.Point(4, 35);
             this.comboBoxCompare.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxCompare.Name = "comboBoxCompare";
             this.comboBoxCompare.Size = new System.Drawing.Size(1616, 33);
@@ -302,7 +262,7 @@
             this.dataGridViewCompare.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCompare.EnableHeadersVisualStyles = false;
             this.dataGridViewCompare.GridColor = System.Drawing.SystemColors.ActiveBorder;
-            this.dataGridViewCompare.Location = new System.Drawing.Point(8, 85);
+            this.dataGridViewCompare.Location = new System.Drawing.Point(4, 76);
             this.dataGridViewCompare.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewCompare.Name = "dataGridViewCompare";
             this.dataGridViewCompare.RowTemplate.Height = 33;
@@ -327,7 +287,7 @@
             // 
             // buttonLoadTaskFromFile
             // 
-            this.buttonLoadTaskFromFile.Location = new System.Drawing.Point(540, 13);
+            this.buttonLoadTaskFromFile.Location = new System.Drawing.Point(538, 6);
             this.buttonLoadTaskFromFile.Margin = new System.Windows.Forms.Padding(4);
             this.buttonLoadTaskFromFile.Name = "buttonLoadTaskFromFile";
             this.buttonLoadTaskFromFile.Size = new System.Drawing.Size(258, 79);
@@ -338,7 +298,7 @@
             // 
             // buttonSaveTaskInFile
             // 
-            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(274, 13);
+            this.buttonSaveTaskInFile.Location = new System.Drawing.Point(272, 6);
             this.buttonSaveTaskInFile.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSaveTaskInFile.Name = "buttonSaveTaskInFile";
             this.buttonSaveTaskInFile.Size = new System.Drawing.Size(258, 79);
@@ -349,7 +309,7 @@
             // 
             // buttonAddTask
             // 
-            this.buttonAddTask.Location = new System.Drawing.Point(8, 13);
+            this.buttonAddTask.Location = new System.Drawing.Point(6, 6);
             this.buttonAddTask.Margin = new System.Windows.Forms.Padding(4);
             this.buttonAddTask.Name = "buttonAddTask";
             this.buttonAddTask.Size = new System.Drawing.Size(258, 79);
@@ -446,6 +406,46 @@
             this.ColumnCriterions.Name = "ColumnCriterions";
             this.ColumnCriterions.Width = 152;
             // 
+            // dataGridViewCalculationResult
+            // 
+            this.dataGridViewCalculationResult.AllowUserToAddRows = false;
+            this.dataGridViewCalculationResult.AllowUserToDeleteRows = false;
+            this.dataGridViewCalculationResult.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewCalculationResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridViewCalculationResult.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this.dataGridViewCalculationResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewCalculationResult.ColumnHeadersVisible = false;
+            this.dataGridViewCalculationResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnResult});
+            this.dataGridViewCalculationResult.Enabled = false;
+            this.dataGridViewCalculationResult.EnableHeadersVisualStyles = false;
+            this.dataGridViewCalculationResult.GridColor = System.Drawing.SystemColors.ActiveBorder;
+            this.dataGridViewCalculationResult.Location = new System.Drawing.Point(512, 4);
+            this.dataGridViewCalculationResult.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridViewCalculationResult.Name = "dataGridViewCalculationResult";
+            this.dataGridViewCalculationResult.ReadOnly = true;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewCalculationResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridViewCalculationResult.RowHeadersWidth = 340;
+            this.dataGridViewCalculationResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridViewCalculationResult.RowTemplate.Height = 33;
+            this.dataGridViewCalculationResult.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.dataGridViewCalculationResult.Size = new System.Drawing.Size(1124, 90);
+            this.dataGridViewCalculationResult.TabIndex = 19;
+            // 
+            // ColumnResult
+            // 
+            this.ColumnResult.HeaderText = "ColumnResult";
+            this.ColumnResult.Name = "ColumnResult";
+            this.ColumnResult.ReadOnly = true;
+            this.ColumnResult.Width = 607;
+            // 
             // FormView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -459,10 +459,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tab.ResumeLayout(false);
             this.tabCalculation.ResumeLayout(false);
-            this.tabCalculation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculation)).EndInit();
             this.tabOptions.ResumeLayout(false);
-            this.tabOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).EndInit();
             this.tabCompares.ResumeLayout(false);
             this.tabCompares.PerformLayout();
@@ -471,6 +469,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTaskCompare)).EndInit();
             this.tabCriterions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -494,17 +493,15 @@
         private System.Windows.Forms.ComboBox comboBoxCompare;
         private System.Windows.Forms.Button buttonSaveTaskInFile;
         private System.Windows.Forms.Button buttonLoadTaskFromFile;
-        private System.Windows.Forms.Label labelResultHeader;
-        private System.Windows.Forms.Label labelNormResult;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOptions;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnCriterions;
         private System.Windows.Forms.Button buttonShowCalc;
-        private System.Windows.Forms.Label labelIdealResult;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabCalculation;
         private System.Windows.Forms.DataGridView dataGridViewCalculation;
         private System.Windows.Forms.Button buttonDeleteOption;
         private System.Windows.Forms.Button buttonDeleteCriterion;
+        private System.Windows.Forms.DataGridView dataGridViewCalculationResult;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnResult;
     }
 }
 

@@ -121,7 +121,7 @@ namespace NamespaceWorkWithGridView
             if (HaveErorInputData(codeError: 15, dataGridView: dataGridView, indexRow: indexRow,indexColumn: indexColumn,inputValue: cellValue))
                 return false;
 
-            dataGridView[indexRow, indexColumn].Value = cellValue;
+            dataGridView.Rows[indexRow].Cells[indexColumn].Value = cellValue;
             return true;
         }
         public static int GetIndexSelectedRow(DataGridView dataGridView)
@@ -190,7 +190,7 @@ namespace NamespaceWorkWithGridView
         public static bool OutputColumn(DataGridView dataGridView, List<string> column,string nameColumn="", bool clear = true)
         {
 
-            if (HaveErorInputData(codeError: 1))
+            if (HaveErorInputData(codeError: 1,dataGridView: dataGridView))
                 return false;
 
             if (clear == true)

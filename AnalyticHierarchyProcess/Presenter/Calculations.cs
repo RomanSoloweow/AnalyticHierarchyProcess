@@ -9,7 +9,7 @@ namespace NamespaceCalculations
         public static Vector<double> Sole(Matrix<double> matrix)
         {
 
-            if ((matrix == null) || (matrix.RowCount < 1) || (matrix.ColumnCount < 1))
+            if ((matrix == null) || (matrix.RowCount < 2) || (matrix.ColumnCount < 2))
                 return null;
             Matrix<double> matrix_copy = Matrix<double>.Build.DenseOfMatrix(matrix);
             // максимальное собственное значение
@@ -103,7 +103,7 @@ namespace NamespaceCalculations
         }
         public static Vector<double> CalcGlobalDistributedPriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
-            if ((priority_vector == null) || (matrixList.Count < 1))
+            if ((priority_vector == null) || (matrixList.Count < 2))
                 return null;
             // Посчет нормированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();
@@ -128,7 +128,7 @@ namespace NamespaceCalculations
         }
         public static Vector<double> CalcGlobalIdealizePriority(Vector<double> priority_vector, List<Matrix<double>> matrixList)
         {
-            if ((priority_vector == null) || (matrixList.Count < 1))
+            if ((priority_vector == null) || (matrixList.Count < 2))
                 return null;
             // Посчет идеализированных приоритетов для каждого из критериев
             List<Vector<double>> vectorList = new List<Vector<double>>();

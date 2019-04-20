@@ -14,10 +14,28 @@ namespace AnalyticHierarchyProcess
         private IPresenter _presenter;
         public FormView()
         {
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");          
             InitializeComponent();
+            InicializationCalculatonResult();
         }
+        private void  InicializationCalculatonResult()
+        {
+            DataGridViewRow dataGridViewRow = new DataGridViewRow();
+            dataGridViewRow.HeaderCell.Value = "Расчет на основании идеализированых приоритетов:";
+            dataGridViewRow.Selected = false;
+            dataGridViewCalculationResult.Rows.Add(dataGridViewRow);
 
+            dataGridViewRow = new DataGridViewRow();
+            dataGridViewRow.HeaderCell.Value = "Расчет на основании нормализированых приоритетов:";
+            dataGridViewRow.Selected = false;
+            dataGridViewCalculationResult.Rows.Add(dataGridViewRow);
+            dataGridViewCalculationResult.Rows[0].Cells[0].Value = "";
+            dataGridViewCalculationResult.Rows[1].Cells[0].Value = "";
+            dataGridViewCalculationResult.DefaultCellStyle.SelectionBackColor = dataGridViewCalculationResult.DefaultCellStyle.BackColor;
+            dataGridViewCalculationResult.DefaultCellStyle.SelectionForeColor = dataGridViewCalculationResult.DefaultCellStyle.ForeColor;
+            dataGridViewCalculation.DefaultCellStyle.SelectionBackColor = dataGridViewCalculationResult.DefaultCellStyle.BackColor;
+            dataGridViewCalculation.DefaultCellStyle.SelectionForeColor = dataGridViewCalculationResult.DefaultCellStyle.ForeColor;
+        }
         public bool AddCriterion(string nameNewCriterion)
         {
             return WorkWithGridView.AddRow(dataGridViewCriterions, nameNewCriterion);
@@ -82,12 +100,12 @@ namespace AnalyticHierarchyProcess
         }
         public bool OuputVectorCalculations(List<string> column, string nameColumn)
         {
-            return WorkWithGridView.OutputColumn(dataGridViewCalculation, column, nameColumn, true);
+            return WorkWithGridView.OutputColumn(dataGridViewCalculation, column, nameColumn, false);
         }
         public bool OuputCalculationsResult(string idealizedResult, string normalizedResult)
         {
-            labelIdealResult.Text = idealizedResult;
-            labelNormResult.Text = normalizedResult;
+            WorkWithGridView.UpdateCellValue(dataGridViewCalculationResult, 0, 0, idealizedResult);
+            WorkWithGridView.UpdateCellValue(dataGridViewCalculationResult, 1, 0, normalizedResult);
             return true;
         }
 
@@ -144,7 +162,7 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewOptions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            string cellValue = WorkWithGridView.GetValue(dataGridViewCriterions, e.RowIndex, e.ColumnIndex);
+            string cellValue = WorkWithGridView.GetValue(dataGridViewOptions, e.RowIndex, e.ColumnIndex);
             _presenter.UpdateOption(e.RowIndex, cellValue);
         }
         private void dataGridViewCriterions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -154,12 +172,12 @@ namespace AnalyticHierarchyProcess
         }
         private void dataGridViewTaskCompare_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            string cellValue = WorkWithGridView.GetValue(dataGridViewCriterions, e.RowIndex, e.ColumnIndex);
+            string cellValue = WorkWithGridView.GetValue(dataGridViewTaskCompare, e.RowIndex, e.ColumnIndex);
             _presenter.UpdateValueCellTaskMatrix(e.RowIndex, e.ColumnIndex, cellValue);
         }
         private void dataGridViewCompare_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            string cellValue = WorkWithGridView.GetValue(dataGridViewCriterions, e.RowIndex, e.ColumnIndex);
+            string cellValue = WorkWithGridView.GetValue(dataGridViewCompare, e.RowIndex, e.ColumnIndex);
             _presenter.UpdateValueCellValueMatrixCompare(e.RowIndex, e.ColumnIndex, cellValue);
         }
 
@@ -216,6 +234,10 @@ namespace AnalyticHierarchyProcess
             comboBoxCompare.SelectedIndex = -1;
             dataGridViewCompare.Rows.Clear();
             dataGridViewCompare.Columns.Clear();
+            dataGridViewCalculationResult.Rows[0].Cells[0].Value = "";
+            dataGridViewCalculationResult.Rows[1].Cells[0].Value = "";
+            dataGridViewCalculation.Rows.Clear();
+            dataGridViewCalculation.Columns.Clear();
         }
 
         private void dataGridViewCompare_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)

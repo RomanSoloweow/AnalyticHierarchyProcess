@@ -9,7 +9,9 @@ namespace NamespaceConst
         private static int defaultIntScaleValue = 1;
         public static string defaultScaleValue = Scale(defaultIntScaleValue);
         public static string Scale(double scale)
-        {            
+        {
+            if (scale < 1)
+                scale = 0;
             string ScaleValue = Scale().ElementAt(Convert.ToInt32(scale));
             return ScaleValue;
         }
