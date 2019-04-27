@@ -54,14 +54,14 @@ namespace NamespaceCalculations
             int maxi = _vector.MaximumIndex();
 
             // максимальный элемент вектора объявляем единицей
-            normalizedPriorities[maxi] = 1;
+            
             // вычисляем вес элемента относительно максимального
             for (int i = 0; i < normalizedPriorities.Count; i++)
             {
                 if (i!=maxi)
                     normalizedPriorities[i] = normalizedPriorities[i] / normalizedPriorities[maxi];
             }
-
+            normalizedPriorities[maxi] = 1;
             return (normalizedPriorities);
         }
         public static Vector<double> GetVectorPriority(Matrix<double> matrix)

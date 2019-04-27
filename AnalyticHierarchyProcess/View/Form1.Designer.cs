@@ -89,11 +89,11 @@
             // 
             // tab
             // 
-            this.tab.Controls.Add(this.tabCalculation);
-            this.tab.Controls.Add(this.tabOptions);
-            this.tab.Controls.Add(this.tabCompares);
             this.tab.Controls.Add(this.tabTask);
             this.tab.Controls.Add(this.tabCriterions);
+            this.tab.Controls.Add(this.tabOptions);
+            this.tab.Controls.Add(this.tabCompares);
+            this.tab.Controls.Add(this.tabCalculation);
             this.tab.Location = new System.Drawing.Point(6, 6);
             this.tab.Margin = new System.Windows.Forms.Padding(4);
             this.tab.Name = "tab";

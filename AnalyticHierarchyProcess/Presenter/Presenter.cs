@@ -408,12 +408,20 @@ namespace NamespacePresenter
 
             _model.task = MatrixIO.LoadFromFile();
 
-    
+            if (_model.task?.fields != null)
+            {
+                foreach (string criterion in _model.task.fields)
+                {
+                  _model.matrixsCompare.Add(criterion, new MatrixTable(criterion, _model.options));
+                    _view.AddCriterion(criterion);
+                    _view.addCriterionInList(criterion);
 
-            _model.task?.fields.ForEach(x => _model.matrixsCompare.Add(x, new MatrixTable(x, _model.options)));
-            selectedMatrix = _model.task?.name;
+                }
+                selectedMatrix = _model.task?.name;
+            }
             _view.OuputMatrixTask(MatrixToDataTable(_model.task));
-            result = false;
+            
+            result = true;
             return true;
         }
 
