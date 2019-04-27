@@ -33,6 +33,8 @@
             this.buttonGetResult = new System.Windows.Forms.Button();
             this.tab = new System.Windows.Forms.TabControl();
             this.tabCalculation = new System.Windows.Forms.TabPage();
+            this.dataGridViewCalculationResult = new System.Windows.Forms.DataGridView();
+            this.ColumnResult = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewCalculation = new System.Windows.Forms.DataGridView();
             this.buttonShowCalc = new System.Windows.Forms.Button();
             this.tabOptions = new System.Windows.Forms.TabPage();
@@ -54,11 +56,10 @@
             this.buttonAddCriterion = new System.Windows.Forms.Button();
             this.dataGridViewCriterions = new System.Windows.Forms.DataGridView();
             this.ColumnCriterions = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewCalculationResult = new System.Windows.Forms.DataGridView();
-            this.ColumnResult = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tab.SuspendLayout();
             this.tabCalculation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculation)).BeginInit();
             this.tabOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).BeginInit();
@@ -68,7 +69,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTaskCompare)).BeginInit();
             this.tabCriterions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).BeginInit();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -117,6 +117,46 @@
             this.tabCalculation.TabIndex = 4;
             this.tabCalculation.Text = "Расчеты";
             this.tabCalculation.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewCalculationResult
+            // 
+            this.dataGridViewCalculationResult.AllowUserToAddRows = false;
+            this.dataGridViewCalculationResult.AllowUserToDeleteRows = false;
+            this.dataGridViewCalculationResult.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewCalculationResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridViewCalculationResult.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this.dataGridViewCalculationResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewCalculationResult.ColumnHeadersVisible = false;
+            this.dataGridViewCalculationResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnResult});
+            this.dataGridViewCalculationResult.Enabled = false;
+            this.dataGridViewCalculationResult.EnableHeadersVisualStyles = false;
+            this.dataGridViewCalculationResult.GridColor = System.Drawing.SystemColors.ActiveBorder;
+            this.dataGridViewCalculationResult.Location = new System.Drawing.Point(512, 4);
+            this.dataGridViewCalculationResult.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridViewCalculationResult.Name = "dataGridViewCalculationResult";
+            this.dataGridViewCalculationResult.ReadOnly = true;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewCalculationResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridViewCalculationResult.RowHeadersWidth = 340;
+            this.dataGridViewCalculationResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridViewCalculationResult.RowTemplate.Height = 33;
+            this.dataGridViewCalculationResult.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.dataGridViewCalculationResult.Size = new System.Drawing.Size(1124, 90);
+            this.dataGridViewCalculationResult.TabIndex = 19;
+            // 
+            // ColumnResult
+            // 
+            this.ColumnResult.HeaderText = "ColumnResult";
+            this.ColumnResult.Name = "ColumnResult";
+            this.ColumnResult.ReadOnly = true;
+            this.ColumnResult.Width = 607;
             // 
             // dataGridViewCalculation
             // 
@@ -228,6 +268,7 @@
             this.tabCompares.TabIndex = 2;
             this.tabCompares.Text = "Сравнения";
             this.tabCompares.UseVisualStyleBackColor = true;
+            this.tabCompares.Click += new System.EventHandler(this.tabCompares_Click);
             // 
             // labelChoiseCriterion
             // 
@@ -406,46 +447,6 @@
             this.ColumnCriterions.Name = "ColumnCriterions";
             this.ColumnCriterions.Width = 152;
             // 
-            // dataGridViewCalculationResult
-            // 
-            this.dataGridViewCalculationResult.AllowUserToAddRows = false;
-            this.dataGridViewCalculationResult.AllowUserToDeleteRows = false;
-            this.dataGridViewCalculationResult.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridViewCalculationResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridViewCalculationResult.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.dataGridViewCalculationResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewCalculationResult.ColumnHeadersVisible = false;
-            this.dataGridViewCalculationResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnResult});
-            this.dataGridViewCalculationResult.Enabled = false;
-            this.dataGridViewCalculationResult.EnableHeadersVisualStyles = false;
-            this.dataGridViewCalculationResult.GridColor = System.Drawing.SystemColors.ActiveBorder;
-            this.dataGridViewCalculationResult.Location = new System.Drawing.Point(512, 4);
-            this.dataGridViewCalculationResult.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGridViewCalculationResult.Name = "dataGridViewCalculationResult";
-            this.dataGridViewCalculationResult.ReadOnly = true;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCalculationResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridViewCalculationResult.RowHeadersWidth = 340;
-            this.dataGridViewCalculationResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridViewCalculationResult.RowTemplate.Height = 33;
-            this.dataGridViewCalculationResult.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridViewCalculationResult.Size = new System.Drawing.Size(1124, 90);
-            this.dataGridViewCalculationResult.TabIndex = 19;
-            // 
-            // ColumnResult
-            // 
-            this.ColumnResult.HeaderText = "ColumnResult";
-            this.ColumnResult.Name = "ColumnResult";
-            this.ColumnResult.ReadOnly = true;
-            this.ColumnResult.Width = 607;
-            // 
             // FormView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -459,6 +460,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tab.ResumeLayout(false);
             this.tabCalculation.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculation)).EndInit();
             this.tabOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOptions)).EndInit();
@@ -469,7 +471,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTaskCompare)).EndInit();
             this.tabCriterions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCriterions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCalculationResult)).EndInit();
             this.ResumeLayout(false);
 
         }

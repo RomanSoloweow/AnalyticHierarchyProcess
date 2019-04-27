@@ -261,5 +261,9 @@ namespace AnalyticHierarchyProcess
                 ((DataGridView)sender).CancelEdit();
         }
 
+        private void tabCompares_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

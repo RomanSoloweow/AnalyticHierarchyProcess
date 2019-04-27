@@ -94,6 +94,7 @@ namespace NamespacePresenter
                 for (int j = 0; j < matrix?.matrix.ColumnCount; j++)
                 {
                     table.Rows.Add();
+                    string tr = Const.Scale(matrix.matrix[i, j]);
                     table.Rows[i][j] = Const.Scale(matrix.matrix[i, j]);
                 }
             return table;
@@ -347,7 +348,7 @@ namespace NamespacePresenter
 
             _model.matrixsCompare[selectedMatrix].SetCellMatrix(indexRow, indexColumn,Const.Scale(cellValue));
             double value = 1.0 / _model.matrixsCompare[selectedMatrix].GetCellMatrix(indexRow, indexColumn);
-            _model.matrixsCompare[selectedMatrix].SetCellMatrix(indexRow, indexColumn, value);
+            _model.matrixsCompare[selectedMatrix].SetCellMatrix(indexColumn, indexRow, value);
 
             _view.UpdateValueCellValueMatrixCompare(indexColumn, indexRow, Const.Scale(value));
             return true;
