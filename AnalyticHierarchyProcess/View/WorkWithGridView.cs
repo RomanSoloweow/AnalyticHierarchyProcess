@@ -4,57 +4,23 @@ using System.Data;
 using NamespaceConst;
 namespace NamespaceWorkWithGridView
 {
-
+   /// <summary>
+   /// Унпивверсальный класс для работы с GridVIew
+   /// </summary>
     public class WorkWithGridView
     {  
+        /// <summary>
+        /// Получить ячейку комбобокс со значениями
+        /// </summary>
+        /// <returns>Ячейка </returns>
         private static DataGridViewComboBoxCell GetDataGridViewComboBoxCell()
         {
             DataGridViewComboBoxCell dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
+            //Заполняем значения комбобокса вариантами
             Const.Scale().ForEach(item => dataGridViewComboBoxCell.Items.Add(item));
             return dataGridViewComboBoxCell;
         }
-        public static bool Contract(DataGridView dataGridView,int indexExpand)
-        {
-            if (HaveErorInputData(7, dataGridView, indexColumn: indexExpand, indexRow: indexExpand))
-                return false;
-
-            dataGridView.Columns.RemoveAt(indexExpand);
-            dataGridView.Rows.RemoveAt(indexExpand);
-            return true;
-        }
-        public static bool Expand(DataGridView dataGridView, string header)
-        {
-            if (HaveErorInputData(9, dataGridView,  inputValue: header))
-                return false;
-
-            DataGridViewColumn dataGridViewColumn = new DataGridViewColumn();
-            dataGridViewColumn.HeaderText = header;
-            dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridViewColumn.CellTemplate = new DataGridViewComboBoxCell();
-            dataGridView.Columns.Add(dataGridViewColumn);
-            DataGridViewRow dataGridViewRow = new DataGridViewRow();
-            dataGridViewRow.HeaderCell.Value = header;
-            dataGridView.Rows.Add(dataGridViewRow);
-
-            int IndexNewRow = dataGridView.RowCount- 1;
-            int IndexNewColumn = dataGridView.ColumnCount - 1;
-            for (int i = 0; i < dataGridView.RowCount; i++)
-            {
-                dataGridView.Rows[i].Cells[IndexNewColumn] = GetDataGridViewComboBoxCell();
-                dataGridView.Rows[i].Cells[IndexNewColumn].Value = Const.defaultScaleValue;
-                if (IndexNewColumn == i)
-                    dataGridView.Rows[i].Cells[IndexNewColumn].ReadOnly = true;
-            }
-            for (int i = 0; i < dataGridView.Columns.Count; i++)
-            {
-                dataGridView.Rows[IndexNewRow].Cells[i] = GetDataGridViewComboBoxCell();
-                dataGridView.Rows[IndexNewRow].Cells[i].Value = Const.defaultScaleValue;
-                if (IndexNewRow == i)
-                    dataGridView.Rows[IndexNewRow].Cells[i].ReadOnly = true;
-            }
-            return true;
-        }
-        private static bool HaveErorInputData(int codeError, DataGridView dataGridView=null, int indexRow=-1, int indexColumn=-1, string inputValue=null)
+        private static bool HaveErorInputData(int codeError, DataGridView dataGridView = null, int indexRow = -1, int indexColumn = -1, string inputValue = null)
         {
             string textError = string.Empty;
             if (((codeError & 1) > 0) && (dataGridView == null))
@@ -73,18 +39,75 @@ namespace NamespaceWorkWithGridView
             {
                 textError = "8";
             }
-            else if (((codeError & 16) > 0) && ((dataGridView.SelectedCells.Count < 1)|| (dataGridView.SelectedCells[0].Value==null)))
+            else if (((codeError & 16) > 0) && ((dataGridView.SelectedCells.Count < 1) || (dataGridView.SelectedCells[0].Value == null)))
             {
                 textError = "16";
             }
-      
+
 
             if (!string.IsNullOrEmpty(textError))
                 return true;
 
 
             return false;
-    }            
+        }
+        /// <summary>
+        /// Удалять поле(сократить)
+        /// </summary>
+        /// <param name="dataGridView">Компонент для которого выполняется действие</param>
+        /// <param name="indexExpand">Индекс удаляемого поля</param>
+        /// <returns>Флаг успешного выполнения</returns>
+        public static bool Contract(DataGridView dataGridView,int indexExpand)
+        {
+            if (HaveErorInputData(7, dataGridView, indexColumn: indexExpand, indexRow: indexExpand))
+                return false;
+           
+            dataGridView.Columns.RemoveAt(indexExpand);
+            dataGridView.Rows.RemoveAt(indexExpand);
+            return true;
+        }
+        /// <summary>
+        /// Добавить поле(расширить)
+        /// </summary>
+        /// <param name="dataGridView">>Компонент для которого выполняется действие</param>
+        /// <param name="header">Имя добавляемого поля</param>
+        /// <returns>Флаг успешного выполнения</returns>
+        public static bool Expand(DataGridView dataGridView, string header)
+        {
+            if (HaveErorInputData(9, dataGridView,  inputValue: header))
+                return false;
+
+            DataGridViewColumn dataGridViewColumn = new DataGridViewColumn();
+            dataGridViewColumn.HeaderText = header;
+            dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridViewColumn.CellTemplate = new DataGridViewComboBoxCell();
+            dataGridView.Columns.Add(dataGridViewColumn);
+
+            DataGridViewRow dataGridViewRow = new DataGridViewRow();
+            dataGridViewRow.HeaderCell.Value = header;
+            dataGridView.Rows.Add(dataGridViewRow);
+
+            int IndexNewRow = dataGridView.RowCount- 1;
+            int IndexNewColumn = dataGridView.ColumnCount - 1;
+            for (int i = 0; i < dataGridView.RowCount; i++)
+            {
+                dataGridView.Rows[i].Cells[IndexNewColumn] = GetDataGridViewComboBoxCell();
+                dataGridView.Rows[i].Cells[IndexNewColumn].Value = Const.defaultScaleValue;
+                //Ячейки на диагоналях не редактируются
+                if (IndexNewColumn == i)
+                    dataGridView.Rows[i].Cells[IndexNewColumn].ReadOnly = true;
+            }
+            for (int i = 0; i < dataGridView.Columns.Count; i++)
+            {
+                dataGridView.Rows[IndexNewRow].Cells[i] = GetDataGridViewComboBoxCell();
+                dataGridView.Rows[IndexNewRow].Cells[i].Value = Const.defaultScaleValue;
+                //Ячейки на диагоналях не редактируются
+                if (IndexNewRow == i)
+                    dataGridView.Rows[IndexNewRow].Cells[i].ReadOnly = true;
+            }
+            return true;
+        }
+        
         public static bool AddRow(DataGridView dataGridView, string addingValue)
         {
             if(HaveErorInputData(codeError:9,dataGridView: dataGridView,inputValue: addingValue))
@@ -147,7 +170,14 @@ namespace NamespaceWorkWithGridView
             string valueSelectedCell = dataGridView.SelectedCells[0].Value.ToString();
 
             return valueSelectedCell;
-        }      
+        }
+        /// <summary>
+        /// Вывести таблицу в компонент
+        /// </summary>
+        /// <param name="dataGridView">Компонент для которого выполняется действие</param>
+        /// <param name="table">Таблица значение</param>
+        /// <param name="clear">Флаг нужно ли очистить компонент перед заполнением</param>
+        /// <returns>Флаг успешного выполнения</returns>
         public static bool OutputTable(DataGridView dataGridView, DataTable table, bool clear = true)
         {
 
@@ -187,6 +217,14 @@ namespace NamespaceWorkWithGridView
 
                   return true;
          }
+        /// <summary>
+        /// Вывести столбец
+        /// </summary>
+        /// <param name="dataGridView">Компонент для которого выполняется действие</param>
+        /// <param name="column">Сам столбец</param>
+        /// <param name="nameColumn">Имя добавляемого столбца</param>
+        /// <param name="clear">Флаг нужно ли очистить компонент перед заполнением</param>
+        /// <returns>Флаг успешного выполнения</returns>
         public static bool OutputColumn(DataGridView dataGridView, List<string> column,string nameColumn="", bool clear = true)
         {
 

@@ -4,14 +4,24 @@ using System;
 namespace NamespaceMatrixTable
 {
     public class MatrixTable
-    {
+     {   
+        /// <summary>
+        /// Создаем зная имя цели и критерии
+        /// </summary>
+        /// <param name="_name">Имя цели</param>
+        /// <param name="_fields">Критерии</param>
         public MatrixTable(string _name,List<string> _fields)
         {
             name = _name;          
                 fields = new List<string>(_fields);
+                //Если список критериев не пустой - создаем матрицу значений и заполняем её единицами
                if ((_fields != null) && (_fields.Count > 0))
                 matrix = Matrix<double>.Build.Dense(fields.Count, fields.Count, 1);           
         }
+        /// <summary>
+        /// Создаем зная имя цели
+        /// </summary>
+        /// <param name="_name">имя цели</param>
         public MatrixTable(string _name)
         {
             name = _name;
@@ -32,7 +42,7 @@ namespace NamespaceMatrixTable
         /// <param name="newField">Добавляемый критерий</param>
         public void AddField(string newField,int indexAddingField)
         {            
-            if (indexAddingField == -1)
+            if (indexAddingField<0)
                 indexAddingField = fields.Count;
 
             fields.Insert(indexAddingField, newField);
@@ -40,10 +50,18 @@ namespace NamespaceMatrixTable
             ExpandMatrix(indexAddingField);
 
         }
+        /// <summary>
+        /// Получить количество критериев цели
+        /// </summary>
+        /// <returns>Количество критериев</returns>
         public int CountFiields()
         {
             return (fields!= null)?fields.Count:0;
         }
+        /// <summary>
+        /// Установить имя цели
+        /// </summary>
+        /// <param name="_name">Новое имя</param>
         public void SetName(string _name)
         {
             name = _name;
@@ -62,7 +80,7 @@ namespace NamespaceMatrixTable
         /// <param name="indexDeletingField"></param>
         public void DeleteField(int indexDeletingField = -1)
         {
-            if (indexDeletingField == -1)
+            if (indexDeletingField <0)
                 indexDeletingField = fields.Count - 1;
 
             fields.RemoveAt(indexDeletingField);

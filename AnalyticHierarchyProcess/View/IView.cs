@@ -14,14 +14,14 @@ namespace NamespaceIView
         bool ContractMatrixTask(int indexAdding);
         bool ExpandMatrixTask(string nameNewElement);
 
-        bool addCriterionInList(string nameNewCriterion);
+        bool AddCriterionInList(string nameNewCriterion);
         bool UpdateCriterionInList(int indexRow, string nameNewCriterion);
         bool DeleteCriterionInList(int indexRow);
 
-        bool OuputMatrixTask(dataTable table);
-        bool OuputMatrixCompare(dataTable table);
-        bool OuputVectorCalculations(listString column, string nameColumn);
-        bool OuputCalculationsResult(string idealizedResult, string normalizedResult);
+        bool OutputMatrixTask(dataTable table);
+        bool OutputMatrixCompare(dataTable table);
+        bool OutputVectorCalculations(listString column, string nameColumn);
+        bool OutputCalculationsResult(string idealizedResult, string normalizedResult);
         bool ShowError(string errorText);
         bool AskQuestion(string QuestionText);
         string GetStringValue(string title, string label_text);

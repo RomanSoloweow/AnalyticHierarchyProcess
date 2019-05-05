@@ -13,7 +13,8 @@ namespace NamespaceMatrixIO
         public static MatrixTable LoadFromFile(string fileNameWithPath)
         {
             if (!System.IO.File.Exists(fileNameWithPath))
-            MessageBox.Show("выбрасываем исключение");
+                throw new ArgumentNullException("Указанного файла не существует");
+
             string matrixName = Path.GetFileNameWithoutExtension(fileNameWithPath);
             using (StreamReader File = new StreamReader(fileNameWithPath))
             {
@@ -31,7 +32,7 @@ namespace NamespaceMatrixIO
                     line = File.ReadLine();
                 }
                 if (indexLineInFile != countLineInMatrix-1)
-                    MessageBox.Show("выбрасываем исключение");
+                    throw new ArgumentNullException("Ошибка чтения файла");
 
                 File.Close();
                 return matrix;
@@ -51,7 +52,9 @@ namespace NamespaceMatrixIO
         {
 
             if (matrix==null)
-                MessageBox.Show("выбрасываем исключение");
+             throw new ArgumentNullException("Сохраняемая матрица пуста");
+            if (String.IsNullOrEmpty(fileNameWithPath))
+               throw new ArgumentNullException("Необходимо выбрать файл");
 
             matrix.FillMatrix();
             using (StreamWriter file = new StreamWriter(fileNameWithPath, false))

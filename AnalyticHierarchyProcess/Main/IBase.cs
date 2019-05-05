@@ -2,6 +2,9 @@
 {
     public  interface IBase
     {
+        bool AddTask(string nameNewTask=null);
+        bool UpdateTask(string nameNewTask=null);
+        bool DeleteTask();
         bool AddCriterion(string nameNewCriterion=null);
         bool UpdateCriterion(int indexRow, string nameNewCriterion);
         bool DeleteCriterion(int indexDelitingCriterion);

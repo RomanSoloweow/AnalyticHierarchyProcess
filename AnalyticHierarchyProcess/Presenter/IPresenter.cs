@@ -3,7 +3,7 @@ namespace NamespaceIPresenter
 {
    public  interface IPresenter: iBase
     {
-       bool AddTask();
+       
        bool SaveTaskInFile();
        bool LoadTaskFromFile();
 

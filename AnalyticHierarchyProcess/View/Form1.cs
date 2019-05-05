@@ -36,6 +36,21 @@ namespace AnalyticHierarchyProcess
             dataGridViewCalculation.DefaultCellStyle.SelectionBackColor = dataGridViewCalculationResult.DefaultCellStyle.BackColor;
             dataGridViewCalculation.DefaultCellStyle.SelectionForeColor = dataGridViewCalculationResult.DefaultCellStyle.ForeColor;
         }
+        public bool AddTask(string nameNewTask)
+        {
+            labelTaskName.Text = nameNewTask;
+            return true;
+        }
+        public bool UpdateTask(string nameNewTask)
+        {
+            labelTaskName.Text = nameNewTask;
+            return true;
+        }
+        public bool DeleteTask()
+        {
+            labelTaskName.Text = "";
+            return true;
+        }
         public bool AddCriterion(string nameNewCriterion)
         {
             return WorkWithGridView.AddRow(dataGridViewCriterions, nameNewCriterion);
@@ -90,19 +105,20 @@ namespace AnalyticHierarchyProcess
         {
             return WorkWithGridView.Expand(dataGridViewTaskCompare, nameNewElement);
         }
-        public bool OuputMatrixTask(DataTable table)
+
+        public bool OutputMatrixTask(DataTable table)
         {
             return WorkWithGridView.OutputTable(dataGridViewTaskCompare, table);
         }
-        public bool OuputMatrixCompare(DataTable table)
+        public bool OutputMatrixCompare(DataTable table)
         {
             return WorkWithGridView.OutputTable(dataGridViewCompare, table, true);
         }
-        public bool OuputVectorCalculations(List<string> column, string nameColumn)
+        public bool OutputVectorCalculations(List<string> column, string nameColumn)
         {
             return WorkWithGridView.OutputColumn(dataGridViewCalculation, column, nameColumn, false);
         }
-        public bool OuputCalculationsResult(string idealizedResult, string normalizedResult)
+        public bool OutputCalculationsResult(string idealizedResult, string normalizedResult)
         {
             WorkWithGridView.UpdateCellValue(dataGridViewCalculationResult, 0, 0, idealizedResult);
             WorkWithGridView.UpdateCellValue(dataGridViewCalculationResult, 1, 0, normalizedResult);
@@ -133,7 +149,7 @@ namespace AnalyticHierarchyProcess
         }
 
 
-        public bool addCriterionInList(string nameNewCriterion)
+        public bool AddCriterionInList(string nameNewCriterion)
         {
             if (string.IsNullOrEmpty(nameNewCriterion))
                 return false;
@@ -201,6 +217,14 @@ namespace AnalyticHierarchyProcess
         {         
             _presenter.AddTask();        
         }
+        private void buttonRenameTask_Click(object sender, EventArgs e)
+        {
+            _presenter.UpdateTask();
+        }
+        private void buttonDeleteTask_Click(object sender, EventArgs e)
+        {
+            _presenter.DeleteTask();
+        }
         private void buttonAddCriterion_Click(object sender, EventArgs e)
         {      
             _presenter.AddCriterion();
@@ -231,6 +255,7 @@ namespace AnalyticHierarchyProcess
 
         private void tab_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //Обнуляем все
             comboBoxCompare.SelectedIndex = -1;
             dataGridViewCompare.Rows.Clear();
             dataGridViewCompare.Columns.Clear();
@@ -242,28 +267,27 @@ namespace AnalyticHierarchyProcess
 
         private void dataGridViewCompare_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            //если поле пустое - откатываем изменение
             if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
                 ((DataGridView)sender).CancelEdit();
         }
         private void dataGridViewTaskCompare_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            //если поле пустое - откатываем изменение
             if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
                 ((DataGridView)sender).CancelEdit();
         }
         private void dataGridViewOptions_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            //если поле пустое - откатываем изменение
             if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
                 ((DataGridView)sender).CancelEdit();
         }
         private void dataGridViewCriterions_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            //если поле пустое - откатываем изменение
             if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
                 ((DataGridView)sender).CancelEdit();
-        }
-
-        private void tabCompares_Click(object sender, EventArgs e)
-        {
-
-        }
+        }     
     }
 }
