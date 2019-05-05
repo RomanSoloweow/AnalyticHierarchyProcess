@@ -217,7 +217,7 @@ namespace AnalyticHierarchyProcess
         {         
             _presenter.AddTask();        
         }
-        private void buttonRenameTask_Click(object sender, EventArgs e)
+        private void buttonUpdateTask_Click(object sender, EventArgs e)
         {
             _presenter.UpdateTask();
         }

@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataSet1 = new System.Data.DataSet();
             this.buttonGetResult = new System.Windows.Forms.Button();
             this.tab = new System.Windows.Forms.TabControl();
             this.tabTask = new System.Windows.Forms.TabPage();
+            this.buttonUpdateTask = new System.Windows.Forms.Button();
+            this.labelTaskName = new System.Windows.Forms.Label();
+            this.labelTaskHeader = new System.Windows.Forms.Label();
+            this.buttonDeleteTask = new System.Windows.Forms.Button();
             this.buttonLoadTaskFromFile = new System.Windows.Forms.Button();
             this.buttonSaveTaskInFile = new System.Windows.Forms.Button();
             this.buttonAddTask = new System.Windows.Forms.Button();
@@ -56,10 +60,6 @@
             this.ColumnResult = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewCalculation = new System.Windows.Forms.DataGridView();
             this.buttonShowCalc = new System.Windows.Forms.Button();
-            this.buttonDeleteTask = new System.Windows.Forms.Button();
-            this.labelTaskHeader = new System.Windows.Forms.Label();
-            this.labelTaskName = new System.Windows.Forms.Label();
-            this.buttonRenameTask = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tab.SuspendLayout();
             this.tabTask.SuspendLayout();
@@ -110,7 +110,7 @@
             // 
             // tabTask
             // 
-            this.tabTask.Controls.Add(this.buttonRenameTask);
+            this.tabTask.Controls.Add(this.buttonUpdateTask);
             this.tabTask.Controls.Add(this.labelTaskName);
             this.tabTask.Controls.Add(this.labelTaskHeader);
             this.tabTask.Controls.Add(this.buttonDeleteTask);
@@ -125,6 +125,42 @@
             this.tabTask.TabIndex = 3;
             this.tabTask.Text = "Цель";
             this.tabTask.UseVisualStyleBackColor = true;
+            // 
+            // buttonUpdateTask
+            // 
+            this.buttonUpdateTask.Location = new System.Drawing.Point(273, 41);
+            this.buttonUpdateTask.Name = "buttonUpdateTask";
+            this.buttonUpdateTask.Size = new System.Drawing.Size(268, 44);
+            this.buttonUpdateTask.TabIndex = 8;
+            this.buttonUpdateTask.Text = "Переименовать цель";
+            this.buttonUpdateTask.UseVisualStyleBackColor = true;
+            this.buttonUpdateTask.Click += new System.EventHandler(this.buttonUpdateTask_Click);
+            // 
+            // labelTaskName
+            // 
+            this.labelTaskName.Location = new System.Drawing.Point(179, 12);
+            this.labelTaskName.Name = "labelTaskName";
+            this.labelTaskName.Size = new System.Drawing.Size(1445, 25);
+            this.labelTaskName.TabIndex = 7;
+            // 
+            // labelTaskHeader
+            // 
+            this.labelTaskHeader.AutoSize = true;
+            this.labelTaskHeader.Location = new System.Drawing.Point(15, 12);
+            this.labelTaskHeader.Name = "labelTaskHeader";
+            this.labelTaskHeader.Size = new System.Drawing.Size(158, 25);
+            this.labelTaskHeader.TabIndex = 6;
+            this.labelTaskHeader.Text = "Текущая цель:";
+            // 
+            // buttonDeleteTask
+            // 
+            this.buttonDeleteTask.Location = new System.Drawing.Point(547, 43);
+            this.buttonDeleteTask.Name = "buttonDeleteTask";
+            this.buttonDeleteTask.Size = new System.Drawing.Size(258, 42);
+            this.buttonDeleteTask.TabIndex = 5;
+            this.buttonDeleteTask.Text = "Удалить цель";
+            this.buttonDeleteTask.UseVisualStyleBackColor = true;
+            this.buttonDeleteTask.Click += new System.EventHandler(this.buttonDeleteTask_Click);
             // 
             // buttonLoadTaskFromFile
             // 
@@ -401,14 +437,14 @@
             this.dataGridViewCalculationResult.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewCalculationResult.Name = "dataGridViewCalculationResult";
             this.dataGridViewCalculationResult.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCalculationResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewCalculationResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewCalculationResult.RowHeadersWidth = 340;
             this.dataGridViewCalculationResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewCalculationResult.RowTemplate.Height = 33;
@@ -453,42 +489,6 @@
             this.buttonShowCalc.Text = "Показать расчеты";
             this.buttonShowCalc.UseVisualStyleBackColor = true;
             this.buttonShowCalc.Click += new System.EventHandler(this.buttonShowCalc_Click);
-            // 
-            // buttonDeleteTask
-            // 
-            this.buttonDeleteTask.Location = new System.Drawing.Point(547, 43);
-            this.buttonDeleteTask.Name = "buttonDeleteTask";
-            this.buttonDeleteTask.Size = new System.Drawing.Size(258, 42);
-            this.buttonDeleteTask.TabIndex = 5;
-            this.buttonDeleteTask.Text = "Удалить цель";
-            this.buttonDeleteTask.UseVisualStyleBackColor = true;
-            this.buttonDeleteTask.Click += new System.EventHandler(this.buttonDeleteTask_Click);
-            // 
-            // labelTaskHeader
-            // 
-            this.labelTaskHeader.AutoSize = true;
-            this.labelTaskHeader.Location = new System.Drawing.Point(15, 12);
-            this.labelTaskHeader.Name = "labelTaskHeader";
-            this.labelTaskHeader.Size = new System.Drawing.Size(158, 25);
-            this.labelTaskHeader.TabIndex = 6;
-            this.labelTaskHeader.Text = "Текущая цель:";
-            // 
-            // labelTaskName
-            // 
-            this.labelTaskName.Location = new System.Drawing.Point(179, 12);
-            this.labelTaskName.Name = "labelTaskName";
-            this.labelTaskName.Size = new System.Drawing.Size(1445, 25);
-            this.labelTaskName.TabIndex = 7;
-            // 
-            // buttonRenameTask
-            // 
-            this.buttonRenameTask.Location = new System.Drawing.Point(273, 41);
-            this.buttonRenameTask.Name = "buttonRenameTask";
-            this.buttonRenameTask.Size = new System.Drawing.Size(268, 44);
-            this.buttonRenameTask.TabIndex = 8;
-            this.buttonRenameTask.Text = "Переименовать цель";
-            this.buttonRenameTask.UseVisualStyleBackColor = true;
-            this.buttonRenameTask.Click += new System.EventHandler(this.buttonRenameTask_Click);
             // 
             // FormView
             // 
@@ -550,7 +550,7 @@
         private System.Windows.Forms.Label labelTaskName;
         private System.Windows.Forms.Label labelTaskHeader;
         private System.Windows.Forms.Button buttonDeleteTask;
-        private System.Windows.Forms.Button buttonRenameTask;
+        private System.Windows.Forms.Button buttonUpdateTask;
     }
 }
 

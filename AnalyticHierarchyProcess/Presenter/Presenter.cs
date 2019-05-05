@@ -26,6 +26,12 @@ namespace NamespacePresenter
         /// Флаг  корректности расчетов
         /// </summary>
         private bool calculationCorrect = false;
+
+        public Presenter(Model model, IView view)
+        {
+            _model = model;
+            _view = view;
+        }
         /// <summary>
         /// Коды ошибок состояний которые нужно проверить для функции
         /// </summary>
@@ -101,8 +107,7 @@ namespace NamespacePresenter
         /// <param name="matrix"> Матрица сравнений</param>
         /// <returns>Таблица строк</returns>
         private DataTable MatrixToDataTable(MatrixTable matrix)
-        {
-          
+        {         
             DataTable table = new DataTable();
 
             if (matrix == null)
@@ -277,11 +282,63 @@ namespace NamespacePresenter
             }
             return false;
         }
-        public Presenter(Model model, IView view)
+
+        public bool AddTask(string nameNewTask = null)
         {
-            _model = model;
-            _view = view;
+            //Получаем имя текущей функции
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+
+            if ((HaveErrorsState(functionName, mute: true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
+                return false;
+
+            nameNewTask = _view.GetStringValue("Создать цель", "Введите цель");
+
+            if (HaveErrorsInputData(functionName, nameNewTask))
+                return false;
+
+            selectedMatrix = string.Empty;
+            _model.task = new MatrixTable(nameNewTask);
+
+            calculationCorrect = false;
+            _view.AddTask(nameNewTask);
+            return true;
         }
+        public bool UpdateTask(string nameNewTask = null)
+        {
+            //Получаем имя текущей функции
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
+                return false;
+            nameNewTask = _view.GetStringValue("Изменить цель", "Введите новое название цели");
+            if (HaveErrorsInputData(functionName, nameNewTask))
+                return false;
+            _model.task.SetName(nameNewTask);
+            _view.UpdateTask(nameNewTask);
+            return true;
+        }
+        public bool DeleteTask()
+        {
+            //Получаем имя текущей функции
+            string functionName = MethodInfo.GetCurrentMethod().Name;
+            if (HaveErrorsState(functionName))
+                return false;
+
+            for (int i = (_model.options.Count() - 1); i > -1; i--)
+                DeleteOption(i);
+            for (int i = (_model.task.CountFiields() - 1); i > -1; i--)
+                DeleteCriterion(i);
+            selectedMatrix = string.Empty;
+            calculationCorrect = false;
+            if (_model.IdealResult != null)
+                _model.IdealResult.Clear();
+            if (_model.NormResult != null)
+                _model.NormResult.Clear();
+            _model.task = null;
+            _view.DeleteTask();
+            _view.OutputMatrixTask(MatrixToDataTable(_model.task));
+            return true;
+        }
+
         public bool AddCriterion(string nameNewCriterion = null)
         {
             //Получаем имя текущей функции
@@ -406,6 +463,7 @@ namespace NamespacePresenter
             _view.DeleteOption(indexDelitingOption);
             return true;
         }
+
         public bool UpdateValueCellValueMatrixCompare(int indexRow, int indexColumn, string cellValue)
         {
             //Получаем имя текущей функции
@@ -440,61 +498,6 @@ namespace NamespacePresenter
             return true;
         }
        
-        public bool AddTask(string nameNewTask=null)
-        {
-            //Получаем имя текущей функции
-            string functionName =  MethodInfo.GetCurrentMethod().Name;
-             
-            if ((HaveErrorsState(functionName, mute:true)) && (!_view.AskQuestion("Цель уже была создана, удалить предыдущую?")))
-                return false;
-
-           nameNewTask = _view.GetStringValue("Создать цель", "Введите цель");
-
-            if (HaveErrorsInputData(functionName, nameNewTask))
-                return false;
-
-            selectedMatrix = string.Empty;
-            _model.task = new MatrixTable(nameNewTask);
-
-            calculationCorrect = false;
-            _view.AddTask(nameNewTask);
-            return true;
-        }
-        public bool UpdateTask(string nameNewTask=null)
-        {
-            //Получаем имя текущей функции
-            string functionName = MethodInfo.GetCurrentMethod().Name;
-            if (HaveErrorsState(functionName))
-                return false;
-            nameNewTask = _view.GetStringValue("Изменить цель", "Введите новое название цели");
-            if (HaveErrorsInputData(functionName, nameNewTask))
-                return false;
-            _model.task.SetName(nameNewTask);
-            _view.UpdateTask(nameNewTask);
-            return true;
-        }
-        public bool DeleteTask()
-        {
-            //Получаем имя текущей функции
-            string functionName = MethodInfo.GetCurrentMethod().Name;
-            if (HaveErrorsState(functionName))
-                return false;
-           
-            for (int i= (_model.options.Count()-1); i>-1;i--)
-                DeleteOption(i);
-            for (int i = (_model.task.CountFiields() - 1); i > -1; i--)
-                DeleteCriterion(i);
-            selectedMatrix = string.Empty;
-            calculationCorrect = false;
-            if (_model.IdealResult != null)
-                _model.IdealResult.Clear();
-            if (_model.NormResult != null)
-                _model.NormResult.Clear();
-            _model.task = null;      
-            _view.DeleteTask();
-            _view.OutputMatrixTask(MatrixToDataTable(_model.task));
-            return true;
-        }
         public bool SaveTaskInFile()
         {
             //Получаем имя текущей функции
